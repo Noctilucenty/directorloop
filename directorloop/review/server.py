@@ -127,7 +127,11 @@ def load_pairs(data_dir: Path, test_types: tuple[str, ...] = ("hook",)) -> list[
                     lp, rp = Path(control.artifact_path), Path(arm.artifact_path)
                 if lp.exists() and rp.exists():
                     pairs.append(PairSpec(exp.id, test, control.id, arm.id, lp, rp))
-    return pairs
+    # the same two media files can appear in several experiments (deterministic renders); keep the newest experiment
+    unique: dict[tuple[str, str, str], PairSpec] = {}
+    for p in pairs:
+        unique[(p.test_type, str(p.left_path), str(p.right_path))] = p
+    return list(unique.values())
 
 
 def _same_opening(exp: CreativeExperiment, arm_id: str) -> bool:
@@ -221,18 +225,23 @@ def create_app(data_dir: Path | None = None, secret: str | None = None) -> FastA
         return _page(
             "Which would you keep watching?",
             f"""
-<p class='lead'>Play both. Which one would you be more likely to keep watching?</p>
+<p class='lead'>Play both openings. Which one would you be more likely to keep watching?</p>
 <div class='pair'>
-  <figure><video src='../m/{safe}/left.mp4' playsinline controls preload='metadata'></video><figcaption>Left</figcaption></figure>
-  <figure><video src='../m/{safe}/right.mp4' playsinline controls preload='metadata'></video><figcaption>Right</figcaption></figure>
+  <figure><video id='vl' src='../m/{safe}/left.mp4#t=0.1' playsinline controls preload='metadata'></video><figcaption>Left</figcaption></figure>
+  <figure><video id='vr' src='../m/{safe}/right.mp4#t=0.1' playsinline controls preload='metadata'></video><figcaption>Right</figcaption></figure>
 </div>
 <div class='choices'>
-  <button data-c='left'>Left</button><button data-c='none' class='quiet'>No preference</button><button data-c='right'>Right</button>
+  <button data-c='left' disabled>Left</button><button data-c='none' class='quiet' disabled>No preference</button><button data-c='right' disabled>Right</button>
 </div>
 <label class='fine' for='about'>Optional: what do you think the video is about?</label>
 <input id='about' maxlength='240' autocomplete='off'>
-<p id='msg' class='fine'></p>
+<p id='msg' class='fine'>Play both clips to answer.</p>
 <script>
+const played = new Set();
+['vl', 'vr'].forEach(id => document.getElementById(id).addEventListener('play', () => {{
+  played.add(id);
+  if (played.size === 2) {{ document.querySelectorAll('.choices button').forEach(x => x.disabled = false); document.getElementById('msg').textContent = ''; }}
+}}));
 document.querySelectorAll('.choices button').forEach(b => b.addEventListener('click', async () => {{
   document.querySelectorAll('.choices button').forEach(x => x.disabled = true);
   const r = await fetch('{safe}/answer', {{method: 'POST', headers: {{'Content-Type': 'application/json'}},
