@@ -120,6 +120,7 @@ class EditPlan(BaseModel):
     narration: NarrationTrack | None = None
     music: MusicTrack | None = None
     protected_intervals: list[ProtectedInterval] = Field(default_factory=list)
+    audio_join_fade_ms: int = Field(default=0, ge=0, le=200)  # renderer fades audio only where the source is not contiguous
     change_rationale: str = ""
 
     # --- timeline helpers -------------------------------------------------

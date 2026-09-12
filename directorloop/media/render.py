@@ -78,17 +78,30 @@ def build_ffmpeg_argv(
         argv += ["-ss", f"{seg.source_in_ms / 1000:.3f}", "-t", f"{(seg.source_out_ms - seg.source_in_ms) / 1000:.3f}", "-i", str(path)]
         n_inputs += 1
     seg_indices = list(range(len(plan.segments)))
-    for i, seg in zip(seg_indices, plan.segments, strict=True):
+    segs = plan.segments
+
+    def contiguous(a: Segment, b: Segment) -> bool:
+        """Audio continues seamlessly when b picks up the same source exactly where a stopped (framing may differ)."""
+        return a.asset_id == b.asset_id and abs(a.source_out_ms - b.source_in_ms) <= 1
+
+    for i, seg in zip(seg_indices, segs, strict=True):
         filters.append(_segment_filter(seg, plan, i))
         rec = manifest.get(seg.asset_id)
         keep_audio = seg.audio_policy == "keep" and bool(rec.stream and rec.stream.has_audio)
         dur = (seg.source_out_ms - seg.source_in_ms) / 1000
         if keep_audio:
+            fade_in = seg.audio_fade_in_ms
+            fade_out = seg.audio_fade_out_ms
+            if plan.audio_join_fade_ms:
+                if i > 0 and not contiguous(segs[i - 1], seg):
+                    fade_in = max(fade_in, plan.audio_join_fade_ms)
+                if i < len(segs) - 1 and not contiguous(seg, segs[i + 1]):
+                    fade_out = max(fade_out, plan.audio_join_fade_ms)
             fades = ""
-            if seg.audio_fade_in_ms:
-                fades += f",afade=t=in:st=0:d={seg.audio_fade_in_ms / 1000:.3f}"
-            if seg.audio_fade_out_ms:
-                fades += f",afade=t=out:st={max(0.0, dur - seg.audio_fade_out_ms / 1000):.3f}:d={seg.audio_fade_out_ms / 1000:.3f}"
+            if fade_in:
+                fades += f",afade=t=in:st=0:d={fade_in / 1000:.3f}"
+            if fade_out:
+                fades += f",afade=t=out:st={max(0.0, dur - fade_out / 1000):.3f}:d={fade_out / 1000:.3f}"
             filters.append(
                 f"[{i}:a]asetpts=PTS-STARTPTS,aformat=sample_rates=48000:channel_layouts=stereo,atrim=0:{dur:.3f},"
                 f"apad=whole_dur={dur:.3f}{fades}[a{i}]"
