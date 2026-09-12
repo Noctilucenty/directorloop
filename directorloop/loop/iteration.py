@@ -332,7 +332,10 @@ def run_iteration(
             {"comparison": comparison.model_dump(mode="json")},
         )
         _emit(on_stage, "DECIDING", "applying hard gates, then the goal metric")
-        decision = decide_acceptance(comparison, candidate_run, pack.brief)
+        from ..evals.compare import text_assisted_fixes
+
+        assisted = text_assisted_fixes(pack.suite, pack.truth, base_version.plan, candidate_plan, comparison.fixed)
+        decision = decide_acceptance(comparison, candidate_run, pack.brief, text_assisted=assisted)
         candidate.decision = decision
         candidate.status = {
             Outcome.PROMOTED: "promoted",

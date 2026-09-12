@@ -113,6 +113,14 @@ NOTEBOOK = (90, 96, 120)
 NOTEBOOK_EDGE = (230, 226, 216)
 PLANT_POT = (150, 96, 70)
 PLANT = (96, 130, 84)
+CUP = (84, 110, 128)
+CUP_SIDE = (64, 86, 102)
+CUP_TOP = (48, 62, 74)
+CUP_HIGHLIGHT = (122, 148, 164)
+PENCIL_A = (70, 96, 150)
+PENCIL_B = (92, 128, 96)
+PENCIL_C = (120, 120, 128)
+PENCIL_TIP = (60, 52, 46)
 
 # ----------------------------------------------------------------------------- projection
 KX = 0.50  # screen x offset per unit of depth
@@ -176,12 +184,17 @@ class Frame:
 BASE_X0, BASE_X1, BASE_Z0, BASE_Z1, BASE_Y = 0.0, 80.0, 0.0, 60.0, 10.0
 PANEL_Z, PANEL_T, PANEL_H, PANEL_LEAN = 48.0, 4.0, 100.0, 0.36
 PANEL_X0, PANEL_X1 = 8.0, 72.0
-TAB_X0, TAB_X1, TAB_Z, TAB_T, TAB_H = 32.0, 48.0, 44.0, 3.0, 22.0
+TAB_X0, TAB_X1, TAB_Z, TAB_T, TAB_H = 26.0, 42.0, 44.0, 3.0, 22.0
+TAB_CX = (TAB_X0 + TAB_X1) / 2
 TAB_TRAVEL = TAB_H - 2.0  # seated: 2 units of tab remain above the base (a clear band in the close-up, a faint sliver in the wide)
-SLOT_X0, SLOT_X1, SLOT_Z0, SLOT_Z1 = 31.0, 49.0, 43.0, 47.5
+SLOT_X0, SLOT_X1, SLOT_Z0, SLOT_Z1 = 25.0, 43.0, 43.0, 47.5
 LIP_X0, LIP_X1, LIP_Z0, LIP_Z1, LIP_H = 8.0, 72.0, 4.0, 8.0, 5.0
 PHONE_X0, PHONE_X1, PHONE_H, PHONE_Z = 18.0, 62.0, 92.0, 9.0
 DESK_DEPTH = 150.0
+# pencil cup standing on the desk in front of the stand (wide shot only); its front face and right side cover
+# the whole tab mechanism from the wide camera: tab, loops and slot project to screen x 45-73, y -49 to -24,
+# the cup covers screen x 41-75 up to y -50
+CUP_X0, CUP_X1, CUP_Z0, CUP_Z1, CUP_H = 52.0, 82.0, -22.0, -14.0, 58.0
 
 
 def ease_in_out(t: float) -> float:
@@ -388,12 +401,56 @@ def draw_hand(f: Frame, tip: Vec2, direction: Vec2, width_units: float) -> None:
     f.draw.ellipse([nail_cx - w * 0.24, nail_cy - w * 0.17, nail_cx + w * 0.24, nail_cy + w * 0.17], fill=NAIL)
 
 
+def draw_pencil_cup(f: Frame) -> None:
+    """A pencil cup on the desk between the wide camera and the stand. It hides the base of the stand,
+    which is ordinary desk clutter in a phone recording, and it is drawn in the wide shot only."""
+    x0, x1, z0, z1, h = CUP_X0, CUP_X1, CUP_Z0, CUP_Z1, CUP_H
+    # pencils first so the cup rim sits in front of them
+    for px_, lean, top, col in ((58.0, -3.0, 30.0, PENCIL_A), (66.0, 1.5, 38.0, PENCIL_B), (74.0, 4.0, 26.0, PENCIL_C)):
+        f.poly([(px_, h - 4, z0 + 4), (px_ + 3.0, h - 4, z0 + 4), (px_ + 3.0 + lean, h + top, z0 + 4),
+                (px_ + lean, h + top, z0 + 4)], col)
+        f.poly([(px_ + lean, h + top, z0 + 4), (px_ + 3.0 + lean, h + top, z0 + 4),
+                (px_ + 1.5 + lean, h + top + 4.0, z0 + 4)], PENCIL_TIP)
+    f.poly([(x1, 0, z0), (x1, 0, z1), (x1, h, z1), (x1, h, z0)], CUP_SIDE)
+    f.poly([(x0, h, z0), (x1, h, z0), (x1, h, z1), (x0, h, z1)], CUP_TOP)
+    f.poly([(x0, 0, z0), (x1, 0, z0), (x1, h, z0), (x0, h, z0)], CUP)
+    f.poly([(x0 + 4, 3, z0), (x0 + 8, 3, z0), (x0 + 8, h - 5, z0), (x0 + 4, h - 5, z0)], CUP_HIGHLIGHT)
+
+
+def draw_reaching_arm(f: Frame, tip: Vec2, direction: Vec2, width_units: float) -> None:
+    """An arm reaching in from the right edge at desk level: forearm, a closed hand, one extended
+    index finger whose tip is the contact point. Nothing extends to the left of the fingertip, so
+    behind the pencil cup the whole contact region stays hidden."""
+    w = f.unit(width_units)
+    dx, dy = direction
+    n = math.hypot(dx, dy) or 1.0
+    dx, dy = dx / n, dy / n
+    nx, ny = -dy, dx
+    tx, ty = tip
+    hand_cx, hand_cy = tx + dx * w * 1.9, ty + dy * w * 1.9
+    fx, fy = tx + dx * w * 40, ty + dy * w * 40
+    forearm = [(hand_cx + nx * w * 1.1, hand_cy + ny * w * 1.1), (fx + nx * w * 1.6, fy + ny * w * 1.6),
+               (fx - nx * w * 1.6, fy - ny * w * 1.6), (hand_cx - nx * w * 1.1, hand_cy - ny * w * 1.1)]
+    f.poly2d(forearm, FINGER)
+    forearm_s = [(hand_cx + nx * w * 1.1, hand_cy + ny * w * 1.1), (fx + nx * w * 1.6, fy + ny * w * 1.6),
+                 (fx + nx * w * 0.7, fy + ny * w * 0.7), (hand_cx + nx * w * 0.4, hand_cy + ny * w * 0.4)]
+    f.poly2d(forearm_s, FINGER_SHADE)
+    rx, ry = w * 1.6, w * 1.15
+    f.draw.ellipse([hand_cx - rx, hand_cy - ry, hand_cx + rx, hand_cy + ry], fill=FINGER_SHADE)
+    f.draw.ellipse([hand_cx - rx, hand_cy - ry, hand_cx + rx, hand_cy + ry * 0.5], fill=FINGER)
+    ex, ey = tx + dx * w * 1.2, ty + dy * w * 1.2
+    quad = [(tx + nx * w * 0.32, ty + ny * w * 0.32), (ex + nx * w * 0.32, ey + ny * w * 0.32),
+            (ex - nx * w * 0.32, ey - ny * w * 0.32), (tx - nx * w * 0.32, ty - ny * w * 0.32)]
+    f.poly2d(quad, FINGER)
+    f.draw.ellipse([tx - w * 0.32, ty - w * 0.32, tx + w * 0.32, ty + w * 0.32], fill=FINGER)
+
+
 # ----------------------------------------------------------------------------- shots
 CAMERAS = {
     # stand roughly 11 percent of frame height; centered lower-middle of a desk scene
     "wide": Camera(scale=1.6, cx=project((40.0, 0.0, 30.0))[0] - 6, cy=-105.0),
     # the tab and slot fill the frame
-    "closeup": Camera(scale=32.0, cx=project((40.0, 12.0, 46.0))[0], cy=project((40.0, 20.0, 46.0))[1]),
+    "closeup": Camera(scale=32.0, cx=project((TAB_CX, 12.0, 46.0))[0], cy=project((TAB_CX, 20.0, 46.0))[1]),
     # three-quarter view of the phone on the locked stand
     "result": Camera(scale=8.5, cx=project((40.0, 55.0, 30.0))[0], cy=project((40.0, 60.0, 30.0))[1]),
 }
@@ -418,11 +475,11 @@ def finger_state(shot: str, t: float, f: Frame, drop: float) -> tuple[Vec2, Vec2
     """Return (tip px, direction px, width units) or None when the finger is out of frame."""
     tab_top_y = BASE_Y - TAB_TRAVEL * drop + TAB_H
     if shot == "wide":
-        # hand comes from the camera side (bottom right), presses, then leaves the same way
+        # arm reaches in from the right edge behind the pencil cup, presses, then leaves the same way
         if t < 1.4 or t > 4.05:
             return None
-        contact = f.px((40.0, tab_top_y, TAB_Z + 1.0))
-        offscreen = (f.width * f.ss * 0.95, f.height * f.ss * 1.25)
+        contact = f.px((TAB_CX, tab_top_y, TAB_Z + 1.0))
+        offscreen = (f.width * f.ss * 1.15, contact[1] + f.height * f.ss * 0.05)
         if t < 2.0:
             a = ease_out((t - 1.4) / 0.6)
         elif t <= 3.7:
@@ -430,7 +487,7 @@ def finger_state(shot: str, t: float, f: Frame, drop: float) -> tuple[Vec2, Vec2
         else:
             a = 1 - ease_in_out((t - 3.7) / 0.35)
         tip = (offscreen[0] + (contact[0] - offscreen[0]) * a, offscreen[1] + (contact[1] - offscreen[1]) * a)
-        return tip, (0.24, 0.97), 12.0
+        return tip, (0.97, 0.18), 8.0
     if shot == "closeup":
         # fingertip from the upper right, touching only the top edge of the tab near its right end
         w_units = 8.0
@@ -503,9 +560,11 @@ def render_frame(shot: str, t: float, width: int, height: int, ss: int = 2) -> I
     if fs is not None:
         tip, direction, w = fs
         if shot == "wide":
-            draw_hand(f, tip, direction, w)
+            draw_reaching_arm(f, tip, direction, w)
         else:
             draw_finger(f, tip, direction, w)
+    if shot == "wide":
+        draw_pencil_cup(f)
     if ss > 1:
         img = img.resize((width, height), Image.LANCZOS)
     return img
@@ -829,7 +888,7 @@ def write_pack_md(
         if narration_reused
         else "Synthesized during this generation."
     )
-    text = f"""# Pack A: cereal-box phone stand (rendered fixture), fixture v2
+    text = f"""# Pack A: cereal-box phone stand (rendered fixture), fixture v3
 
 Status: fictional graphical demonstration, procedurally rendered by `scripts/make_pack_a.py`.
 There is no real product and no recorded footage in this pack. The spec (section 6) allows a
@@ -848,19 +907,18 @@ clearly labeled fictional graphical demo when recorded footage is unavailable; t
 
 ## What each shot establishes
 
-- wide shot: the whole desk from a desk-level phone-camera angle. The stand is about 11 percent of
-  frame height and the orange tab about 1 percent. A hand reaches in from the camera side and
-  presses at the base of the stand (2.0-3.7 s); from this viewpoint the hand covers the tab and the
-  slot for the whole press, and when it withdraws the tab is already seated inside the base, so the
-  after-state shows nothing where the tab was. A viewer of this shot sees: a hand touches the base,
-  the hand leaves, a phone is placed (3.8-5.0 s). Whether the tab was pushed down, slid, twisted or
-  folded is genuinely not visible. This is the realistic case the loop is meant to catch, not a
-  sabotaged edit: the mechanism was filmed, just from an angle that hides it.
+- wide shot: the whole desk from a desk-level phone-camera angle, with a pencil cup standing on the
+  desk in front of the stand. The cup hides the base of the stand, so the orange tab, its guide
+  loops and the slot are never visible in this shot (0 tab-coloured pixels in every frame). A hand
+  reaches in from the camera side and presses behind the cup (2.0-3.7 s), withdraws, and a phone is
+  placed on the stand (3.8-5.0 s). A viewer of this shot sees a hand reach behind the cup and a
+  phone being placed. How the stand locks is genuinely not visible. This is the realistic case the
+  loop is meant to catch, not a sabotaged edit: the lock was filmed, but desk clutter hides it.
 - close-up: the tab, its two guide loops and the slot fill the frame; a fingertip arrives from the
   upper right and touches only the top edge of the tab, so the tab body, loops and slot stay
   visible beside it while the tab is pressed down and seats into the slot (0.3-2.2 s).
 - result shot: the phone on the locked stand; a fingertip taps the screen twice at 1.5 s and 2.1 s
-  and nothing moves.
+  and nothing moves. The phone body covers the seated tab, so this shot shows no tab either.
 - The baseline edit uses only the wide and result shots. The close-up exists in the asset pool but
   is not used, which is the ordinary first-cut situation the loop is meant to catch.
 
@@ -870,9 +928,16 @@ clearly labeled fictional graphical demo when recorded footage is unavailable; t
   could still read "a finger pushes the small orange tab down into the base", so the wide-shot
   baseline passed the mechanism questions. The no-media control was clean, so the questions did
   not leak; the fixture was simply too legible.
-- v2 (current): hand occludes the mechanism in the wide shot as described above; close-up angle
-  changed so the mechanism stays visible beside the fingertip; suite options rebalanced so every
-  option describes a plausible cardboard mechanism and only the pixels decide.
+- v2: the hand occluded the tab only during the press. The same viewer read the before and after
+  states instead: the orange tab was visible above the base before the press (about 14 px tall at
+  512 px) and a sliver remained after it, and it answered "a finger pushes the small orange tab
+  downward into the base". Before and after states also communicate a mechanism. Suite options were
+  rebalanced in v2 so every option describes a plausible cardboard mechanism.
+- v3 (current): a pencil cup in front of the stand hides the whole mechanism in the wide shot, and
+  the mechanism moved 6 world units left so the phone covers the seated tab in the result shot.
+  The close-up is unchanged apart from recentering on the moved tab. Declared claims in the manifest
+  still describe what the creator believes each shot shows (the creator believes the wide shot shows
+  the lock); pixel coverage analysis in the loop is what has to catch the mismatch.
 
 ## Replacing the fixture with real footage
 

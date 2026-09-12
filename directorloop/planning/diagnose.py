@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 
-from ..domain.assets import AssetCoverageMap, AssetManifest, CoverageStatus
+from ..domain.assets import AssetCoverageMap, AssetManifest
 from ..domain.brief import CreativeBrief, RepairAction
 from ..domain.edit_plan import EditPlan
 from ..domain.evaluation import EvaluationRun, MeasurementType
@@ -66,7 +66,9 @@ def transcript_mentions(claim_text: str, transcript: str | None) -> bool | None:
 
 def _segments_for_claim(plan: EditPlan, manifest: AssetManifest, coverage: AssetCoverageMap, claim_id: str) -> list[str]:
     ids: list[str] = []
-    covering_assets = {e.asset_id for e in coverage.for_claim(claim_id) if e.status != CoverageStatus.ABSENT}
+    # every clip meant to carry the claim, including clips a pixel check found NOT showing it:
+    # those are exactly the segments where the communication fails
+    covering_assets = {e.asset_id for e in coverage.for_claim(claim_id)}
     for seg in plan.segments:
         if seg.asset_id in covering_assets:
             ids.append(seg.id)

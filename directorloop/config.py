@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     dl_probe_model: str = "gpt-5.6-terra"
     dl_probe_trials: int = 3
     dl_probe_frames: int = 8
-    dl_probe_prompt_version: str = "v1"
+    dl_probe_prompt_version: str = "v2-independent-questions"
     dl_wandb_inference_probe_model: str = "Qwen/Qwen3.8-27B"
     dl_wandb_inference_planner_model: str = "moonshotai/Kimi-K2.6"
 

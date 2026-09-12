@@ -45,16 +45,30 @@ def run_probe_trials(
     suite: EvaluationSuite,
     trials: int,
     seed_base: int = 1000,
-    concurrency: int = 3,
+    concurrency: int = 8,
+    independent_questions: bool = True,
 ) -> list[ProbeAnswer]:
-    """Run `trials` independent viewer calls with per-trial option shuffles. Bounded concurrency."""
+    """Run `trials` viewer passes with per-trial option shuffles, bounded concurrency.
 
-    def one(trial: int) -> list[ProbeAnswer]:
+    independent_questions=True asks every question in its own call, so the wording of one question
+    (for example "where is the orange tab?") cannot tell the viewer the answer to another
+    ("which part moves?"). The pack A v3 regression run showed exactly that leak when all
+    questions shared one call.
+    """
+    jobs: list[tuple[int, list]] = []
+    for trial in range(trials):
         views = suite.viewer_views(seed=seed_base + trial)
+        if independent_questions:
+            jobs.extend((trial, [v]) for v in views)
+        else:
+            jobs.append((trial, views))
+
+    def one(job: tuple[int, list]) -> list[ProbeAnswer]:
+        trial, views = job
         return provider.answer_questions(media, views, seed=trial)
 
     answers: list[ProbeAnswer] = []
-    with cf.ThreadPoolExecutor(max_workers=max(1, min(concurrency, trials))) as ex:
-        for batch in ex.map(one, range(trials)):
+    with cf.ThreadPoolExecutor(max_workers=max(1, min(concurrency, len(jobs)))) as ex:
+        for batch in ex.map(one, jobs):
             answers.extend(batch)
     return answers

@@ -128,7 +128,9 @@ def traced(name: str, kind: str | None = None) -> Callable[[F], F]:
     """Decorate a loop boundary as a Weave op with a stable name."""
 
     def deco(fn: F) -> F:
-        op = weave.op(name=name, kind=kind, postprocess_inputs=redact_inputs, postprocess_output=redact_output)(fn)
+        op = weave.op(
+            name=name, kind=kind, postprocess_inputs=redact_inputs, postprocess_output=redact_output, enable_code_capture=False
+        )(fn)
 
         @wraps(fn)
         def wrapper(*args: Any, **kwargs: Any) -> Any:

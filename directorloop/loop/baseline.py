@@ -80,13 +80,16 @@ def build_baseline(
 
     _emit(on_stage, "ANALYZING", "checking which claims each clip visibly shows (cached per asset hash)")
     t1 = time.monotonic()
-    if state.coverage is None or state.coverage_model != providers.probe.capability.model:
+    coverage_key = f"{providers.probe.capability.model}:{pack.manifest.checksum()}"
+    if state.coverage is None or state.coverage_key != coverage_key:
         try:
             state.coverage = analyze_asset_coverage(pack.manifest, asset_paths, pack.truth, providers.probe, cache_dir)
             state.coverage_model = providers.probe.capability.model
+            state.coverage_key = coverage_key
         except Exception as exc:  # noqa: BLE001
             state.coverage = declared_coverage(pack.manifest, pack.truth)
             state.coverage_model = None
+            state.coverage_key = None
             _emit(on_stage, "ANALYZING", f"coverage analysis failed; using creator-declared coverage only ({str(exc)[:80]})")
     timings["coverage_ms"] = int((time.monotonic() - t1) * 1000)
 

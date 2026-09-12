@@ -6,8 +6,8 @@
       "project_id": "proj_pack_a",
       "kind": "video",
       "origin": "rendered_fixture",
-      "content_hash": "779075832a2039e3c7cc7cc74edfb8f568d5bf4944fd2a10b507180b50888f3c",
-      "storage_key": "779075832a2039e3c7cc7cc74edfb8f568d5bf4944fd2a10b507180b50888f3c.mp4",
+      "content_hash": "d23efd8c26f5f22cf9b1139384993511e3c63754075af15923e46754ae36b170",
+      "storage_key": "d23efd8c26f5f22cf9b1139384993511e3c63754075af15923e46754ae36b170.mp4",
       "original_filename": null,
       "label": "wide shot",
       "duration_ms": 6000,
@@ -24,7 +24,7 @@
         "rotation": 0,
         "nb_frames": 180,
         "container": "mov,mp4,m4a,3gp,3g2,mj2",
-        "size_bytes": 58558
+        "size_bytes": 49832
       },
       "declared_claims": [
         "c_object",
@@ -34,15 +34,15 @@
       "rights_note": "Procedurally rendered for this project; no third-party material",
       "restrictions": [],
       "generation": null,
-      "created_at": "2026-09-12T19:17:52.605+00:00"
+      "created_at": "2026-09-12T19:35:42.501+00:00"
     },
     {
       "id": "asset_closeup",
       "project_id": "proj_pack_a",
       "kind": "video",
       "origin": "rendered_fixture",
-      "content_hash": "425e1af5cf142562406f1e7a0afbefdebec011d7e775803d973683a6ca55e93b",
-      "storage_key": "425e1af5cf142562406f1e7a0afbefdebec011d7e775803d973683a6ca55e93b.mp4",
+      "content_hash": "c7ae597c0dccdcbf1aea54f2b5cd2c0c4f96c6b5430512971ad8fa290b61d3a8",
+      "storage_key": "c7ae597c0dccdcbf1aea54f2b5cd2c0c4f96c6b5430512971ad8fa290b61d3a8.mp4",
       "original_filename": null,
       "label": "close-up shot",
       "duration_ms": 3000,
@@ -59,7 +59,7 @@
         "rotation": 0,
         "nb_frames": 90,
         "container": "mov,mp4,m4a,3gp,3g2,mj2",
-        "size_bytes": 59271
+        "size_bytes": 59471
       },
       "declared_claims": [
         "c_moving_part",
@@ -69,15 +69,15 @@
       "rights_note": "Procedurally rendered for this project; no third-party material",
       "restrictions": [],
       "generation": null,
-      "created_at": "2026-09-12T19:17:57.020+00:00"
+      "created_at": "2026-09-12T19:35:46.783+00:00"
     },
     {
       "id": "asset_result",
       "project_id": "proj_pack_a",
       "kind": "video",
       "origin": "rendered_fixture",
-      "content_hash": "310b10783fdc475ebe2a6ccb36fdc4fd03fbc1c0af038bce78e63e69f70fbe2e",
-      "storage_key": "310b10783fdc475ebe2a6ccb36fdc4fd03fbc1c0af038bce78e63e69f70fbe2e.mp4",
+      "content_hash": "8cfbf022f7fc2cf154b1b74c1afb4eb65216bd9b5c2a1d514f3385d365fbb57d",
+      "storage_key": "8cfbf022f7fc2cf154b1b74c1afb4eb65216bd9b5c2a1d514f3385d365fbb57d.mp4",
       "original_filename": null,
       "label": "result shot",
       "duration_ms": 4000,
@@ -94,7 +94,7 @@
         "rotation": 0,
         "nb_frames": 120,
         "container": "mov,mp4,m4a,3gp,3g2,mj2",
-        "size_bytes": 81838
+        "size_bytes": 80937
       },
       "declared_claims": [
         "c_object",
@@ -103,7 +103,7 @@
       "rights_note": "Procedurally rendered for this project; no third-party material",
       "restrictions": [],
       "generation": null,
-      "created_at": "2026-09-12T19:18:02.805+00:00"
+      "created_at": "2026-09-12T19:35:52.419+00:00"
     },
     {
       "id": "asset_narration",
@@ -138,7 +138,7 @@
       "rights_note": "Procedurally rendered for this project; no third-party material",
       "restrictions": [],
       "generation": null,
-      "created_at": "2026-09-12T19:18:02.867+00:00"
+      "created_at": "2026-09-12T19:35:52.483+00:00"
     },
     {
       "id": "asset_music",
@@ -169,7 +169,7 @@
       "rights_note": "Procedurally rendered for this project; no third-party material",
       "restrictions": [],
       "generation": null,
-      "created_at": "2026-09-12T19:18:02.931+00:00"
+      "created_at": "2026-09-12T19:35:52.548+00:00"
     }
   ],
   "rights_statement": "All assets rendered or synthesized for this project. Fictional product."

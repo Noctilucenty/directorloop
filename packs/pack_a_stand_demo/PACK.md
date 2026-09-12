@@ -1,4 +1,4 @@
-# Pack A: cereal-box phone stand (rendered fixture), fixture v2
+# Pack A: cereal-box phone stand (rendered fixture), fixture v3
 
 Status: fictional graphical demonstration, procedurally rendered by `scripts/make_pack_a.py`.
 There is no real product and no recorded footage in this pack. The spec (section 6) allows a
@@ -17,19 +17,18 @@ clearly labeled fictional graphical demo when recorded footage is unavailable; t
 
 ## What each shot establishes
 
-- wide shot: the whole desk from a desk-level phone-camera angle. The stand is about 11 percent of
-  frame height and the orange tab about 1 percent. A hand reaches in from the camera side and
-  presses at the base of the stand (2.0-3.7 s); from this viewpoint the hand covers the tab and the
-  slot for the whole press, and when it withdraws the tab is already seated inside the base, so the
-  after-state shows nothing where the tab was. A viewer of this shot sees: a hand touches the base,
-  the hand leaves, a phone is placed (3.8-5.0 s). Whether the tab was pushed down, slid, twisted or
-  folded is genuinely not visible. This is the realistic case the loop is meant to catch, not a
-  sabotaged edit: the mechanism was filmed, just from an angle that hides it.
+- wide shot: the whole desk from a desk-level phone-camera angle, with a pencil cup standing on the
+  desk in front of the stand. The cup hides the base of the stand, so the orange tab, its guide
+  loops and the slot are never visible in this shot (0 tab-coloured pixels in every frame). A hand
+  reaches in from the camera side and presses behind the cup (2.0-3.7 s), withdraws, and a phone is
+  placed on the stand (3.8-5.0 s). A viewer of this shot sees a hand reach behind the cup and a
+  phone being placed. How the stand locks is genuinely not visible. This is the realistic case the
+  loop is meant to catch, not a sabotaged edit: the lock was filmed, but desk clutter hides it.
 - close-up: the tab, its two guide loops and the slot fill the frame; a fingertip arrives from the
   upper right and touches only the top edge of the tab, so the tab body, loops and slot stay
   visible beside it while the tab is pressed down and seats into the slot (0.3-2.2 s).
 - result shot: the phone on the locked stand; a fingertip taps the screen twice at 1.5 s and 2.1 s
-  and nothing moves.
+  and nothing moves. The phone body covers the seated tab, so this shot shows no tab either.
 - The baseline edit uses only the wide and result shots. The close-up exists in the asset pool but
   is not used, which is the ordinary first-cut situation the loop is meant to catch.
 
@@ -39,9 +38,16 @@ clearly labeled fictional graphical demo when recorded footage is unavailable; t
   could still read "a finger pushes the small orange tab down into the base", so the wide-shot
   baseline passed the mechanism questions. The no-media control was clean, so the questions did
   not leak; the fixture was simply too legible.
-- v2 (current): hand occludes the mechanism in the wide shot as described above; close-up angle
-  changed so the mechanism stays visible beside the fingertip; suite options rebalanced so every
-  option describes a plausible cardboard mechanism and only the pixels decide.
+- v2: the hand occluded the tab only during the press. The same viewer read the before and after
+  states instead: the orange tab was visible above the base before the press (about 14 px tall at
+  512 px) and a sliver remained after it, and it answered "a finger pushes the small orange tab
+  downward into the base". Before and after states also communicate a mechanism. Suite options were
+  rebalanced in v2 so every option describes a plausible cardboard mechanism.
+- v3 (current): a pencil cup in front of the stand hides the whole mechanism in the wide shot, and
+  the mechanism moved 6 world units left so the phone covers the seated tab in the result shot.
+  The close-up is unchanged apart from recentering on the moved tab. Declared claims in the manifest
+  still describe what the creator believes each shot shows (the creator believes the wide shot shows
+  the lock); pixel coverage analysis in the loop is what has to catch the mismatch.
 
 ## Replacing the fixture with real footage
 

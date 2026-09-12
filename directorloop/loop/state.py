@@ -57,6 +57,7 @@ class ProjectState(BaseModel):
     evaluations: dict[str, EvaluationRun] = Field(default_factory=dict)
     coverage: AssetCoverageMap | None = None
     coverage_model: str | None = None
+    coverage_key: str | None = None  # probe model + manifest checksum the coverage was computed for
     leakage: LeakageControlResult | None = None
     best_version_id: str | None = None
     created_at: str = Field(default_factory=utc_now_iso)

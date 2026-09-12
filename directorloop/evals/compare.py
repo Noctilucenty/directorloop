@@ -2,9 +2,57 @@
 
 from __future__ import annotations
 
+import re
+
 from ..domain.decision import Comparison, QuestionDelta
+from ..domain.edit_plan import EditPlan
 from ..domain.evaluation import EvaluationRun
-from ..domain.truth import EvaluationSuite
+from ..domain.truth import EvaluationSuite, EvidenceModality, SourceTruth
+
+_STOP = {"the", "a", "an", "and", "or", "of", "to", "in", "on", "into", "is", "it", "its", "that", "this", "with",
+         "when", "after", "before", "then", "by", "for", "at", "as", "be", "was", "are", "from", "up", "down"}
+
+
+def _content_tokens(text: str) -> set[str]:
+    return {t for t in re.findall(r"[a-z0-9']+", text.lower()) if len(t) > 2 and t not in _STOP}
+
+
+def text_assisted_fixes(
+    suite: EvaluationSuite,
+    truth: SourceTruth | None,
+    baseline_plan: EditPlan,
+    candidate_plan: EditPlan,
+    fixed_question_ids: list[str],
+) -> list[str]:
+    """Fixed VISUAL questions whose answer the candidate now states in NEW on-screen text.
+
+    Showing the answer as a caption is not visual evidence; a caption can pass a probe while the
+    footage still does not show the thing (a Curio lesson in the spec). Such fixes are excluded.
+    """
+    before = {c.text for c in baseline_plan.captions}
+    new_texts = [c.text for c in candidate_plan.captions if c.text not in before]
+    if not new_texts:
+        return []
+    flagged: list[str] = []
+    for qid in fixed_question_ids:
+        q = suite.question(qid)
+        if q.modality != EvidenceModality.VISUAL:
+            continue
+        answer = next(o.text for o in q.options if o.id == q.correct_option_id)
+        tokens = _content_tokens(answer)
+        if truth is not None:
+            for cid in q.claim_ids:
+                try:
+                    tokens |= _content_tokens(truth.claim(cid).text)
+                except KeyError:
+                    pass
+        if not tokens:
+            continue
+        for text in new_texts:
+            if len(_content_tokens(text) & tokens) >= max(2, int(0.5 * len(_content_tokens(answer)))):
+                flagged.append(qid)
+                break
+    return flagged
 
 
 def compare_runs(baseline: EvaluationRun, candidate: EvaluationRun, suite: EvaluationSuite, duration_before_ms: int, duration_after_ms: int) -> Comparison:

@@ -93,19 +93,36 @@ def _count_colors(img, colors, tol: int = 40) -> int:
     return int(mask.sum())
 
 
-def test_wide_shot_hides_mechanism_during_press_and_closeup_shows_it() -> None:
-    """The fixture's defining property: the wide shot cannot show how the tab locks, the close-up must."""
-    from make_pack_a import SLOT, TAB, TAB_SIDE, TAB_TOP
+def test_wide_and_result_shots_never_show_mechanism_and_closeup_does(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The fixture's defining property (v3): no frame of the wide or result shot shows the tab, its guide
+    loops or the slot; the close-up shows all three. The mechanism is repainted in sentinel colours that
+    appear nowhere else in the scene, so the check measures visibility rather than colour coincidence
+    (pencil tips and phone edges share dark browns with the slot)."""
+    import make_pack_a as m
+
+    sentinels = {"slot": (255, 0, 255), "tab": (0, 255, 255), "loops": (255, 255, 0)}
+    for name in ("SLOT", "SLOT_INNER"):
+        monkeypatch.setattr(m, name, sentinels["slot"])
+    for name in ("TAB", "TAB_SIDE", "TAB_TOP"):
+        monkeypatch.setattr(m, name, sentinels["tab"])
+    for name in ("LOOP", "LOOP_SHADE"):
+        monkeypatch.setattr(m, name, sentinels["loops"])
+
+    def visible(shot: str, t: float) -> dict[str, int]:
+        frame = m.render_frame(shot, t, 540, 960)
+        return {k: _count_colors(frame, [c], tol=90) for k, c in sentinels.items()}
+
+    for t in (0.2, 1.0, 1.8, 2.6, 3.2, 3.9, 4.6, 5.2, 5.9):
+        assert visible("wide", t) == {"slot": 0, "tab": 0, "loops": 0}, f"mechanism visible in wide shot at {t}s"
+    for t in (0.2, 1.6, 1.8, 2.3, 3.0, 3.9):
+        assert visible("result", t) == {"slot": 0, "tab": 0, "loops": 0}, f"mechanism visible in result shot at {t}s"
+    for t in (1.0, 2.0):
+        seen = visible("closeup", t)
+        assert seen["tab"] > 2000 and seen["slot"] > 200 and seen["loops"] > 2000, f"close-up hides the mechanism at {t}s: {seen}"
+    monkeypatch.undo()
+    from make_pack_a import TAB, TAB_SIDE, TAB_TOP
 
     orange = [TAB, TAB_SIDE, TAB_TOP]
-    for t in (2.6, 3.2):
-        frame = render_frame("wide", t, 540, 960)
-        assert _count_colors(frame, orange) == 0, f"tab visible in wide shot at {t}s"
-        assert _count_colors(frame, [SLOT]) == 0, f"slot visible in wide shot at {t}s"
-    for t in (1.0, 2.0):
-        frame = render_frame("closeup", t, 540, 960)
-        assert _count_colors(frame, orange) > 2000, f"tab not visible in close-up at {t}s"
-        assert _count_colors(frame, [SLOT]) > 200, f"slot not visible in close-up at {t}s"
     # seated end state: tab body mostly gone, only a band above the slot remains
     up = _count_colors(render_frame("closeup", 0.2, 540, 960), orange)
     seated = _count_colors(render_frame("closeup", 2.8, 540, 960), orange)
