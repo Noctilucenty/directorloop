@@ -16,7 +16,7 @@ from .models import AlignedUnit
 
 MIN_SIMILARITY = 0.35
 SHARED_SIMILARITY = 0.85
-MERGE_PENALTY = 0.5  # in words: a merge must beat a one-to-one match plus a gap by a little
+MERGE_PENALTY = 0.5  # in matched words: a merge must match more words than a one-to-one match plus a gap
 
 
 def tokens(text: str) -> list[str]:
@@ -28,6 +28,13 @@ def text_similarity(a: str, b: str) -> float:
     if not ta or not tb:
         return 0.0
     return difflib.SequenceMatcher(None, ta, tb, autojunk=False).ratio()
+
+
+def matched_tokens(a: str, b: str) -> int:
+    ta, tb = tokens(a), tokens(b)
+    if not ta or not tb:
+        return 0
+    return sum(m.size for m in difflib.SequenceMatcher(None, ta, tb, autojunk=False).get_matching_blocks())
 
 
 def align_beats(a: list[Any], b: list[Any], min_similarity: float = MIN_SIMILARITY) -> list[AlignedUnit]:
@@ -55,7 +62,8 @@ def align_beats(a: list[Any], b: list[Any], min_similarity: float = MIN_SIMILARI
                     sim = text_similarity(ta, tb)
                     if sim < min_similarity:
                         continue
-                    gain = sim * max(len(tokens(ta)), len(tokens(tb))) - (MERGE_PENALTY if (di, dj) != (1, 1) else 0.0)
+                    # score matched words, not length: folding an unmatched sentence into a match must not pay
+                    gain = matched_tokens(ta, tb) - (MERGE_PENALTY if (di, dj) != (1, 1) else 0.0)
                 if dp[i][j] + gain > dp[ni][nj]:
                     dp[ni][nj] = dp[i][j] + gain
                     back[ni][nj] = (i, j, sim)

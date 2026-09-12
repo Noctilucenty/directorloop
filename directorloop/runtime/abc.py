@@ -241,6 +241,8 @@ def select_c(planner: Any, config: ABCConfig, comparison: ABComparison, audits: 
         return None, f"the selector failed: {str(exc)[:160]}"
     d = res.data
     chosen = next(((o, p) for o, p in options if o.key == d.get("choice")), None)
+    if chosen is None and d.get("choice"):
+        return None, f"the selector chose '{str(d.get('choice'))[:60]}', which is not an available option, so no C was rendered: " + str(d.get("reason", ""))[:240]
     if chosen is None:
         return None, "no C chosen: " + str(d.get("reason", ""))[:300] + (f" Needed: {d.get('needed_capability')}" if d.get("needed_capability") else "")
     opt = chosen[0]
@@ -263,26 +265,38 @@ def render_c(plan: Any, manifest: Any, materials: dict[str, VersionMaterial], da
     return {"path": str(r.path), "artifact_hash": r.artifact_hash, "duration_ms": r.duration_ms, "render_ms": r.render_ms + r.verify_ms}
 
 
-def _new_weaknesses(c_audit: AuditReport, plan: Any, audits: dict[str, AuditReport]) -> list[str]:
-    """Medium/high findings in C whose source moment carried no finding in the version it came from."""
+def _new_weaknesses(c_audit: AuditReport, plan: Any, audits: dict[str, AuditReport], changed_region_ms: tuple[int, int]) -> tuple[list[str], list[str]]:
+    """Medium/high findings in C, split into (new weaknesses, reviewer variance).
+
+    A finding counts as new only if it touches what the edit changed (the changed stretch or a join between sources) and the
+    source moment carried no finding in the version it came from. A finding that lies entirely on untouched material is the
+    fresh reviewer disagreeing with the earlier one about identical content: it is reported as uncertainty, never as a
+    regression caused by the edit."""
     spans = timeline_spans(plan)
     by_asset = {v: k for k, v in ASSET_ID.items()}
-    out = []
+    joins = [spans[s.id][0] for i, s in enumerate(plan.segments) if i > 0 and
+             not (s.asset_id == plan.segments[i - 1].asset_id and s.source_in_ms == plan.segments[i - 1].source_out_ms)]
+    new, variance = [], []
     for f in c_audit.findings:
         if f.severity not in ("medium", "high"):
             continue
-        sources, joins = [], 0
+        sources = []
         for s in plan.segments:
             t0, t1 = spans[s.id]
             a, b = max(f.start_ms, t0), min(f.end_ms, t1)
             if b > a:
                 sources.append((by_asset[s.asset_id], s.source_in_ms + (a - t0), s.source_in_ms + (b - t0)))
-            if f.start_ms < t0 < f.end_ms:
-                joins += 1
+        at_join = any(f.start_ms - 250 <= j <= f.end_ms + 250 for j in joins)
+        in_changed = max(f.start_ms, changed_region_ms[0]) < min(f.end_ms, changed_region_ms[1])
         known = any(any(max(g.start_ms, s0) < min(g.end_ms, s1) for g in audits[lab].findings) for lab, s0, s1 in sources if lab in audits)
-        if not known:
-            out.append(f"{f.start_ms / 1000:.1f}-{f.end_ms / 1000:.1f}s [{f.issue_type}, {f.severity}]{' across a join' if joins else ''}: {f.weakness[:160]}")
-    return out
+        text = f"{f.start_ms / 1000:.1f}-{f.end_ms / 1000:.1f}s [{f.issue_type}, {f.severity}]{' at a join' if at_join else ''}: {f.weakness[:160]}"
+        if known:
+            continue
+        if at_join or in_changed:
+            new.append(text)
+        else:
+            variance.append(f"reviewer variance on unchanged material (the earlier audit did not flag this identical content): {text}")
+    return new, variance
 
 
 @traced("directorloop.abc_run", kind="agent")
@@ -502,11 +516,12 @@ def run_abc(config: ABCConfig, providers: ProviderBundle, data_dir: Path, on_sta
                               Path(evaluated[base_label]["path"]), mats[base_label].words, {k: v for k, v in by_source.items() if v})
             evaluation.vs_base, evaluation.vs_other, evaluation.target_region = results["vs_base"], results["vs_other"], results["target"]
             evaluation.protected = results["protected"]
-            evaluation.new_weaknesses = _new_weaknesses(c_audit, plan, audits)
+            evaluation.new_weaknesses, variance = _new_weaknesses(c_audit, plan, audits, opt.candidate_region_ms)
             verdict = decide_c(vs_base=evaluation.vs_base, vs_other=evaluation.vs_other, target=evaluation.target_region, target_dimensions=proposal.target_dimensions,
                                base_label=base_label, other_label=other_label, protected=evaluation.protected, new_weaknesses=evaluation.new_weaknesses)
             evaluation.outcome, evaluation.outcome_reason = verdict["outcome"], verdict["reason"]
-            evaluation.improved, evaluation.regressed, evaluation.unchanged, evaluation.uncertain = verdict["improved"], verdict["regressed"], verdict["unchanged"], verdict["uncertain"]
+            evaluation.improved, evaluation.regressed, evaluation.unchanged = verdict["improved"], verdict["regressed"], verdict["unchanged"]
+            evaluation.uncertain = verdict["uncertain"] + variance
             att.decision = "accept" if verdict["outcome"] == "improvement" else "reject_keep_inputs"
             att.reason = verdict["reason"]
             if att.decision == "accept":
