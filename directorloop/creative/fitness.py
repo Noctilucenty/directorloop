@@ -21,6 +21,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import weave
+
 from ..domain.assets import AssetManifest
 from ..domain.brief import CreativeBrief
 from ..domain.creative import (
@@ -216,7 +218,6 @@ def pairwise_preference(provider: MediaProbeProvider, control: ProbeMedia, varia
     score = 0.0
     valid = 0
     reasons: list[str] = []
-    import concurrent.futures as cf
 
     def one(call: tuple[ProbeMedia, bool]) -> tuple[str | None, str]:
         media, variant_first = call
@@ -232,7 +233,7 @@ def pairwise_preference(provider: MediaProbeProvider, control: ProbeMedia, varia
         picked_variant = (choice == "1") == variant_first
         return ("variant" if picked_variant else "control"), str(res.data.get("reason", ""))[:120]
 
-    with cf.ThreadPoolExecutor(max_workers=len(calls)) as ex:
+    with weave.ThreadPoolExecutor(max_workers=len(calls)) as ex:
         for outcome, reason in ex.map(one, calls):
             if outcome is None:
                 continue

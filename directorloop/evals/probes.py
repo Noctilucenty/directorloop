@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-import concurrent.futures as cf
 from pathlib import Path
+
+import weave
 
 from ..domain.evaluation import ProbeAnswer, ProbeModality
 from ..domain.truth import EvaluationSuite
@@ -68,7 +69,7 @@ def run_probe_trials(
         return provider.answer_questions(media, views, seed=trial)
 
     answers: list[ProbeAnswer] = []
-    with cf.ThreadPoolExecutor(max_workers=max(1, min(concurrency, len(jobs)))) as ex:
+    with weave.ThreadPoolExecutor(max_workers=max(1, min(concurrency, len(jobs)))) as ex:
         for batch in ex.map(one, jobs):
             answers.extend(batch)
     return answers

@@ -9,10 +9,12 @@ from __future__ import annotations
 
 import base64
 import time
+from collections.abc import Callable
 from typing import Any
 
 from ..domain.evaluation import ProbeAnswer
 from ..domain.truth import ProbeQuestionView
+from ..observability.weave_ops import traced
 from .base import (
     NO_MEDIA_SYSTEM_PROMPT,
     VIEWER_SYSTEM_PROMPT,
@@ -156,11 +158,26 @@ class OpenAICompatProvider:
         content = self._media_content(media)
         content.append({"type": "text", "text": instruction})
         messages = [{"role": "system", "content": VIEWER_SYSTEM_PROMPT}, {"role": "user", "content": content}]
-        return self._chat(messages, schema, temperature=0.1)
+        return _vision_model_call(self.name, self.model, self.reasoning_effort, VIEWER_SYSTEM_PROMPT, media, instruction, schema,
+                                  _send=lambda: self._chat(messages, schema, temperature=0.1))
 
     def complete_json(self, system: str, user: str, schema: dict[str, Any], *, temperature: float = 0.2) -> CompletionResult:
         messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
-        return self._chat(messages, schema, temperature)
+        return _text_model_call(self.name, self.model, self.reasoning_effort, system, user, schema, _send=lambda: self._chat(messages, schema, temperature))
+
+
+@traced("model_call.vision", kind="llm")
+def _vision_model_call(provider_name: str, model: str, reasoning_effort: str | None, system_prompt: str, media: ProbeMedia, instruction: str,
+                       schema: dict[str, Any], _send: Callable[[], CompletionResult]) -> CompletionResult:
+    """One vision request, traced with the exact instruction, frame timestamps and transcript (image bytes are not stored)."""
+    return _send()
+
+
+@traced("model_call.text", kind="llm")
+def _text_model_call(provider_name: str, model: str, reasoning_effort: str | None, system_prompt: str, user_prompt: str, schema: dict[str, Any],
+                     _send: Callable[[], CompletionResult]) -> CompletionResult:
+    """One text request, traced with the exact system and user prompts."""
+    return _send()
 
 
 def wandb_inference_provider(api_key: str, model: str, project_path: str, role: str, vision: bool) -> OpenAICompatProvider:

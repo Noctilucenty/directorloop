@@ -16,11 +16,12 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+from ..audit.models import OBJECTIVES, AuditReport, RepairRun
 from ..config import REPO_ROOT, Settings, get_settings
 from ..creative.design import design_experiment
 from ..creative.experiment import classify_arm, run_creative_experiment
@@ -29,15 +30,22 @@ from ..creative.investigate import investigate
 from ..creative.mutate import experiment_brief, identity_plan, source_manifest
 from ..creative.policy import load_policy, save_policy
 from ..domain.creative import CreativeExperiment, ReferenceCorpus, RetentionSeries
+from ..domain.ids import utc_now_iso as utc_now_iso_str
 from ..jobs import IdempotencyConflict, JobStore, JobWorker
 from ..observability import init_weave, weave_status
 from ..observability.weave_ops import flush
 from ..providers import build_providers
 from ..review.server import summarize as review_summary
+from ..runtime.director import EDIT_TYPES, DirectorRun, RunConfig, load_run, run_director, runs_dir
 
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 HOOK_RE = re.compile(r"^[0-9a-f]{40}_hook3000$")
 VIDEO_ID_RE = re.compile(r"^[a-z0-9_\-]{2,80}$")
+RUN_ID_RE = re.compile(r"^run_[0-9a-f]+_[0-9a-f]+$")
+AUDIT_ID_RE = re.compile(r"^audit_[0-9a-f]+_[0-9a-f]+$")
+REPAIR_ID_RE = re.compile(r"^repair_[0-9a-f]+_[0-9a-f]+$")
+UPLOAD_SUFFIXES = {".mp4", ".mov", ".m4v", ".webm"}
+MAX_UPLOAD_BYTES = 300 * 1024 * 1024
 
 DEMO_VIDEOS = [
     {"video_id": "aptip", "role": "demo_a", "path": "/Users/leon/Desktop/dev/Curio-Automation/data/productions/AP-TIPPE-V4/aptip-custom-captioned.mp4", "title": "Tippe top climbs instead of falling"},
@@ -53,6 +61,16 @@ class ExperimentRequest(BaseModel):
     idempotency_key: str | None = Field(default=None, max_length=120)
 
 
+class RunRequest(BaseModel):
+    video_id: str = Field(pattern=VIDEO_ID_RE.pattern)
+    objective: str = Field(min_length=3, max_length=500)
+    constraints: list[str] = Field(default_factory=list, max_length=12)
+    focus: str | None = None
+    allowed_edits: list[str] | None = None
+    iteration_budget: int = Field(default=3, ge=1, le=8)
+    idempotency_key: str | None = Field(default=None, max_length=120)
+
+
 class Services:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
@@ -62,7 +80,7 @@ class Services:
         self.policy_lock = threading.Lock()
         self.providers = build_providers(settings)
         self.jobs = JobStore(self.data / "directorloop_jobs.db")
-        self.worker = JobWorker(self.jobs, {"experiment": self.run_experiment_job})
+        self.worker = JobWorker(self.jobs, {"experiment": self.run_experiment_job, "run": self.run_director_job})
         self._registry: dict[str, dict[str, Any]] | None = None
 
     # ---- registry -------------------------------------------------------------
@@ -78,6 +96,9 @@ class Services:
         for v in DEMO_VIDEOS:
             if Path(v["path"]).exists():
                 reg[v["video_id"]] = {**v, "category": "educational_short", "source": "owned_curio", "retention": None}
+        for up in self.uploads():
+            if Path(up["path"]).exists():
+                reg[up["video_id"]] = {**up, "role": "upload", "category": "educational_short", "source": "upload", "retention": None}
         corpus = self.corpus()
         if corpus is not None:
             for ref in corpus.references:
@@ -117,7 +138,43 @@ class Services:
                 continue
         return sorted(out, key=lambda e: e.created_at, reverse=True)
 
+    def uploads(self) -> list[dict[str, Any]]:
+        f = self.data / "uploads" / "registry.json"
+        return json.loads(f.read_text(encoding="utf-8")) if f.exists() else []
+
+    def register_upload(self, entry: dict[str, Any]) -> None:
+        d = self.data / "uploads"
+        d.mkdir(parents=True, exist_ok=True)
+        items = [u for u in self.uploads() if u["video_id"] != entry["video_id"]] + [entry]
+        tmp = d / "registry.json.tmp"
+        tmp.write_text(json.dumps(items, indent=2), encoding="utf-8")
+        tmp.replace(d / "registry.json")
+        self._registry = None
+
     # ---- jobs -----------------------------------------------------------------
+    def run_director_job(self, job, on_stage) -> dict[str, Any]:  # noqa: ANN001
+        params = job.params
+        v = self.video(params["video_id"])
+        run_id = "run_" + job.id.removeprefix("job_")
+        config = RunConfig(video_id=v["video_id"], video_path=v["path"], objective=params["objective"], constraints=params.get("constraints") or [],
+                           focus=params.get("focus"), allowed_edits=params.get("allowed_edits"), iteration_budget=int(params.get("iteration_budget", 3)),
+                           category=v.get("category", "educational_short"))
+        try:
+            with self.policy_lock:
+                run = run_director(config, self.providers, self.data, on_stage=on_stage, run_id=run_id, launched_via="api")
+        except BaseException as exc:
+            stored = load_run(self.data, run_id)
+            if stored is not None and stored.status == "running":
+                stored.status, stored.error = "failed", f"{type(exc).__name__}: {str(exc)[:300]}"
+                stored.stop_reason = "the run was canceled" if type(exc).__name__ == "JobCanceled" else "the run stopped with an error"
+                from ..runtime.director import save_run
+
+                save_run(stored, self.data)
+            raise
+        finally:
+            flush()
+        return {"run_id": run.id, "final_version_id": run.final_version_id, "stop_reason": run.stop_reason, "weave_url": run.weave_url, "status": run.status}
+
     def run_experiment_job(self, job, on_stage) -> dict[str, Any]:  # noqa: ANN001
         params = job.params
         v = self.video(params["video_id"])
@@ -361,6 +418,142 @@ def create_app(settings: Settings | None = None, start_worker: bool = True) -> F
                 "decision": e.decision.model_dump(mode="json") if e.decision else None, "policy_updates": e.policy_updates,
                 "reference_patterns": detail.get("reference_patterns", []), "suite": {"id": e.suite_id, "hash": e.suite_hash, "questions": suite_q},
                 "timings_ms": e.timings_ms, "model_calls": e.model_calls, "notes": e.notes}
+
+    # ---- uploads and director runs ------------------------------------------------
+    @app.post("/api/uploads", dependencies=[Depends(auth)])
+    async def upload_video(file: UploadFile = File(...)) -> dict[str, Any]:  # noqa: B008
+        import hashlib
+        import shutil
+
+        from ..media.probe import inspect_media
+
+        suffix = Path(file.filename or "").suffix.lower()
+        if suffix not in UPLOAD_SUFFIXES:
+            raise HTTPException(status_code=415, detail=f"unsupported file type; use one of {sorted(UPLOAD_SUFFIXES)}")
+        d = services.data / "uploads"
+        d.mkdir(parents=True, exist_ok=True)
+        tmp = d / f".incoming_{threading.get_ident()}{suffix}"
+        h, size = hashlib.sha256(), 0
+        with open(tmp, "wb") as out:
+            while chunk := await file.read(1 << 20):
+                size += len(chunk)
+                if size > MAX_UPLOAD_BYTES:
+                    out.close()
+                    tmp.unlink(missing_ok=True)
+                    raise HTTPException(status_code=413, detail="file is larger than 300 MB")
+                h.update(chunk)
+                out.write(chunk)
+        sha = h.hexdigest()
+        try:
+            info = inspect_media(tmp)
+        except Exception as exc:  # noqa: BLE001
+            tmp.unlink(missing_ok=True)
+            raise HTTPException(status_code=422, detail=f"not a readable video: {str(exc)[:120]}") from exc
+        if not info.width or not info.height or not info.duration_ms:
+            tmp.unlink(missing_ok=True)
+            raise HTTPException(status_code=422, detail="the file has no video stream")
+        final = d / f"{sha}{suffix}"
+        if final.exists():
+            tmp.unlink(missing_ok=True)
+        else:
+            shutil.move(str(tmp), final)
+        title = re.sub(r"[^A-Za-z0-9 ._\-]", "", Path(file.filename or "upload").stem)[:80] or "upload"
+        entry = {"video_id": f"upl-{sha[:12]}", "path": str(final), "title": title, "sha256": sha, "duration_ms": info.duration_ms,
+                 "width": info.width, "height": info.height, "has_audio": bool(info.has_audio), "uploaded_at": utc_now_iso_str()}
+        services.register_upload(entry)
+        return {k: entry[k] for k in ("video_id", "title", "sha256", "duration_ms", "width", "height", "has_audio")} | {"media_url": f"/media/source/{entry['video_id']}.mp4"}
+
+    @app.post("/api/runs", dependencies=[Depends(auth)])
+    def start_run(body: RunRequest) -> dict[str, Any]:
+        services.video(body.video_id)
+        if body.focus is not None and body.focus not in OBJECTIVES:
+            raise HTTPException(status_code=422, detail=f"focus must be one of {OBJECTIVES}")
+        if body.allowed_edits is not None and any(e not in EDIT_TYPES for e in body.allowed_edits):
+            raise HTTPException(status_code=422, detail=f"allowed_edits must be a subset of {list(EDIT_TYPES)}")
+        params = body.model_dump(exclude={"idempotency_key"})
+        try:
+            job, created = services.jobs.create("run", params, idempotency_key=body.idempotency_key)
+        except IdempotencyConflict as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        return {"job_id": job.id, "run_id": "run_" + job.id.removeprefix("job_"), "created": created}
+
+    def _run_summary(r: DirectorRun) -> dict[str, Any]:
+        return {"id": r.id, "video_id": r.config.video_id, "status": r.status, "created_at": r.created_at, "ended_at": r.ended_at, "objective": r.config.objective,
+                "iteration_budget": r.config.iteration_budget, "iterations": len([i for i in r.iterations if i.finding_id]),
+                "decisions": [i.decision for i in r.iterations], "final_version_id": r.final_version_id, "final_decision": r.final_decision,
+                "stop_reason": r.stop_reason, "weave_url": r.weave_url, "launched_via": r.launched_via, "total_ms": r.timings_ms.get("total_ms")}
+
+    @app.get("/api/runs", dependencies=[Depends(auth)])
+    def list_runs() -> list[dict[str, Any]]:
+        d = runs_dir(services.data)
+        out = []
+        for f in sorted(d.glob("run_*.json"), reverse=True) if d.exists() else []:
+            try:
+                out.append(_run_summary(DirectorRun.model_validate_json(f.read_text(encoding="utf-8"))))
+            except ValueError:
+                continue
+        return out
+
+    @app.get("/api/runs/{run_id}", dependencies=[Depends(auth)])
+    def run_detail(run_id: str) -> dict[str, Any]:
+        if not RUN_ID_RE.match(run_id):
+            raise HTTPException(status_code=404)
+        r = load_run(services.data, run_id)
+        if r is None:
+            raise HTTPException(status_code=404)
+        body = r.model_dump(mode="json")
+        body["original_media_url"] = f"/media/source/{r.config.video_id}.mp4"
+        body["final_media_url"] = _media_url(r.final_path) or body["original_media_url"]
+        for it in body["iterations"]:
+            it["candidate_media_url"] = _media_url(it.get("candidate_path"))
+        return body
+
+    def _audit_view(a: AuditReport) -> dict[str, Any]:
+        body = a.model_dump(mode="json")
+
+        def frame_url(path: str) -> str | None:
+            p = Path(path)
+            return f"/media/audit/{a.id}/{p.stem}.jpg" if p.parent.name == "frames" and p.stem.isdigit() else None
+
+        for group in ("findings", "strengths"):
+            for item in body[group]:
+                for ef in item.get("evidence_frames", []):
+                    ef["url"] = frame_url(ef.pop("path"))
+        body["media_url"] = _media_url(a.artifact_path)
+        body.pop("artifact_path", None)
+        return body
+
+    @app.get("/api/audits/{audit_id}", dependencies=[Depends(auth)])
+    def audit_detail(audit_id: str) -> dict[str, Any]:
+        if not AUDIT_ID_RE.match(audit_id):
+            raise HTTPException(status_code=404)
+        f = services.data / "audit" / audit_id / "audit.json"
+        if not f.exists():
+            raise HTTPException(status_code=404)
+        return _audit_view(AuditReport.model_validate_json(f.read_text(encoding="utf-8")))
+
+    @app.get("/api/repairs/{repair_id}", dependencies=[Depends(auth)])
+    def repair_detail(repair_id: str) -> dict[str, Any]:
+        if not REPAIR_ID_RE.match(repair_id):
+            raise HTTPException(status_code=404)
+        f = services.data / "repairs" / f"{repair_id}.json"
+        if not f.exists():
+            raise HTTPException(status_code=404)
+        rr = RepairRun.model_validate_json(f.read_text(encoding="utf-8"))
+        body = rr.model_dump(mode="json")
+        body["candidate_media_url"] = _media_url(rr.candidate_path)
+        body.pop("original_path", None)
+        body.pop("candidate_path", None)
+        return body
+
+    @app.get("/media/audit/{audit_id}/{t_ms}.jpg")
+    def media_audit_frame(audit_id: str, t_ms: str) -> FileResponse:
+        if not AUDIT_ID_RE.match(audit_id) or not t_ms.isdigit() or len(t_ms) > 7:
+            raise HTTPException(status_code=404)
+        f = services.data / "audit" / audit_id / "frames" / f"{t_ms}.jpg"
+        if not f.exists():
+            raise HTTPException(status_code=404)
+        return FileResponse(f, media_type="image/jpeg")
 
     # ---- policy, corpus, transfer, reviews --------------------------------------
     @app.get("/api/policy", dependencies=[Depends(auth)])

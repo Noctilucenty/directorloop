@@ -61,7 +61,7 @@ def _redact(obj: Any, depth: int = 0) -> Any:
 def redact_inputs(inputs: dict[str, Any]) -> dict[str, Any]:
     out: dict[str, Any] = {}
     for k, v in inputs.items():
-        if k in ("self", "provider", "providers", "planner", "on_stage", "is_cancelled"):
+        if k in ("self", "provider", "providers", "planner", "on_stage", "is_cancelled") or str(k).startswith("_"):
             continue
         out[k] = "[redacted]" if str(k).lower() in _REDACT_KEYS else _redact(v)
     return out
