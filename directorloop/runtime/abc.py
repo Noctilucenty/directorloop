@@ -541,6 +541,13 @@ def run_abc(config: ABCConfig, providers: ProviderBundle, data_dir: Path, on_sta
         return finish("completed", f"attempt budget of {config.iteration_budget} used")
     except BudgetExceeded as exc:
         return finish("completed", f"stopped by a run limit: {exc}")
+    except Exception as exc:  # noqa: BLE001 - a failed provider or stage is an explicit stop state, never a record left "running"
+        if type(exc).__name__ == "JobCanceled":
+            run.manual_interventions.append(f"canceled by the operator during a run: {str(exc)[:160]}")
+            finish("failed", "the run was canceled", error=str(exc)[:300])
+            raise
+        kind = "the model provider failed" if isinstance(exc, ProviderError) else f"a stage failed ({type(exc).__name__})"
+        return finish("failed", f"{kind}: {str(exc)[:300]}", error=f"{type(exc).__name__}: {str(exc)[:300]}")
 
 
 def judge_c(probe: Any, context: DeclaredContext, c_media: Any, media: dict[str, Any], base_label: str, other_label: str, c_path: Path, c_words: list[Any],

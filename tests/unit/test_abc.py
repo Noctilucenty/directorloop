@@ -338,3 +338,16 @@ def test_new_weakness_only_counts_where_the_edit_changed_something() -> None:
     assert [n.split(" [")[0] for n in new] == ["4.1-5.0s"], new  # inside the swapped part
     assert len(variance) == 2 and all("unchanged material" in v for v in variance)  # 1.0-2.0s and 9.0-11.0s: untouched A footage
     # 6.5-7.0s is a known A weakness at the same source moment: neither new nor variance
+
+
+def test_provider_failure_is_an_explicit_failed_record(monkeypatch: pytest.MonkeyPatch, clips: tuple[Path, Path], tmp_path: Path) -> None:
+    install(monkeypatch, clips, {"AB:whole": "A"})
+
+    def broken_audit(**kw: Any) -> AuditReport:
+        raise ProviderError("openai request failed: Error code: 429 insufficient_quota")
+
+    monkeypatch.setattr(R, "run_audit", broken_audit)
+    run = R.run_abc(config(clips), bundle(ScriptedPlanner([None])), tmp_path / "data")
+    assert run.status == "failed" and run.stop_reason.startswith("the model provider failed") and "429" in run.stop_reason
+    stored = R.load_abc(tmp_path / "data", run.id)
+    assert stored is not None and stored.status == "failed", "no record is left running"

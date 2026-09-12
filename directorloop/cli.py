@@ -85,7 +85,22 @@ def cmd_run(args: argparse.Namespace) -> int:
     w = init_weave(s)
     print(f"weave: {'connected to ' + w.project if w.connected else 'not connected (' + w.reason + ')'}")
     providers = build_providers(s)
-    run = run_director(config, providers, s.data_dir, on_stage=_progress, launched_via="cli")
+    from .domain.ids import new_id
+    from .runtime.director import load_run, save_run
+
+    run_id = new_id("run")
+    try:
+        run = run_director(config, providers, s.data_dir, on_stage=_progress, run_id=run_id, launched_via="cli")
+    except Exception as exc:  # noqa: BLE001 - close the record with the real reason instead of leaving it "running"
+        flush()
+        stored = load_run(s.data_dir, run_id)
+        if stored is not None and stored.status == "running":
+            stored.status, stored.error = "failed", f"{type(exc).__name__}: {str(exc)[:300]}"
+            stored.stop_reason = f"the run stopped with an error: {str(exc)[:300]}"
+            save_run(stored, s.data_dir)
+            print_run(stored)
+        print(f"run {run_id} failed: {type(exc).__name__}: {str(exc)[:300]}", file=sys.stderr)
+        return 1
     flush()
     print_run(run)
     return 0 if run.status == "completed" else 1
