@@ -27,37 +27,47 @@ _REDACT_KEYS = {"api_key", "authorization", "token", "secret", "password", "corr
 
 
 def _redact(obj: Any, depth: int = 0) -> Any:
-    if depth > 6:
-        return obj
+    """JSON-safe, secret-free copy. Pydantic models and dataclasses become plain dicts at every depth:
+    Weave treats any nested object with a `ref` attribute as its own reference type, and several of our
+    evidence records have a `ref` field."""
+    import dataclasses
+    import enum
+    from pathlib import PurePath
+
+    if depth > 8:
+        return str(obj)[:200]
+    if hasattr(obj, "model_dump") and not isinstance(obj, type):
+        try:
+            obj = obj.model_dump(mode="json")
+        except Exception:  # noqa: BLE001
+            return str(obj)[:200]
+    elif dataclasses.is_dataclass(obj) and not isinstance(obj, type):
+        obj = {f.name: getattr(obj, f.name) for f in dataclasses.fields(obj)}
     if isinstance(obj, dict):
-        return {k: ("[redacted]" if str(k).lower() in _REDACT_KEYS else _redact(v, depth + 1)) for k, v in obj.items()}
-    if isinstance(obj, list):
-        return [_redact(v, depth + 1) for v in obj[:200]]
+        return {str(k): ("[redacted]" if str(k).lower() in _REDACT_KEYS else _redact(v, depth + 1)) for k, v in list(obj.items())[:200]}
+    if isinstance(obj, list | tuple | set):
+        return [_redact(v, depth + 1) for v in list(obj)[:200]]
     if isinstance(obj, bytes):
         return f"<{len(obj)} bytes>"
-    return obj
+    if isinstance(obj, enum.Enum):
+        return obj.value
+    if isinstance(obj, PurePath):
+        return str(obj)
+    if obj is None or isinstance(obj, bool | int | float | str):
+        return obj
+    return str(obj)[:200]
 
 
 def redact_inputs(inputs: dict[str, Any]) -> dict[str, Any]:
     out: dict[str, Any] = {}
     for k, v in inputs.items():
-        if k in ("self", "provider", "providers"):
+        if k in ("self", "provider", "providers", "planner", "on_stage", "is_cancelled"):
             continue
-        if hasattr(v, "model_dump"):
-            try:
-                v = v.model_dump(mode="json")
-            except Exception:  # noqa: BLE001
-                v = str(v)
-        out[k] = _redact(v)
+        out[k] = "[redacted]" if str(k).lower() in _REDACT_KEYS else _redact(v)
     return out
 
 
 def redact_output(output: Any) -> Any:
-    if hasattr(output, "model_dump"):
-        try:
-            return _redact(output.model_dump(mode="json"))
-        except Exception:  # noqa: BLE001
-            return str(output)
     return _redact(output)
 
 
