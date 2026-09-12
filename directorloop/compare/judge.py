@@ -20,7 +20,7 @@ from ..observability.weave_ops import set_display_name, traced
 from ..providers.base import MediaProbeProvider, ProbeMedia, ProviderError
 from .models import DeclaredContext, DimensionJudgment, PairComparison
 
-RUBRIC_VERSION = "abc-rubric-v1"
+RUBRIC_VERSION = "abc-rubric-v2"  # v2: blunt reasons; denser whole-video sampling (v1 gave unstable verdicts on 7 of 8 dimensions for a trim)
 
 WHOLE_DIMENSIONS: dict[str, str] = {
     "opening_interest": "In the first seconds, which version gives this viewer a clearer reason to keep watching?",
@@ -38,7 +38,7 @@ REGION_DIMENSIONS: dict[str, str] = {
     "visual_narration_alignment": "In this stretch, which version's pictures better show what is being said?",
     "pacing": "In this stretch, which version's timing better fits what is shown and said?",
 }
-SAMPLING = {"whole": {"frames": 8, "width": 384, "words": "timed words of the rendered speech"},
+SAMPLING = {"whole": {"fps": 2, "max_frames": 24, "width": 320, "words": "timed words of the rendered speech"},
             "region": {"fps": 3, "max_frames": 10, "width": 384, "words": "timed words inside the stretch"}}
 VERDICT_RULES = ("Each dimension is asked in both presentation orders (repeats=1). Same label in both orders -> that label; 'same' in both -> "
                  "same; different answers -> unstable; no valid answer -> unclear. Votes are kept.")
@@ -48,7 +48,7 @@ JUDGE_INSTRUCTION = """Frames with timestamps under 100 s belong to Version 1; f
 Both versions present the same idea. They are {scope_text}.
 The viewing situation for both: {encounter}. The intended viewer: {audience}. The purpose of the video: {objective}.{payoff}
 You did not hear the audio; the words are a transcript of the rendered speech with times.
-Answer every question with '1', '2', 'same' (no meaningful difference) or 'unclear' (these frames and words cannot tell), and one short reason tied to what you saw or read.
+Answer every question with '1', '2', 'same' (no meaningful difference) or 'unclear' (these frames and words cannot tell), and one short, blunt reason tied to what you saw or read: say plainly what is worse in the losing version, not polite generalities.
 Questions:
 {questions}
 Finally, overall: which version better serves this viewer and purpose {overall_text}?"""
@@ -69,7 +69,8 @@ def words_text(words: list[Any], start_ms: int = 0, end_ms: int | None = None) -
 
 
 def whole_media(path: Path, duration_ms: int, words: list[Any]) -> ProbeMedia:
-    frames = sample_frames(path, duration_ms, count=SAMPLING["whole"]["frames"], max_width=SAMPLING["whole"]["width"])
+    count = max(8, min(SAMPLING["whole"]["max_frames"], int(duration_ms / 1000 * SAMPLING["whole"]["fps"])))
+    frames = sample_frames(path, duration_ms, count=count, max_width=SAMPLING["whole"]["width"])
     return ProbeMedia(kind="frames", duration_ms=duration_ms, frames=frames, transcript=words_text(words))
 
 

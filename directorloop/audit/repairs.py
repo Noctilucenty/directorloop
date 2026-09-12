@@ -152,7 +152,7 @@ def build_candidates(finding: AuditFinding, genome: CreativeGenome, video_path: 
 
 CHOOSE_SYSTEM = ("You choose which executable edit, if any, should be tried against a weakness a reviewer found in a short video. Be strict: "
                  "an edit that is merely similar to the proposed repair does not implement it, and an edit that does not plausibly reduce the "
-                 "specific weakness should not be tried. Trying an edit costs a render and a fresh review; choosing nothing is acceptable.")
+                 "specific weakness should not be tried. Trying an edit costs a render and a fresh review; choosing nothing is acceptable. State reasons and risks bluntly.")
 
 CHOOSE_SCHEMA: dict[str, Any] = {
     "type": "object",

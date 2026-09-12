@@ -265,7 +265,7 @@ def _pair(a: ProbeMedia, b: ProbeMedia) -> ProbeMedia:
 def pairwise(provider: MediaProbeProvider, original: ProbeMedia, candidate: ProbeMedia, question: str, repeats: int = 2) -> tuple[float | None, StabilityRecord, list[str]]:
     set_display_name("pairwise_" + question[:24].replace(" ", "_"))
     instruction = ("Frames with timestamps under 100 s belong to Version 1; frames at 100 s or later belong to Version 2 (subtract 100 s). "
-                   f"{question} Answer '1', '2' or 'no_preference' with one short reason.")
+                   f"{question} Answer '1', '2' or 'no_preference' with one short, blunt reason naming what is worse in the other version.")
     jobs = []
     for r in range(repeats):
         jobs.append((r, False, _pair(original, candidate)))  # candidate is version 2

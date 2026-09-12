@@ -169,7 +169,7 @@ def decide_c(*, vs_base: PairComparison | None, vs_other: PairComparison | None,
 
 SELECT_SYSTEM = ("You direct a third version (C) of a short video from two existing edits (A and B) of the same idea. You may only choose one of "
                  "the executable options listed. Choose the smallest change that the evidence says should help the declared viewer and objective, "
-                 "keep what already works, and name the tradeoffs. Model judgments in the evidence are predictions, not audience data. Choosing "
+                 "keep what already works, and name the tradeoffs bluntly, including what C will lose. Model judgments in the evidence are predictions, not audience data. Choosing "
                  "nothing is acceptable when no option is supported by the evidence.")
 
 SELECT_SCHEMA: dict[str, Any] = {

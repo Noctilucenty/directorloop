@@ -165,7 +165,8 @@ Answer as that viewer, only from what was shown or said up to {end:.1f}s:
 - open_question: the question on your mind right now (empty if none)
 - reaction to the moment you just watched: engaged, neutral, losing_interest or confused
 - attention_risk: how likely you are to scroll away right after this moment (low, medium, high)
-- cause: the specific thing in the moment you just watched (what you saw, read on screen, or heard) that caused this reaction"""
+- cause: the specific thing in the moment you just watched (what you saw, read on screen, or heard) that caused this reaction
+Be blunt, the way a real viewer talks to a friend: if this moment is boring, confusing or pointless, say so plainly and name exactly what caused it. Do not be polite, and do not invent problems that are not there."""
 
 
 def _words_block(words: list[Word], start_ms: int, end_ms: int) -> str:
@@ -250,7 +251,8 @@ Produce:
 2. strengths: sections that work and must be preserved, with why.
 3. audience predictions (YES, MAYBE, NO or INSUFFICIENT_EVIDENCE with a short reason): would the opening make an unfamiliar viewer stop; would they keep watching and where interest may weaken; would they finish; is there a reason to like; would they send it and to whom; a natural reason to comment; value in saving or replaying; a reason to visit the creator. Not every video needs every action.
 4. overall_summary: two or three plain sentences.
-Use only evidence present in these inputs. Keep timestamps as precise as the frames allow; do not claim precision you cannot see."""
+Use only evidence present in these inputs. Keep timestamps as precise as the frames allow; do not claim precision you cannot see.
+Write like a blunt, experienced editor giving notes to a colleague: state each weakness plainly, say exactly what fails and what it costs the viewer, with no softening, hedging filler or generic praise. Blunt is not harsh for effect: every criticism needs evidence from these inputs, and zero findings is still the right answer when nothing fails."""
 
 
 @traced("diagnose_audit", kind="llm")
