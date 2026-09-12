@@ -1,0 +1,28 @@
+Metadata-Version: 2.4
+Name: directorloop
+Version: 0.1.0
+Summary: Intent-aware creative repair and learning loop for short videos
+Requires-Python: >=3.12
+Requires-Dist: fastapi
+Requires-Dist: uvicorn[standard]
+Requires-Dist: sqlalchemy
+Requires-Dist: pydantic>=2
+Requires-Dist: pydantic-settings
+Requires-Dist: httpx
+Requires-Dist: weave
+Requires-Dist: wandb
+Requires-Dist: pillow
+Requires-Dist: numpy
+Requires-Dist: python-multipart
+Requires-Dist: google-genai
+Requires-Dist: openai
+Requires-Dist: alembic
+Requires-Dist: psycopg[binary]
+Requires-Dist: pyyaml
+Requires-Dist: python-dotenv
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: pytest-asyncio; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
+Requires-Dist: mypy; extra == "dev"
+Requires-Dist: marimo; extra == "dev"

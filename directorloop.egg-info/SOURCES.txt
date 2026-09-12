@@ -1,0 +1,7 @@
+pyproject.toml
+directorloop.egg-info/PKG-INFO
+directorloop.egg-info/SOURCES.txt
+directorloop.egg-info/dependency_links.txt
+directorloop.egg-info/entry_points.txt
+directorloop.egg-info/requires.txt
+directorloop.egg-info/top_level.txt

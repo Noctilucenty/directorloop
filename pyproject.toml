@@ -1,0 +1,45 @@
+[project]
+name = "directorloop"
+version = "0.1.0"
+description = "Intent-aware creative repair and learning loop for short videos"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi", "uvicorn[standard]", "sqlalchemy", "pydantic>=2", "pydantic-settings",
+  "httpx", "weave", "wandb", "pillow", "numpy", "python-multipart", "google-genai",
+  "openai", "alembic", "psycopg[binary]", "pyyaml", "python-dotenv",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-asyncio", "ruff", "mypy", "marimo"]
+
+[project.scripts]
+directorloop = "directorloop.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["directorloop*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+check_untyped_defs = true
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "I001"]
+"notebooks/*.py" = ["E402", "F401", "B018"]
