@@ -52,6 +52,7 @@ class Job:
             "id": self.id, "kind": self.kind, "state": self.state, "stage": self.stage, "created_at": self.created_at,
             "started_at": self.started_at, "ended_at": self.ended_at, "elapsed_ms": self.elapsed_ms(), "error": self.error,
             "experiment_id": (self.result or {}).get("experiment_id"), "run_id": (self.result or {}).get("run_id") or ("run_" + self.id.removeprefix("job_") if self.kind == "run" else None),
+            "abc_id": (self.result or {}).get("abc_id") or ("abc_" + self.id.removeprefix("job_") if self.kind == "abc" else None),
             "params": self.params, "cancel_requested": self.cancel_requested,
         }
 

@@ -22,6 +22,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from ..audit.models import OBJECTIVES, AuditReport, RepairRun
+from ..compare.models import ABCRun, DeclaredContext
 from ..config import REPO_ROOT, Settings, get_settings
 from ..creative.design import design_experiment
 from ..creative.experiment import classify_arm, run_creative_experiment
@@ -36,16 +37,18 @@ from ..observability import init_weave, weave_status
 from ..observability.weave_ops import flush
 from ..providers import build_providers
 from ..review.server import summarize as review_summary
+from ..runtime.abc import ABCConfig, abc_dir, load_abc, run_abc
 from ..runtime.director import EDIT_TYPES, DirectorRun, RunConfig, load_run, run_director, runs_dir
 
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 HOOK_RE = re.compile(r"^[0-9a-f]{40}_hook3000$")
 VIDEO_ID_RE = re.compile(r"^[a-z0-9_\-]{2,80}$")
 RUN_ID_RE = re.compile(r"^run_[0-9a-f]+_[0-9a-f]+$")
+ABC_ID_RE = re.compile(r"^abc_[0-9a-f]+_[0-9a-f]+$")
 AUDIT_ID_RE = re.compile(r"^audit_[0-9a-f]+_[0-9a-f]+$")
 REPAIR_ID_RE = re.compile(r"^repair_[0-9a-f]+_[0-9a-f]+$")
 UPLOAD_SUFFIXES = {".mp4", ".mov", ".m4v", ".webm"}
-FEATURES = {"abc": False, "url_ingest": False, "classify": False}  # switched on as each backend path is implemented and tested
+FEATURES = {"abc": True, "url_ingest": False, "classify": False}  # switched on as each backend path is implemented and tested
 MAX_UPLOAD_BYTES = 300 * 1024 * 1024
 
 DEMO_VIDEOS = [
@@ -72,6 +75,21 @@ class RunRequest(BaseModel):
     idempotency_key: str | None = Field(default=None, max_length=120)
 
 
+class ABCRequest(BaseModel):
+    a_video_id: str = Field(pattern=VIDEO_ID_RE.pattern)
+    b_video_id: str = Field(pattern=VIDEO_ID_RE.pattern)
+    objective: str = Field(min_length=3, max_length=400)
+    creative_type: str = Field(default="educational short", max_length=120)
+    audience: str = Field(default="general viewers who do not know the topic", max_length=200)
+    expected_payoff: str = Field(default="", max_length=300)
+    encounter: str = Field(default="a cold scrolling feed on a phone with sound on", max_length=200)
+    constraints: list[str] = Field(default_factory=list, max_length=12)
+    iteration_budget: int = Field(default=2, ge=1, le=5)
+    max_model_calls: int | None = Field(default=260, ge=20, le=2000)
+    deadline_s: int | None = Field(default=1500, ge=60, le=7200)
+    idempotency_key: str | None = Field(default=None, max_length=120)
+
+
 class Services:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
@@ -81,7 +99,7 @@ class Services:
         self.policy_lock = threading.Lock()
         self.providers = build_providers(settings)
         self.jobs = JobStore(self.data / "directorloop_jobs.db")
-        self.worker = JobWorker(self.jobs, {"experiment": self.run_experiment_job, "run": self.run_director_job})
+        self.worker = JobWorker(self.jobs, {"experiment": self.run_experiment_job, "run": self.run_director_job, "abc": self.run_abc_job})
         self._registry: dict[str, dict[str, Any]] | None = None
 
     # ---- registry -------------------------------------------------------------
@@ -175,6 +193,31 @@ class Services:
         finally:
             flush()
         return {"run_id": run.id, "final_version_id": run.final_version_id, "stop_reason": run.stop_reason, "weave_url": run.weave_url, "status": run.status}
+
+    def run_abc_job(self, job, on_stage) -> dict[str, Any]:  # noqa: ANN001
+        params = job.params
+        a, b = self.video(params["a_video_id"]), self.video(params["b_video_id"])
+        abc_id = "abc_" + job.id.removeprefix("job_")
+        ctx = DeclaredContext(objective=params["objective"], creative_type=params.get("creative_type") or "educational short",
+                              audience=params.get("audience") or "general viewers who do not know the topic", expected_payoff=params.get("expected_payoff") or "",
+                              encounter=params.get("encounter") or "a cold scrolling feed on a phone with sound on")
+        config = ABCConfig(a_video_id=a["video_id"], a_path=a["path"], b_video_id=b["video_id"], b_path=b["path"], context=ctx, constraints=params.get("constraints") or [],
+                           iteration_budget=int(params.get("iteration_budget", 2)), max_model_calls=params.get("max_model_calls"), deadline_s=params.get("deadline_s"))
+        try:
+            with self.policy_lock:
+                run = run_abc(config, self.providers, self.data, on_stage=on_stage, abc_id=abc_id, launched_via="api")
+        except BaseException as exc:
+            stored = load_abc(self.data, abc_id)
+            if stored is not None and stored.status == "running":
+                from ..runtime.abc import save_abc
+
+                stored.status, stored.error = "failed", f"{type(exc).__name__}: {str(exc)[:300]}"
+                stored.stop_reason = "the run was canceled" if type(exc).__name__ == "JobCanceled" else "the run stopped with an error"
+                save_abc(stored, self.data)
+            raise
+        finally:
+            flush()
+        return {"abc_id": run.id, "final_version": run.final_version, "stop_reason": run.stop_reason, "weave_url": run.weave_url, "status": run.status}
 
     def run_experiment_job(self, job, on_stage) -> dict[str, Any]:  # noqa: ANN001
         params = job.params
@@ -556,6 +599,57 @@ def create_app(settings: Settings | None = None, start_worker: bool = True) -> F
         if not f.exists():
             raise HTTPException(status_code=404)
         return FileResponse(f, media_type="image/jpeg")
+
+    # ---- A/B-to-C -------------------------------------------------------------------
+    @app.post("/api/abc", dependencies=[Depends(auth)])
+    def start_abc(body: ABCRequest) -> dict[str, Any]:
+        if body.a_video_id == body.b_video_id:
+            raise HTTPException(status_code=422, detail="A and B must be two different edits")
+        services.video(body.a_video_id)
+        services.video(body.b_video_id)
+        params = body.model_dump(exclude={"idempotency_key"})
+        try:
+            job, created = services.jobs.create("abc", params, idempotency_key=body.idempotency_key)
+        except IdempotencyConflict as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        return {"job_id": job.id, "abc_id": "abc_" + job.id.removeprefix("job_"), "created": created}
+
+    def _abc_summary(r: ABCRun) -> dict[str, Any]:
+        comp = r.comparison
+        return {"id": r.id, "status": r.status, "created_at": r.created_at, "ended_at": r.ended_at, "objective": r.context.objective,
+                "a_video_id": r.versions["A"].video_id if "A" in r.versions else None, "b_video_id": r.versions["B"].video_id if "B" in r.versions else None,
+                "ab_overall": comp.whole.overall.verdict if comp and comp.whole else None, "attempts": len([a for a in r.attempts if a.proposal]),
+                "decisions": [a.decision for a in r.attempts], "final_version": r.final_version, "final_decision": r.final_decision, "stop_reason": r.stop_reason,
+                "weave_url": r.weave_url, "launched_via": r.launched_via, "total_ms": r.timings_ms.get("total_ms"), "rubric_version": r.rubric.get("version")}
+
+    @app.get("/api/abc", dependencies=[Depends(auth)])
+    def list_abc() -> list[dict[str, Any]]:
+        d = abc_dir(services.data)
+        out = []
+        for f in sorted(d.glob("abc_*.json"), reverse=True) if d.exists() else []:
+            try:
+                out.append(_abc_summary(ABCRun.model_validate_json(f.read_text(encoding="utf-8"))))
+            except ValueError:
+                continue
+        return out
+
+    @app.get("/api/abc/{abc_id}", dependencies=[Depends(auth)])
+    def abc_detail(abc_id: str) -> dict[str, Any]:
+        if not ABC_ID_RE.match(abc_id):
+            raise HTTPException(status_code=404)
+        r = load_abc(services.data, abc_id)
+        if r is None:
+            raise HTTPException(status_code=404)
+        body = r.model_dump(mode="json")
+        for v in body["versions"].values():
+            v["media_url"] = _media_url(v.get("evaluated_path"))
+            v.pop("evaluated_path", None)
+            v.pop("original_path", None)
+        for att in body["attempts"]:
+            att["render_media_url"] = _media_url(att.get("render_path"))
+            att.pop("render_path", None)
+        body["runtime"] = {k: v for k, v in body.get("runtime", {}).items() if k != "state"}
+        return body
 
     # ---- policy, corpus, transfer, reviews --------------------------------------
     @app.get("/api/policy", dependencies=[Depends(auth)])
