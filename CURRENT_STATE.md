@@ -3,7 +3,7 @@
 Handoff file for whoever continues this build (Claude Code or Codex). Only verified facts go here. Newest entry wins over
 any older prompt or plan.
 
-Last updated: 2026-09-12 14:50 PDT (main at 519f365)
+Last updated: 2026-09-12 15:10 PDT (main at 18dab05)
 
 ## Direction (authoritative, in order)
 
@@ -13,6 +13,14 @@ Last updated: 2026-09-12 14:50 PDT (main at 519f365)
 2. `DIRECTORLOOP_FINAL_GOAL.md` (in this repo): the cold-audience audit contract, repair routes A/B/C, honest outcomes.
 3. The runtime acceptance test: from one launch (app, API or CLI), audit, diagnose, choose a repair, render, re-evaluate,
    compare and decide, including justified alternatives after failures and explicit stops.
+
+## BLOCKER (15:00 PDT)
+
+The OpenAI account behind OPENAI_API_KEY has no credits left (HTTP 429 insufficient_quota, credit_balance_exhausted).
+Every audit, comparison and selection call uses it (gpt-5.6-terra reviewer, gpt-5.6-sol selector), so no new model-based
+run can complete. Nobody should add credits or switch paid providers without Leon's decision. Options: add OpenAI credits
+(keeps results comparable with the runs below), or switch DL_PROBE_PROVIDER / DL_PLANNER_PROVIDER to W&B Inference models
+that passed setup smoke tests (new rubric version; earlier runs are not comparable).
 
 ## Who owns what right now
 
@@ -26,7 +34,7 @@ Last updated: 2026-09-12 14:50 PDT (main at 519f365)
 ## Commands
 
 ```
-.venv/bin/python -m pytest -p no:warnings        # 80 tests pass at 519f365
+.venv/bin/python -m pytest -p no:warnings        # 86 tests pass at 18dab05
 .venv/bin/ruff check directorloop tests scripts   # clean
 .venv/bin/directorloop run VIDEO --objective TEXT [--constraint TEXT] [--budget N] [--focus X] [--allow-edit TYPE]
 .venv/bin/directorloop abc A.mp4 B.mp4 --objective TEXT [--constraint TEXT] [--budget N] [--max-calls N] [--deadline S]
@@ -36,7 +44,9 @@ Last updated: 2026-09-12 14:50 PDT (main at 519f365)
 
 ## API (loopback; optional bearer token DL_LOCAL_AUTH_TOKEN)
 
-- GET /api/health (features: runs, abc true; url_ingest, classify false)
+- GET /api/health (features: runs, abc, url_ingest true; classify false)
+- POST /api/ingest/url (direct media links; Instagram/TikTok/YouTube/X via yt-dlp; SSRF, port, size and time limits); linked videos need owner_confirms_rights to be edited
+- POST /api/audits (Judge Video, audit only), GET /api/audits?video_id=
 - POST /api/uploads (multipart "file"), GET /api/videos, /media/source/{video_id}.mp4
 - POST /api/runs, GET /api/runs, GET /api/runs/{id}; GET /api/audits/{id}; GET /api/repairs/{id}; /media/audit/{id}/{t}.jpg
 - POST /api/abc, GET /api/abc, GET /api/abc/{id}; /media/renders/{sha}.mp4
@@ -73,8 +83,13 @@ A/B-to-C runs (`data/abc`):
   judged the same on every dimension. C1 = trim A's 0.5 s final hold: verified, tie, rejected. Attempt 2 declined.
   Final: keep both inputs. 35 calls, 122 s. Its "new weakness" was reviewer variance on unchanged footage; that case is
   now classified as uncertainty (04ecda5).
-- In progress at this update: Smoot police-payoff-v5 vs relaxed-read-v6 (same words, 7.5 s vs 10.4 s), then
-  progress-proof-v2 vs hybrid-v3.
+- abc_1a0979874ab_05c246c4, Smoot police-payoff-v5 (A, 7.5 s) vs relaxed-read-v6 (B, 10.4 s), identical words, rubric v2:
+  A preferred overall in both orders (opening interest, information progression, pacing). The selector declined every C
+  option (swaps would weaken A's opening or lengthen its ending; needed: phrase-level retiming, which no executable edit
+  offers). Final: keep A. 21 calls, 87 s.
+- abc_1a09799dc01_f3bd31aa, Smoot progress-proof-v2 vs hybrid-v3: failed during the audits when OpenAI credits ran out.
+  The crash left the record running; it was closed by hand (annotated) and the runtime now turns provider failures into
+  explicit failed records (613918c).
 
 Earlier experiment work (policy, Video A experiment, the losing Video B transfer result): `docs/POLICY_EVIDENCE.md`.
 
@@ -101,6 +116,7 @@ Earlier experiment work (policy, Video A experiment, the losing Video B transfer
 
 ## Next
 
-1. Finish the A/B-to-C runs above, pick the demo pair from real results without tuning the evaluator, and document it.
-2. URL ingestion (direct media first) and content classification endpoints for the new frontend flow.
+1. Resolve the model-credit blocker (Leon), then re-run progress-proof-v2 vs hybrid-v3 and pick the demo pair from real results
+   without tuning the evaluator. Across 3 completed A/B-to-C runs no C has been accepted yet; that is the honest state.
+2. Content classification endpoint (creative type, platform guess, speech and captions present) for the new frontend flow.
 3. Wire the frontend to /api/abc and /api/runs once the redesign lands; end-to-end UI test.
