@@ -50,6 +50,8 @@ class Segment(BaseModel):
     crop: CropRect | None = None
     speed: float = 1.0
     audio_policy: Literal["keep", "mute"] = "mute"
+    audio_fade_in_ms: int = Field(default=0, ge=0, le=500)  # softens a hard audio join at a non-contiguous cut
+    audio_fade_out_ms: int = Field(default=0, ge=0, le=500)
     label: str = ""
 
     @model_validator(mode="after")

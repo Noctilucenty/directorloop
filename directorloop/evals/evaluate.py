@@ -48,11 +48,17 @@ def transcribe_cached(artifact_path: Path, artifact_hash: str, cache_dir: Path) 
     cached = cache_dir / f"transcript_{artifact_hash}.json"
     if cached.exists():
         data = json.loads(cached.read_text(encoding="utf-8"))
-        from ..media.transcribe import TranscriptSegment
+        from ..media.transcribe import TranscriptSegment, TranscriptToken
 
         return Transcript(
             text=data["text"],
-            segments=[TranscriptSegment(**s) for s in data.get("segments", [])],
+            segments=[
+                TranscriptSegment(
+                    start_ms=s["start_ms"], end_ms=s["end_ms"], text=s["text"],
+                    tokens=tuple(TranscriptToken(**t) for t in s.get("tokens", [])),
+                )
+                for s in data.get("segments", [])
+            ],
             source=data.get("source", "whisper.cpp"),
             model=data.get("model", ""),
             has_speech=data.get("has_speech", bool(data["text"])),

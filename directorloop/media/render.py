@@ -84,7 +84,15 @@ def build_ffmpeg_argv(
         keep_audio = seg.audio_policy == "keep" and bool(rec.stream and rec.stream.has_audio)
         dur = (seg.source_out_ms - seg.source_in_ms) / 1000
         if keep_audio:
-            filters.append(f"[{i}:a]asetpts=PTS-STARTPTS,aformat=sample_rates=48000:channel_layouts=stereo,atrim=0:{dur:.3f},apad=whole_dur={dur:.3f}[a{i}]")
+            fades = ""
+            if seg.audio_fade_in_ms:
+                fades += f",afade=t=in:st=0:d={seg.audio_fade_in_ms / 1000:.3f}"
+            if seg.audio_fade_out_ms:
+                fades += f",afade=t=out:st={max(0.0, dur - seg.audio_fade_out_ms / 1000):.3f}:d={seg.audio_fade_out_ms / 1000:.3f}"
+            filters.append(
+                f"[{i}:a]asetpts=PTS-STARTPTS,aformat=sample_rates=48000:channel_layouts=stereo,atrim=0:{dur:.3f},"
+                f"apad=whole_dur={dur:.3f}{fades}[a{i}]"
+            )
         else:
             filters.append(f"anullsrc=r=48000:cl=stereo,atrim=0:{dur:.3f}[a{i}]")
     concat_in = "".join(f"[v{i}][a{i}]" for i in seg_indices)

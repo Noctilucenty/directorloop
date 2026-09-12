@@ -20,10 +20,18 @@ DEFAULT_MODEL = Path(os.environ.get("DL_WHISPER_MODEL", str(Path.home() / ".cach
 
 
 @dataclass(frozen=True)
+class TranscriptToken:
+    start_ms: int
+    end_ms: int
+    text: str
+
+
+@dataclass(frozen=True)
 class TranscriptSegment:
     start_ms: int
     end_ms: int
     text: str
+    tokens: tuple[TranscriptToken, ...] = ()
 
 
 @dataclass
@@ -38,7 +46,10 @@ class Transcript:
     def to_dict(self) -> dict:
         return {
             "text": self.text,
-            "segments": [s.__dict__ for s in self.segments],
+            "segments": [
+                {"start_ms": s.start_ms, "end_ms": s.end_ms, "text": s.text, "tokens": [t.__dict__ for t in s.tokens]}
+                for s in self.segments
+            ],
             "source": self.source,
             "model": self.model,
             "has_speech": self.has_speech,
@@ -92,7 +103,7 @@ def transcribe(path: str | Path, model_path: Path | None = None, timeout: int = 
             str(model_path),
             "-f",
             str(wav),
-            "-oj",
+            "-ojf",
             "-of",
             str(out_base),
             "-ml",
@@ -114,8 +125,13 @@ def transcribe(path: str | Path, model_path: Path | None = None, timeout: int = 
         text = (item.get("text") or "").strip()
         if not text or text.startswith("[") and text.endswith("]"):
             continue
+        tokens = tuple(
+            TranscriptToken(start_ms=int(tok.get("offsets", {}).get("from", 0)), end_ms=int(tok.get("offsets", {}).get("to", 0)), text=str(tok.get("text", "")))
+            for tok in item.get("tokens", [])
+            if str(tok.get("text", "")).strip() and not str(tok.get("text", "")).startswith("[_")
+        )
         segments.append(
-            TranscriptSegment(start_ms=int(offsets.get("from", 0)), end_ms=int(offsets.get("to", 0)), text=text)
+            TranscriptSegment(start_ms=int(offsets.get("from", 0)), end_ms=int(offsets.get("to", 0)), text=text, tokens=tokens)
         )
     text = " ".join(s.text for s in segments).strip()
     return Transcript(
