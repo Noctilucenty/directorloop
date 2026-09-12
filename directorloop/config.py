@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     dl_database_url: str = "sqlite:///./data/directorloop.db"
     dl_data_dir: str = "./data"
     dl_local_auth_token: str = ""
+    dl_ingest_allow_private_hosts: bool = False  # tests only: lets link ingestion fetch from loopback
     dl_max_upload_mb: int = 200
     dl_max_iterations: int = 1
     dl_job_deadline_seconds: int = 45

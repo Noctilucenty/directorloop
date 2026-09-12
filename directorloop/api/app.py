@@ -22,6 +22,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from ..audit.models import OBJECTIVES, AuditReport, RepairRun
+from ..audit.review import run_audit
 from ..compare.models import ABCRun, DeclaredContext
 from ..config import REPO_ROOT, Settings, get_settings
 from ..creative.design import design_experiment
@@ -48,7 +49,7 @@ ABC_ID_RE = re.compile(r"^abc_[0-9a-f]+_[0-9a-f]+$")
 AUDIT_ID_RE = re.compile(r"^audit_[0-9a-f]+_[0-9a-f]+$")
 REPAIR_ID_RE = re.compile(r"^repair_[0-9a-f]+_[0-9a-f]+$")
 UPLOAD_SUFFIXES = {".mp4", ".mov", ".m4v", ".webm"}
-FEATURES = {"abc": True, "url_ingest": False, "classify": False}  # switched on as each backend path is implemented and tested
+FEATURES = {"abc": True, "url_ingest": True, "classify": False}  # switched on as each backend path is implemented and tested
 MAX_UPLOAD_BYTES = 300 * 1024 * 1024
 
 DEMO_VIDEOS = [
@@ -72,7 +73,22 @@ class RunRequest(BaseModel):
     focus: str | None = None
     allowed_edits: list[str] | None = None
     iteration_budget: int = Field(default=3, ge=1, le=8)
+    owner_confirms_rights: bool = False
     idempotency_key: str | None = Field(default=None, max_length=120)
+
+
+class IngestRequest(BaseModel):
+    url: str = Field(min_length=8, max_length=2000)
+    idempotency_key: str | None = Field(default=None, max_length=120)
+
+
+class AuditRequest(BaseModel):
+    video_id: str = Field(pattern=VIDEO_ID_RE.pattern)
+    idempotency_key: str | None = Field(default=None, max_length=120)
+
+
+EDIT_RIGHTS_DETAIL = ("This video came from a link. DirectorLoop can judge it, but creating an edited version requires confirming that you own it "
+                      "or have the right to edit it (owner_confirms_rights: true), or uploading the original file.")
 
 
 class ABCRequest(BaseModel):
@@ -87,6 +103,7 @@ class ABCRequest(BaseModel):
     iteration_budget: int = Field(default=2, ge=1, le=5)
     max_model_calls: int | None = Field(default=260, ge=20, le=2000)
     deadline_s: int | None = Field(default=1500, ge=60, le=7200)
+    owner_confirms_rights: bool = False
     idempotency_key: str | None = Field(default=None, max_length=120)
 
 
@@ -99,7 +116,8 @@ class Services:
         self.policy_lock = threading.Lock()
         self.providers = build_providers(settings)
         self.jobs = JobStore(self.data / "directorloop_jobs.db")
-        self.worker = JobWorker(self.jobs, {"experiment": self.run_experiment_job, "run": self.run_director_job, "abc": self.run_abc_job})
+        self.worker = JobWorker(self.jobs, {"experiment": self.run_experiment_job, "run": self.run_director_job, "abc": self.run_abc_job,
+                                            "ingest": self.run_ingest_job, "audit": self.run_audit_job})
         self._registry: dict[str, dict[str, Any]] | None = None
 
     # ---- registry -------------------------------------------------------------
@@ -117,7 +135,8 @@ class Services:
                 reg[v["video_id"]] = {**v, "category": "educational_short", "source": "owned_curio", "retention": None}
         for up in self.uploads():
             if Path(up["path"]).exists():
-                reg[up["video_id"]] = {**up, "role": "upload", "category": "educational_short", "source": "upload", "retention": None}
+                reg[up["video_id"]] = {**up, "role": "link" if up.get("source") == "url" else "upload", "category": "educational_short",
+                                       "source": up.get("source", "upload"), "edit_permission": up.get("edit_permission", "owner_upload"), "retention": None}
         corpus = self.corpus()
         if corpus is not None:
             for ref in corpus.references:
@@ -193,6 +212,56 @@ class Services:
         finally:
             flush()
         return {"run_id": run.id, "final_version_id": run.final_version_id, "stop_reason": run.stop_reason, "weave_url": run.weave_url, "status": run.status}
+
+    def run_ingest_job(self, job, on_stage) -> dict[str, Any]:  # noqa: ANN001
+        import shutil
+
+        from ..ingest.url import IngestError, acquire, classify_url
+        from ..media.probe import inspect_media
+
+        url = job.params["url"]
+        info = classify_url(url)
+        on_stage("RESOLVING", f"{info['kind']} link on {info['host']}" + (f" ({info['platform']})" if info["platform"] else ""), {"kind": info["kind"], "platform": info["platform"]})
+        on_stage("DOWNLOADING", "retrieving the accessible media", None)
+        incoming = self.data / "uploads" / "incoming"
+        try:
+            got = acquire(url, incoming, allow_private=self.settings.dl_ingest_allow_private_hosts)
+        except IngestError as exc:
+            raise ValueError(str(exc)) from exc
+        on_stage("PROBING", f"received {got.bytes / 1e6:.1f} MB in {got.elapsed_ms / 1000:.1f}s; checking the streams", None)
+        try:
+            media = inspect_media(got.path)
+        except Exception as exc:  # noqa: BLE001
+            got.path.unlink(missing_ok=True)
+            raise ValueError(f"the downloaded file is not a readable video: {str(exc)[:120]}") from exc
+        if not media.width or not media.height or not media.duration_ms:
+            got.path.unlink(missing_ok=True)
+            raise ValueError("the downloaded file has no video stream")
+        final = self.data / "uploads" / f"{got.sha256}{got.path.suffix.lower() or '.mp4'}"
+        if final.exists():
+            got.path.unlink(missing_ok=True)
+        else:
+            final.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(got.path), final)
+        entry = {"video_id": f"url-{got.sha256[:12]}", "path": str(final), "title": got.title, "sha256": got.sha256, "duration_ms": media.duration_ms,
+                 "width": media.width, "height": media.height, "has_audio": bool(media.has_audio), "source": "url", "source_url": got.source_url,
+                 "platform": got.platform, "uploader": got.uploader, "edit_permission": "requires_owner_confirmation", "uploaded_at": utc_now_iso_str()}
+        self.register_upload(entry)
+        on_stage("REGISTERED", f"ready to judge: {entry['video_id']}", {"video_id": entry["video_id"]})
+        return {"video_id": entry["video_id"], "title": got.title, "platform": got.platform, "edit_permission": entry["edit_permission"],
+                "media_url": f"/media/source/{entry['video_id']}.mp4"}
+
+    def run_audit_job(self, job, on_stage) -> dict[str, Any]:  # noqa: ANN001
+        v = self.video(job.params["video_id"])
+        try:
+            rep = run_audit(video_id=v["video_id"], video_path=Path(v["path"]), version_id="v0", provider=self.providers.probe, data_dir=self.data, on_stage=on_stage)
+        finally:
+            flush()
+        return {"audit_id": rep.id, "status": rep.status, "findings": len(rep.findings), "strengths": len(rep.strengths), "weave_url": rep.weave_url}
+
+    def require_edit_rights(self, video: dict[str, Any], confirmed: bool) -> None:
+        if video.get("edit_permission") == "requires_owner_confirmation" and not confirmed:
+            raise HTTPException(status_code=403, detail=EDIT_RIGHTS_DETAIL)
 
     def run_abc_job(self, job, on_stage) -> dict[str, Any]:  # noqa: ANN001
         params = job.params
@@ -299,7 +368,8 @@ def create_app(settings: Settings | None = None, start_worker: bool = True) -> F
         for v in services.registry().values():
             latest = next((e.id for e in exps if e.video_id == v["video_id"] and e.status == "completed"), None)
             genome_cached = any((services.creative / "genomes").glob("genome_*.json")) if (services.creative / "genomes").exists() else False
-            out.append({"video_id": v["video_id"], "title": v["title"], "duration_ms": None, "category": v["category"], "source": v["source"],
+            out.append({"video_id": v["video_id"], "title": v["title"], "duration_ms": v.get("duration_ms"), "category": v["category"], "source": v["source"],
+                        "edit_permission": v.get("edit_permission", "owned"), "platform": v.get("platform"),
                         "media_url": f"/media/source/{v['video_id']}.mp4", "role": v["role"], "has_genome": genome_cached,
                         "retention_class": ({"historical_owned": "historical", "real_platform": "real", "simulated_demo": "simulated"}.get(v["retention"]["source_type"]) if v.get("retention") else None),
                         "latest_experiment_id": latest})
@@ -504,13 +574,59 @@ def create_app(settings: Settings | None = None, start_worker: bool = True) -> F
             shutil.move(str(tmp), final)
         title = re.sub(r"[^A-Za-z0-9 ._\-]", "", Path(file.filename or "upload").stem)[:80] or "upload"
         entry = {"video_id": f"upl-{sha[:12]}", "path": str(final), "title": title, "sha256": sha, "duration_ms": info.duration_ms,
-                 "width": info.width, "height": info.height, "has_audio": bool(info.has_audio), "uploaded_at": utc_now_iso_str()}
+                 "width": info.width, "height": info.height, "has_audio": bool(info.has_audio), "source": "upload", "edit_permission": "owner_upload",
+                 "uploaded_at": utc_now_iso_str()}
         services.register_upload(entry)
         return {k: entry[k] for k in ("video_id", "title", "sha256", "duration_ms", "width", "height", "has_audio")} | {"media_url": f"/media/source/{entry['video_id']}.mp4"}
 
+    @app.post("/api/ingest/url", dependencies=[Depends(auth)])
+    def ingest_url(body: IngestRequest) -> dict[str, Any]:
+        from urllib.parse import urlparse
+
+        from ..ingest.url import IngestError, check_host, classify_url
+
+        try:
+            info = classify_url(body.url)
+            if info["kind"] == "unknown":
+                raise IngestError("the link is neither a supported platform page nor a direct video file (.mp4, .mov, .m4v, .webm)")
+            u = urlparse(body.url.strip())
+            check_host(info["host"], u.port, allow_private=settings.dl_ingest_allow_private_hosts)
+        except IngestError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        try:
+            job, created = services.jobs.create("ingest", {"url": body.url.strip()}, idempotency_key=body.idempotency_key)
+        except IdempotencyConflict as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        return {"job_id": job.id, "created": created, "kind": info["kind"], "platform": info["platform"],
+                "edit_permission": "requires_owner_confirmation"}
+
+    @app.post("/api/audits", dependencies=[Depends(auth)])
+    def start_audit(body: AuditRequest) -> dict[str, Any]:
+        services.video(body.video_id)
+        try:
+            job, created = services.jobs.create("audit", {"video_id": body.video_id}, idempotency_key=body.idempotency_key)
+        except IdempotencyConflict as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        return {"job_id": job.id, "created": created}
+
+    @app.get("/api/audits", dependencies=[Depends(auth)])
+    def list_audits(video_id: str | None = None) -> list[dict[str, Any]]:
+        d = services.data / "audit"
+        out = []
+        for f in sorted(d.glob("audit_*/audit.json"), reverse=True) if d.exists() else []:
+            try:
+                a = AuditReport.model_validate_json(f.read_text(encoding="utf-8"))
+            except ValueError:
+                continue
+            if video_id and a.video_id != video_id:
+                continue
+            out.append({"id": a.id, "video_id": a.video_id, "version_id": a.version_id, "status": a.status, "created_at": a.created_at, "findings": len(a.findings),
+                        "strengths": len(a.strengths), "duration_ms": a.duration_ms, "weave_url": a.weave_url})
+        return out
+
     @app.post("/api/runs", dependencies=[Depends(auth)])
     def start_run(body: RunRequest) -> dict[str, Any]:
-        services.video(body.video_id)
+        services.require_edit_rights(services.video(body.video_id), body.owner_confirms_rights)
         if body.focus is not None and body.focus not in OBJECTIVES:
             raise HTTPException(status_code=422, detail=f"focus must be one of {OBJECTIVES}")
         if body.allowed_edits is not None and any(e not in EDIT_TYPES for e in body.allowed_edits):
@@ -605,8 +721,8 @@ def create_app(settings: Settings | None = None, start_worker: bool = True) -> F
     def start_abc(body: ABCRequest) -> dict[str, Any]:
         if body.a_video_id == body.b_video_id:
             raise HTTPException(status_code=422, detail="A and B must be two different edits")
-        services.video(body.a_video_id)
-        services.video(body.b_video_id)
+        services.require_edit_rights(services.video(body.a_video_id), body.owner_confirms_rights)
+        services.require_edit_rights(services.video(body.b_video_id), body.owner_confirms_rights)
         params = body.model_dump(exclude={"idempotency_key"})
         try:
             job, created = services.jobs.create("abc", params, idempotency_key=body.idempotency_key)
