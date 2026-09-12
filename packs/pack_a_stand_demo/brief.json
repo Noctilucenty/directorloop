@@ -1,0 +1,97 @@
+{
+  "id": "brief_pack_a",
+  "project_id": "proj_pack_a",
+  "profile": "product_demo",
+  "objective": "Make it immediately clear how the stand locks and that the phone stays put.",
+  "audience": "people who make things at home",
+  "language": "en",
+  "aspect_ratio": "9:16",
+  "target_duration_ms_min": 8000,
+  "target_duration_ms_max": 12000,
+  "required_information": [
+    {
+      "id": "r_object",
+      "text": "What the object is",
+      "claim_ids": [
+        "c_object"
+      ]
+    },
+    {
+      "id": "r_lock",
+      "text": "How the stand locks: the tab goes down into the slot",
+      "claim_ids": [
+        "c_moving_part",
+        "c_lock_action",
+        "c_tab_location"
+      ]
+    },
+    {
+      "id": "r_stable",
+      "text": "The phone stays put when tapped",
+      "claim_ids": [
+        "c_result_stable"
+      ]
+    }
+  ],
+  "style_notes": "Plain maker-video feel. No title cards, no CTA.",
+  "protected_constraints": [
+    {
+      "id": "pc_narration",
+      "kind": "keep_narration",
+      "reason": "The creator's voiceover is final.",
+      "start_ms": null,
+      "end_ms": null,
+      "value_ms": null
+    },
+    {
+      "id": "pc_music",
+      "kind": "keep_music",
+      "reason": "Keep the original music bed.",
+      "start_ms": null,
+      "end_ms": null,
+      "value_ms": null
+    },
+    {
+      "id": "pc_product",
+      "kind": "preserve_product_appearance",
+      "reason": "Do not change how the stand looks.",
+      "start_ms": null,
+      "end_ms": null,
+      "value_ms": null
+    },
+    {
+      "id": "pc_facts",
+      "kind": "no_new_facts",
+      "reason": "Do not invent features.",
+      "start_ms": null,
+      "end_ms": null,
+      "value_ms": null
+    },
+    {
+      "id": "pc_duration",
+      "kind": "max_duration_ms",
+      "reason": "Short-form limit.",
+      "start_ms": null,
+      "end_ms": null,
+      "value_ms": 12000
+    }
+  ],
+  "allowed_actions": [
+    "trim_or_retime",
+    "reorder_segments",
+    "replace_with_existing_asset",
+    "crop_existing_shot",
+    "revise_captions",
+    "generate_missing_shot"
+  ],
+  "generation_permitted": true,
+  "narration_change_permitted": false,
+  "budget": {
+    "max_usd": 2.0,
+    "max_llm_calls": 40,
+    "max_generation_calls": 1,
+    "max_wall_seconds": 45
+  },
+  "review_status": "approved",
+  "approved_by": "leon"
+}

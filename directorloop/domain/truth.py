@@ -111,12 +111,17 @@ class ProbeQuestion(BaseModel):
 
 
 class ProbeQuestionView(BaseModel):
-    """What the viewer model receives: no answers, no claim ids, no labels."""
+    """What the viewer model receives: no answers, no claim ids, no labels.
+
+    `modality` is a rubric ("answer from the pictures" vs "from anything in the video"),
+    not an answer hint.
+    """
 
     model_config = ConfigDict(extra="forbid")
 
     id: str
     text: str
+    modality: EvidenceModality = EvidenceModality.EITHER
     options: list[ProbeOption]
 
 
@@ -154,7 +159,7 @@ class EvaluationSuite(BaseModel):
             content = [o for o in q.options if o.id != NOT_SHOWN_OPTION_ID]
             not_shown = [o for o in q.options if o.id == NOT_SHOWN_OPTION_ID]
             rng.shuffle(content)
-            views.append(ProbeQuestionView(id=q.id, text=q.text, options=content + not_shown))
+            views.append(ProbeQuestionView(id=q.id, text=q.text, modality=q.modality, options=content + not_shown))
         return views
 
     def total_weight(self) -> float:

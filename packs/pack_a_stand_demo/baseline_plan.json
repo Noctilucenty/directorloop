@@ -1,0 +1,71 @@
+{
+  "schema_version": "1",
+  "parent_plan_hash": null,
+  "output": {
+    "width": 720,
+    "height": 1280,
+    "fps_num": 30,
+    "fps_den": 1
+  },
+  "segments": [
+    {
+      "id": "seg_wide",
+      "asset_id": "asset_wide",
+      "source_in_ms": 0,
+      "source_out_ms": 5500,
+      "fit": "cover",
+      "crop": null,
+      "speed": 1.0,
+      "audio_policy": "mute",
+      "label": "wide shot"
+    },
+    {
+      "id": "seg_result",
+      "asset_id": "asset_result",
+      "source_in_ms": 0,
+      "source_out_ms": 4000,
+      "fit": "cover",
+      "crop": null,
+      "speed": 1.0,
+      "audio_policy": "mute",
+      "label": "result shot"
+    }
+  ],
+  "captions": [
+    {
+      "id": "cap_01",
+      "text": "Cereal-box phone stand",
+      "start_ms": 300,
+      "end_ms": 2500,
+      "position": "bottom",
+      "style": "default"
+    },
+    {
+      "id": "cap_02",
+      "text": "Locks in one move",
+      "start_ms": 3000,
+      "end_ms": 5000,
+      "position": "bottom",
+      "style": "default"
+    },
+    {
+      "id": "cap_03",
+      "text": "Holds when you tap",
+      "start_ms": 6500,
+      "end_ms": 9200,
+      "position": "bottom",
+      "style": "default"
+    }
+  ],
+  "narration": {
+    "asset_id": "asset_narration",
+    "offset_ms": 0,
+    "gain_db": 0.0
+  },
+  "music": {
+    "asset_id": "asset_music",
+    "gain_db": -16.0
+  },
+  "protected_intervals": [],
+  "change_rationale": "Creator's first cut."
+}

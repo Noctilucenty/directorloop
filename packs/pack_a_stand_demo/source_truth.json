@@ -1,0 +1,89 @@
+{
+  "id": "truth_pack_a",
+  "version": 1,
+  "is_fictional": true,
+  "title": "Cereal-box phone stand with a locking tab",
+  "summary": "A fictional cardboard phone stand. An orange tab on the back panel slides down through two guide loops into a slot in the base, which locks the panel angle. Once locked, a phone rests against the panel and stays in place when the screen is tapped.",
+  "claims": [
+    {
+      "id": "c_object",
+      "text": "The object being demonstrated is a phone stand.",
+      "kind": "entity",
+      "uncertainty": "established",
+      "supporting_asset_ids": [
+        "asset_wide",
+        "asset_result"
+      ]
+    },
+    {
+      "id": "c_material",
+      "text": "The stand is made from a cereal box (cardboard).",
+      "kind": "fact",
+      "uncertainty": "established",
+      "supporting_asset_ids": [
+        "asset_narration"
+      ]
+    },
+    {
+      "id": "c_moving_part",
+      "text": "The small orange tab is the part that moves during locking.",
+      "kind": "mechanism",
+      "uncertainty": "established",
+      "supporting_asset_ids": [
+        "asset_closeup",
+        "asset_wide"
+      ]
+    },
+    {
+      "id": "c_lock_action",
+      "text": "Locking is done by pushing the orange tab down into a slot in the base.",
+      "kind": "mechanism",
+      "uncertainty": "established",
+      "supporting_asset_ids": [
+        "asset_closeup",
+        "asset_wide"
+      ]
+    },
+    {
+      "id": "c_tab_location",
+      "text": "After locking, the tab sits inside the slot in the base.",
+      "kind": "outcome",
+      "uncertainty": "established",
+      "supporting_asset_ids": [
+        "asset_closeup"
+      ]
+    },
+    {
+      "id": "c_result_stable",
+      "text": "After locking, the phone stays in place when the screen is tapped.",
+      "kind": "outcome",
+      "uncertainty": "established",
+      "supporting_asset_ids": [
+        "asset_result",
+        "asset_narration"
+      ]
+    }
+  ],
+  "entities": [
+    "phone stand",
+    "orange locking tab",
+    "slot in the base",
+    "phone"
+  ],
+  "event_order": [
+    "c_object",
+    "c_moving_part",
+    "c_lock_action",
+    "c_tab_location",
+    "c_result_stable"
+  ],
+  "source_references": [
+    {
+      "label": "authored fixture",
+      "url": null,
+      "note": "Fictional product authored for this pack; no external source."
+    }
+  ],
+  "approved_by": "leon",
+  "approved_at": "2026-09-12T00:00:00Z"
+}

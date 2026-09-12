@@ -1,0 +1,220 @@
+{
+  "id": "suite_pack_a_dev",
+  "version": 1,
+  "split": "dev",
+  "story_family": "stand_demo",
+  "questions": [
+    {
+      "id": "q_lock_action",
+      "text": "What physical action locks the stand?",
+      "modality": "visual",
+      "options": [
+        {
+          "id": "o1",
+          "text": "The orange tab is slid sideways along the base into a groove"
+        },
+        {
+          "id": "o2",
+          "text": "The orange tab is pushed straight down into a slot in the base"
+        },
+        {
+          "id": "o3",
+          "text": "The orange tab is twisted a quarter turn until it locks"
+        },
+        {
+          "id": "o4",
+          "text": "The orange tab is folded over the top edge of the phone"
+        },
+        {
+          "id": "not_shown",
+          "text": "Not shown or cannot tell from the video"
+        }
+      ],
+      "correct_option_id": "o2",
+      "claim_ids": [
+        "c_lock_action"
+      ],
+      "weight": 1.0,
+      "regression_guard": false,
+      "leakage_status": "untested",
+      "leakage_note": ""
+    },
+    {
+      "id": "q_tab_location",
+      "text": "After the stand is locked, where is the orange tab?",
+      "modality": "visual",
+      "options": [
+        {
+          "id": "o1",
+          "text": "Inside a slot in the base"
+        },
+        {
+          "id": "o2",
+          "text": "Sticking up above the back panel"
+        },
+        {
+          "id": "o3",
+          "text": "Lying flat along the top surface of the base"
+        },
+        {
+          "id": "o4",
+          "text": "Clipped over the top edge of the phone"
+        },
+        {
+          "id": "not_shown",
+          "text": "Not shown or cannot tell from the video"
+        }
+      ],
+      "correct_option_id": "o1",
+      "claim_ids": [
+        "c_tab_location"
+      ],
+      "weight": 1.0,
+      "regression_guard": false,
+      "leakage_status": "untested",
+      "leakage_note": ""
+    },
+    {
+      "id": "q_moving_part",
+      "text": "Which part of the stand moves while it is being locked?",
+      "modality": "visual",
+      "options": [
+        {
+          "id": "o1",
+          "text": "The whole back panel swings"
+        },
+        {
+          "id": "o2",
+          "text": "The base slides forward"
+        },
+        {
+          "id": "o3",
+          "text": "A small orange tab"
+        },
+        {
+          "id": "o4",
+          "text": "The front lip flips up"
+        },
+        {
+          "id": "not_shown",
+          "text": "Not shown or cannot tell from the video"
+        }
+      ],
+      "correct_option_id": "o3",
+      "claim_ids": [
+        "c_moving_part"
+      ],
+      "weight": 1.0,
+      "regression_guard": false,
+      "leakage_status": "untested",
+      "leakage_note": ""
+    },
+    {
+      "id": "q_material",
+      "text": "What is the stand made from?",
+      "modality": "either",
+      "options": [
+        {
+          "id": "o1",
+          "text": "A cereal box (cardboard)"
+        },
+        {
+          "id": "o2",
+          "text": "Wood"
+        },
+        {
+          "id": "o3",
+          "text": "3D-printed plastic"
+        },
+        {
+          "id": "o4",
+          "text": "Bent metal"
+        },
+        {
+          "id": "not_shown",
+          "text": "Not shown or cannot tell from the video"
+        }
+      ],
+      "correct_option_id": "o1",
+      "claim_ids": [
+        "c_material"
+      ],
+      "weight": 1.0,
+      "regression_guard": true,
+      "leakage_status": "untested",
+      "leakage_note": ""
+    },
+    {
+      "id": "q_object",
+      "text": "What kind of object is being demonstrated?",
+      "modality": "either",
+      "options": [
+        {
+          "id": "o1",
+          "text": "A phone case"
+        },
+        {
+          "id": "o2",
+          "text": "A phone stand"
+        },
+        {
+          "id": "o3",
+          "text": "A wireless charger"
+        },
+        {
+          "id": "o4",
+          "text": "A small speaker"
+        },
+        {
+          "id": "not_shown",
+          "text": "Not shown or cannot tell from the video"
+        }
+      ],
+      "correct_option_id": "o2",
+      "claim_ids": [
+        "c_object"
+      ],
+      "weight": 1.0,
+      "regression_guard": true,
+      "leakage_status": "untested",
+      "leakage_note": ""
+    },
+    {
+      "id": "q_result_stable",
+      "text": "What happens when the screen is tapped after the stand is locked?",
+      "modality": "either",
+      "options": [
+        {
+          "id": "o1",
+          "text": "The phone stays in place"
+        },
+        {
+          "id": "o2",
+          "text": "The stand tips over"
+        },
+        {
+          "id": "o3",
+          "text": "The phone slides off"
+        },
+        {
+          "id": "o4",
+          "text": "The back panel folds flat"
+        },
+        {
+          "id": "not_shown",
+          "text": "Not shown or cannot tell from the video"
+        }
+      ],
+      "correct_option_id": "o1",
+      "claim_ids": [
+        "c_result_stable"
+      ],
+      "weight": 1.0,
+      "regression_guard": true,
+      "leakage_status": "untested",
+      "leakage_note": ""
+    }
+  ],
+  "scoring": "exact_option",
+  "frozen": true
+}

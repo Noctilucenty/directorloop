@@ -44,11 +44,13 @@ class Settings(BaseSettings):
     dl_weave_enabled: bool = True
 
     # Model selection
-    dl_planner_provider: Literal["gemini", "openai", "wandb_inference", "typesafe", "rules"] = "gemini"
-    dl_planner_model: str = "gemini-3.1-pro-preview"
-    dl_probe_provider: Literal["gemini", "openai", "wandb_inference", "typesafe"] = "gemini"
-    dl_probe_model: str = "gemini-3.8-flash"
+    dl_planner_provider: Literal["gemini", "openai", "wandb_inference", "typesafe", "rules"] = "openai"
+    dl_planner_model: str = "gpt-5.6-sol"
+    dl_probe_provider: Literal["gemini", "openai", "wandb_inference", "typesafe"] = "openai"
+    dl_probe_model: str = "gpt-5.6-terra"
     dl_probe_trials: int = 3
+    dl_probe_frames: int = 8
+    dl_probe_prompt_version: str = "v1"
     dl_wandb_inference_probe_model: str = "Qwen/Qwen3.8-27B"
     dl_wandb_inference_planner_model: str = "moonshotai/Kimi-K2.6"
 

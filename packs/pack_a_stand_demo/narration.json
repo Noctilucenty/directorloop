@@ -1,0 +1,9 @@
+{
+  "text": "I made this phone stand out of a cereal box. Set it up, lock it, and it holds. Even when you tap around on the screen.",
+  "provider": "elevenlabs",
+  "model": "eleven_v3",
+  "duration_ms": 6720,
+  "asset_id": "asset_narration",
+  "storage_key": "145fc433dc7b5c414d71f9d8342b934ffdfecb3085a9ad4abe677cc61e212aac.wav",
+  "reused": true
+}
