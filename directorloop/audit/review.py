@@ -447,5 +447,5 @@ def run_audit(*, video_id: str, video_path: Path, version_id: str, provider: Med
     )
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "audit.json").write_text(report.model_dump_json(indent=2), encoding="utf-8")
-    emit("DONE", f"audit {audit_id}: {len(findings)} findings, {len(strengths)} strengths", {"audit_id": audit_id, "weave_url": url})
+    emit("AUDIT_DONE", f"audit {audit_id}: {len(findings)} findings, {len(strengths)} strengths", {"audit_id": audit_id, "weave_url": url})
     return report

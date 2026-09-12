@@ -45,6 +45,7 @@ RUN_ID_RE = re.compile(r"^run_[0-9a-f]+_[0-9a-f]+$")
 AUDIT_ID_RE = re.compile(r"^audit_[0-9a-f]+_[0-9a-f]+$")
 REPAIR_ID_RE = re.compile(r"^repair_[0-9a-f]+_[0-9a-f]+$")
 UPLOAD_SUFFIXES = {".mp4", ".mov", ".m4v", ".webm"}
+FEATURES = {"abc": False, "url_ingest": False, "classify": False}  # switched on as each backend path is implemented and tested
 MAX_UPLOAD_BYTES = 300 * 1024 * 1024
 
 DEMO_VIDEOS = [
@@ -238,6 +239,7 @@ def create_app(settings: Settings | None = None, start_worker: bool = True) -> F
         public = services.data / "reviews" / "public_url.txt"
         return {
             "status": "ok",
+            "features": {"runs": True, "abc": FEATURES["abc"], "url_ingest": FEATURES["url_ingest"], "classify": FEATURES["classify"]},
             "weave": {"connected": w.connected, "project": w.project, "traces_url": w.traces_url, "reason": w.reason},
             "providers": [{"name": c.name, "role": c.role, "model": c.model, "state": c.state} for c in services.providers.capabilities if c.present],
             "policy_version": load_policy(services.policy_path).version,

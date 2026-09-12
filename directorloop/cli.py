@@ -91,9 +91,92 @@ def cmd_run(args: argparse.Namespace) -> int:
     return 0 if run.status == "completed" else 1
 
 
+def print_abc(run) -> None:  # noqa: ANN001
+    ctx = run.context
+    print(f"\nA/B-TO-C RUN {run.id}  status={run.status}  launched via {run.launched_via}")
+    print(f"context: {ctx.creative_type}; viewer: {ctx.audience}; objective: {ctx.objective}; encounter: {ctx.encounter}")
+    print(f"rubric {run.rubric.get('version')} sha256 {str(run.rubric.get('sha256'))[:16]} (frozen before any C was chosen)")
+    for key, v in run.versions.items():
+        print(f"  {key}: {v.video_id} evaluated {v.evaluated_hash[:12]} ({v.duration_ms} ms) audit {v.audit_id} [{v.audit_status}]")
+    comp = run.comparison
+    if comp is not None:
+        print(f"comparable: {comp.comparable}  wording similarity: {comp.transcript_similarity}  confounds: {comp.confounds or 'none'}")
+        for u in comp.alignment:
+            a = "-" if u.a_start_ms is None else f"{u.a_start_ms / 1000:.1f}-{u.a_end_ms / 1000:.1f}s"
+            b = "-" if u.b_start_ms is None else f"{u.b_start_ms / 1000:.1f}-{u.b_end_ms / 1000:.1f}s"
+            print(f"  part {u.index + 1} [{u.kind}] A {a} | B {b} | {u.text_a[:60]!r} | {u.text_b[:60]!r}")
+        if comp.whole:
+            print("A vs B (whole, both orders): " + "; ".join(f"{d.dimension}={d.verdict}" for d in comp.whole.dimensions) + f"; overall={comp.whole.overall.verdict}")
+        for r in comp.regions:
+            print(f"  part {int((r.region or {}).get('unit_index', -1)) + 1}: " + "; ".join(f"{d.dimension}={d.verdict}" for d in r.dimensions) + f"; overall={r.overall.verdict}")
+        print(f"best supported input: {comp.best_supported or 'none'} ({comp.best_supported_reason})")
+    for att in run.attempts:
+        print(f"\n  C ATTEMPT {att.index}: {att.decision} -> next {att.next_action}")
+        if att.proposal:
+            pr = att.proposal
+            print(f"    proposal: {pr.description}")
+            print(f"    targets: {pr.target_dimensions}  protected: {pr.protected_strengths}")
+            print(f"    tradeoffs: {pr.tradeoffs}  why smallest: {pr.why_smallest}")
+            print(f"    selector: {pr.selector_reason[:300]}")
+        ev = att.evaluation
+        if ev is not None:
+            if ev.change_verification:
+                print(f"    verified: {ev.change_verification.verified}  {'; '.join(ev.change_verification.checks)[:500]}")
+            if ev.vs_base:
+                print(f"    C vs {ev.vs_base.second}: " + "; ".join(f"{d.dimension}={d.verdict}" for d in ev.vs_base.dimensions) + f"; overall={ev.vs_base.overall.verdict}")
+            if ev.vs_other:
+                print(f"    C vs {ev.vs_other.second}: " + "; ".join(f"{d.dimension}={d.verdict}" for d in ev.vs_other.dimensions) + f"; overall={ev.vs_other.overall.verdict}")
+            if ev.target_region:
+                print("    changed stretch: " + "; ".join(f"{d.dimension}={d.verdict}" for d in ev.target_region.dimensions) + f"; overall={ev.target_region.overall.verdict}")
+            print(f"    protected: {ev.protected}")
+            print(f"    new weaknesses: {ev.new_weaknesses or 'none'}")
+            print(f"    outcome: {ev.outcome}: {ev.outcome_reason}")
+        print(f"    reason: {att.reason}  | next: {att.next_action_reason}")
+        if att.render_path:
+            print(f"    C file: {att.render_path}")
+    print(f"\nFINAL: {run.final_decision}")
+    print(f"stop reason: {run.stop_reason}")
+    print(f"usage: {run.usage}")
+    print(f"mocked stages: {run.mocked_stages or 'none'}  manual interventions: {run.manual_interventions or 'none'}")
+    print(f"weave: {run.weave_url}")
+
+
+def cmd_abc(args: argparse.Namespace) -> int:
+    from .compare.models import DeclaredContext
+    from .observability import flush, init_weave
+    from .providers import build_providers
+    from .runtime.abc import ABCConfig, run_abc
+
+    s = get_settings()
+    a, b = Path(args.a).expanduser().resolve(), Path(args.b).expanduser().resolve()
+    for p in (a, b):
+        if not p.is_file():
+            print(f"video not found: {p}", file=sys.stderr)
+            return 2
+    ctx = DeclaredContext(creative_type=args.creative_type, audience=args.audience, objective=args.objective, expected_payoff=args.expected_payoff or "",
+                          encounter=args.encounter)
+    config = ABCConfig(a_video_id=args.a_id or _video_id(a), a_path=str(a), b_video_id=args.b_id or _video_id(b), b_path=str(b), context=ctx,
+                       constraints=args.constraint or [], iteration_budget=args.budget, max_model_calls=args.max_calls, deadline_s=args.deadline)
+    w = init_weave(s)
+    print(f"weave: {'connected to ' + w.project if w.connected else 'not connected (' + w.reason + ')'}")
+    run = run_abc(config, build_providers(s), s.data_dir, on_stage=_progress, launched_via="cli")
+    flush()
+    print_abc(run)
+    return 0 if run.status == "completed" else 1
+
+
 def cmd_show(args: argparse.Namespace) -> int:
     from .runtime.director import load_run
 
+    if args.run_id.startswith("abc_"):
+        from .runtime.abc import load_abc
+
+        abc = load_abc(get_settings().data_dir, args.run_id)
+        if abc is None:
+            print(f"run not found: {args.run_id}", file=sys.stderr)
+            return 2
+        print_abc(abc)
+        return 0
     run = load_run(get_settings().data_dir, args.run_id)
     if run is None:
         print(f"run not found: {args.run_id}", file=sys.stderr)
@@ -141,6 +224,21 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--video-id")
     r.add_argument("--category", default="educational_short")
     r.set_defaults(fn=cmd_run)
+    c = sub.add_parser("abc", help="compare two edits of the same idea, direct and test a third version")
+    c.add_argument("a")
+    c.add_argument("b")
+    c.add_argument("--objective", required=True)
+    c.add_argument("--creative-type", default="educational short")
+    c.add_argument("--audience", default="general viewers who do not know the topic")
+    c.add_argument("--expected-payoff")
+    c.add_argument("--encounter", default="a cold scrolling feed on a phone with sound on")
+    c.add_argument("--constraint", action="append")
+    c.add_argument("--budget", type=int, default=2, help="maximum number of rendered C attempts")
+    c.add_argument("--max-calls", type=int, default=260)
+    c.add_argument("--deadline", type=int, default=1500, help="seconds")
+    c.add_argument("--a-id")
+    c.add_argument("--b-id")
+    c.set_defaults(fn=cmd_abc)
     sh = sub.add_parser("show", help="print a stored run")
     sh.add_argument("run_id")
     sh.set_defaults(fn=cmd_show)

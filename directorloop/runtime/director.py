@@ -48,7 +48,7 @@ POLICY_TYPE = {"REMOVE_BEAT": MutationType.REMOVE_REDUNDANT_BEAT, "MOVE_BEAT_EAR
 SEVERITY_RANK = {"high": 0, "medium": 1, "low": 2}
 UNCERTAINTY_RANK = {"low": 0, "medium": 1, "high": 2}
 PROMPT_SOURCES = ("directorloop/audit/review.py", "directorloop/audit/repairs.py", "directorloop/audit/revise.py", "directorloop/runtime/director.py",
-                  "directorloop/providers/base.py")
+                  "directorloop/providers/base.py", "directorloop/compare/judge.py", "directorloop/compare/recombine.py", "directorloop/runtime/abc.py")
 MAX_DURATION_MS = 180_000
 RUNTIME_VERSION = "director-v1"
 
@@ -311,7 +311,10 @@ def update_memory(data_dir: Path, run_id: str, config: RunConfig, finding: Audit
 
 
 def validate_input(config: RunConfig) -> str | None:
-    p = Path(config.video_path)
+    return validate_video_path(Path(config.video_path))
+
+
+def validate_video_path(p: Path) -> str | None:
     if not p.is_file():
         return f"video file not found: {p.name}"
     try:
