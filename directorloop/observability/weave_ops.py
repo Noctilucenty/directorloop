@@ -134,12 +134,43 @@ def weave_status() -> WeaveStatus:
     return _status
 
 
-def traced(name: str, kind: str | None = None) -> Callable[[F], F]:
-    """Decorate a loop boundary as a Weave op with a stable name."""
+def _display_func(display: str | Callable[[dict[str, Any]], str], fallback: str) -> str | Callable[[Any], str]:
+    if not callable(display):
+        return display
+
+    def call_display_name(call: Any) -> str:  # Weave requires exactly one parameter (the Call)
+        try:
+            return str(display(dict(call.inputs or {})))[:200] or fallback
+        except Exception:  # noqa: BLE001 - a naming failure must never break the traced function
+            return fallback
+
+    return call_display_name
+
+
+def _output_func(summarize: Callable[[Any], Any] | None) -> Callable[[Any], Any]:
+    if summarize is None:
+        return redact_output
+
+    def postprocess_output(output: Any) -> Any:
+        try:
+            return redact_output(summarize(output))
+        except Exception:  # noqa: BLE001
+            return redact_output(output)
+
+    return postprocess_output
+
+
+def traced(name: str, kind: str | None = None, display: str | Callable[[dict[str, Any]], str] | None = None,
+           summarize: Callable[[Any], Any] | None = None) -> Callable[[F], F]:
+    """Decorate a loop boundary as a Weave op with a stable name.
+
+    display: the span label in the trace tree, a string or a function of the call's (redacted) inputs, computed when the call is
+    created. summarize: what the trace shows as the span's output (the caller still receives the real return value)."""
 
     def deco(fn: F) -> F:
         op = weave.op(
-            name=name, kind=kind, postprocess_inputs=redact_inputs, postprocess_output=redact_output, enable_code_capture=False
+            name=name, kind=kind, call_display_name=_display_func(display, name) if display is not None else None, postprocess_inputs=redact_inputs,
+            postprocess_output=_output_func(summarize), enable_code_capture=False
         )(fn)
 
         @wraps(fn)
