@@ -1,0 +1,1130 @@
+{
+  "id": "abc_1a097b6ace8_52d2739b",
+  "status": "completed",
+  "created_at": "2026-09-12T22:22:06.568+00:00",
+  "ended_at": "2026-09-12T22:23:39.752+00:00",
+  "final_version": "A",
+  "final_decision": "keep A: no C demonstrated an improvement; A was preferred over B as a whole",
+  "stop_reason": "attempt budget of 1 used",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-ace3-72b0-9b67-b6b92bfd89e0",
+  "usage": {
+    "model_calls": 39,
+    "elapsed_s": 93.2,
+    "input_tokens": 255012,
+    "output_tokens": 10456
+  },
+  "versions": [
+    {
+      "label": "A",
+      "duration_ms": 14000,
+      "sha256": "6a9f3a80108cd411609caa2416781e504924cef7967721170dfe15c7d62ed416",
+      "src": "/media/a.mp4",
+      "poster": "/media/a.jpg"
+    },
+    {
+      "label": "B",
+      "duration_ms": 11000,
+      "sha256": "7a65cae132ba45cb82d007a171a5371b7b11d8b73ff0793895175920952e084c",
+      "src": "/media/b.mp4",
+      "poster": "/media/b.jpg"
+    },
+    {
+      "label": "C",
+      "duration_ms": 12900,
+      "sha256": "3b901cca671653d8dba86b4a6a0f30ac582fc4068de1747e1abc1d30dd16cdc4",
+      "src": "/media/c.mp4",
+      "poster": "/media/c.jpg"
+    }
+  ],
+  "workflow_stages": [
+    {
+      "id": "stage_e9a72b07f5b74da6aae88fe9275934c0",
+      "parent_id": null,
+      "key": "ingest",
+      "title": "Ingest and validate A and B",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 62,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-ad03-700f-a387-76d4d10c3405"
+    },
+    {
+      "id": "stage_8de3333fe2574a3caaf197f870a379c0",
+      "parent_id": null,
+      "key": "prepare",
+      "title": "Prepare matching evaluation inputs",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 5992,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-ad42-7500-8211-50da99dd39b6"
+    },
+    {
+      "id": "stage_93f82ba077c64e50a1689462f785df4e",
+      "parent_id": "stage_8de3333fe2574a3caaf197f870a379c0",
+      "key": "prepare_input",
+      "title": "Prepare input A",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 3417,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-ad43-7311-9083-f12a5d693d83"
+    },
+    {
+      "id": "stage_f0bac67ce08f4800a77994a3afbf39ed",
+      "parent_id": "stage_8de3333fe2574a3caaf197f870a379c0",
+      "key": "prepare_input",
+      "title": "Prepare input B",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 3415,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-ad43-7217-ae99-d0715986700e"
+    },
+    {
+      "id": "stage_3d30f6c5125048a89514cd9ce2e1041e",
+      "parent_id": "stage_8de3333fe2574a3caaf197f870a379c0",
+      "key": "baseline_render",
+      "title": "Prepare matched evaluation copy A",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 1196,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-bb15-7934-8f0d-4829619cf6fd"
+    },
+    {
+      "id": "stage_0e8f4570ab1941d7a243f9ff7ff5bcf3",
+      "parent_id": "stage_8de3333fe2574a3caaf197f870a379c0",
+      "key": "baseline_render",
+      "title": "Prepare matched evaluation copy B",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 1257,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-bfc1-7834-81de-d5ced152fd70"
+    },
+    {
+      "id": "stage_3c624902968144aa82eded2ca31b0783",
+      "parent_id": null,
+      "key": "original",
+      "title": "Iteration 0 - Independent A and B audits",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 30163,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-c4ab-7f39-9e0d-7e663fce8bbb"
+    },
+    {
+      "id": "stage_89ca938f0c5e4280bb1ff9356b4cc7c6",
+      "parent_id": "stage_3c624902968144aa82eded2ca31b0783",
+      "key": "audit_input",
+      "title": "Cold-audience audit A",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 30160,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-c4ae-76e4-b81f-88f2ff27c20f"
+    },
+    {
+      "id": "stage_ab531319ec3547ad9d8734fe6d0b3d03",
+      "parent_id": "stage_3c624902968144aa82eded2ca31b0783",
+      "key": "audit_input",
+      "title": "Cold-audience audit B",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 28048,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-c4af-7dcf-ab06-5437770b4d13"
+    },
+    {
+      "id": "stage_d93c03949ffc4fdb89a054c49a5401f5",
+      "parent_id": "stage_ab531319ec3547ad9d8734fe6d0b3d03",
+      "key": "ingest",
+      "title": "Inspect video and prepare evidence",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 3731,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-c4b1-7a73-9eff-191f1471bc1a"
+    },
+    {
+      "id": "stage_8e6629e75f9045459965c14c650852a1",
+      "parent_id": "stage_d93c03949ffc4fdb89a054c49a5401f5",
+      "key": "inspect_media",
+      "title": "Inspect rendered video",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 36,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-c4b2-74e3-914e-ec535e55ac8b"
+    },
+    {
+      "id": "stage_04773426ef0643768809d309f1cb3829",
+      "parent_id": "stage_89ca938f0c5e4280bb1ff9356b4cc7c6",
+      "key": "ingest",
+      "title": "Inspect video and prepare evidence",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 3914,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-c4b0-754f-a518-c05d8ad748b7"
+    },
+    {
+      "id": "stage_5d0ee623cfe2486dbf01e4dd388a5fdc",
+      "parent_id": "stage_04773426ef0643768809d309f1cb3829",
+      "key": "inspect_media",
+      "title": "Inspect rendered video",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 29,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-c4b4-7544-9e10-0306fc7ac019"
+    },
+    {
+      "id": "stage_90606d8ef04b4c5d8f3cd22e74aee683",
+      "parent_id": "stage_04773426ef0643768809d309f1cb3829",
+      "key": "measure_signals",
+      "title": "Measure cuts, motion and loudness",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 780,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-c4d2-7aaf-825f-d1fe74fa9aa7"
+    },
+    {
+      "id": "stage_642f49bf0d86460a94da801fcd6e7837",
+      "parent_id": "stage_d93c03949ffc4fdb89a054c49a5401f5",
+      "key": "measure_signals",
+      "title": "Measure cuts, motion and loudness",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 850,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-c4d6-7039-9ca2-2a0838e08bc6"
+    },
+    {
+      "id": "stage_163c1ab81a304a59a0a33398aa2eedde",
+      "parent_id": "stage_04773426ef0643768809d309f1cb3829",
+      "key": "transcribe_audio",
+      "title": "Transcribe rendered audio",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 2956,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-c7df-7afb-8490-ce286af75a6b"
+    },
+    {
+      "id": "stage_802ddd3b264d45d6ab6eafc1246cce21",
+      "parent_id": "stage_d93c03949ffc4fdb89a054c49a5401f5",
+      "key": "transcribe_audio",
+      "title": "Transcribe rendered audio",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 2843,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-c829-7010-85b0-453cd7923854"
+    },
+    {
+      "id": "stage_6ce198f4e47548af9fb22051a01f555e",
+      "parent_id": "stage_ab531319ec3547ad9d8734fe6d0b3d03",
+      "key": "cold_judge",
+      "title": "Cold audience judge",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 6449,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d346-763c-b073-c192568737d4"
+    },
+    {
+      "id": "stage_4d043860b1924adb899f73f75e5f4cb0",
+      "parent_id": "stage_6ce198f4e47548af9fb22051a01f555e",
+      "key": "review_window",
+      "title": "Review 0.0-2.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 5721,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d34a-7593-99d7-0499142c5d0f"
+    },
+    {
+      "id": "stage_9c317ea1d4b94d3bb85eff88c1e7d868",
+      "parent_id": "stage_6ce198f4e47548af9fb22051a01f555e",
+      "key": "review_window",
+      "title": "Review 10.0-11.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 5904,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d34b-73f7-874a-6a4c1ffd5444"
+    },
+    {
+      "id": "stage_6b338cca213c4913bf63ee3d1b587cf4",
+      "parent_id": "stage_6ce198f4e47548af9fb22051a01f555e",
+      "key": "review_window",
+      "title": "Review 6.0-8.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 5706,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d34a-7346-a383-e30a651aa70b"
+    },
+    {
+      "id": "stage_a3f7a4e45f4c4ab580879983dda3351f",
+      "parent_id": "stage_6ce198f4e47548af9fb22051a01f555e",
+      "key": "review_window",
+      "title": "Review 8.0-10.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 6172,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d34a-78ef-bfe6-f2b624390829"
+    },
+    {
+      "id": "stage_40e529d46ad24a1d8bc8eae52fd70dde",
+      "parent_id": "stage_6ce198f4e47548af9fb22051a01f555e",
+      "key": "review_window",
+      "title": "Review 2.0-4.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 5545,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d34a-7214-b1f7-2878135a4e83"
+    },
+    {
+      "id": "stage_6068b60274d54ff7b1c16422d8c40906",
+      "parent_id": "stage_6ce198f4e47548af9fb22051a01f555e",
+      "key": "review_window",
+      "title": "Review 4.0-6.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 6445,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d34a-770a-b0ca-ae7a76bf2b26"
+    },
+    {
+      "id": "stage_59d1f3e29da6422692b393775a09f031",
+      "parent_id": "stage_89ca938f0c5e4280bb1ff9356b4cc7c6",
+      "key": "cold_judge",
+      "title": "Cold audience judge",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 8095,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d3fb-7ccd-926d-c46b8ba5a24b"
+    },
+    {
+      "id": "stage_05a7a62763d441a49f437961484fab50",
+      "parent_id": "stage_59d1f3e29da6422692b393775a09f031",
+      "key": "review_window",
+      "title": "Review 0.0-2.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 6807,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d410-7cb4-a62e-9388a33eba08"
+    },
+    {
+      "id": "stage_09ecc6ddb9e14f6b8556fe11ece3c195",
+      "parent_id": "stage_59d1f3e29da6422692b393775a09f031",
+      "key": "review_window",
+      "title": "Review 2.0-4.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 5263,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d413-73a4-a863-a6dd4effaf95"
+    },
+    {
+      "id": "stage_eda73d919b9e49b1a8e3ce9f28eee429",
+      "parent_id": "stage_59d1f3e29da6422692b393775a09f031",
+      "key": "review_window",
+      "title": "Review 6.0-8.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 5934,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d41a-711f-b150-ada99adc1fb1"
+    },
+    {
+      "id": "stage_8c872f1521c2482d91b6cfcd4e07a2ef",
+      "parent_id": "stage_59d1f3e29da6422692b393775a09f031",
+      "key": "review_window",
+      "title": "Review 4.0-6.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 6452,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d41f-7ada-9042-e0f1802b74ab"
+    },
+    {
+      "id": "stage_0f99afc9747042c18d8c70f55903ec27",
+      "parent_id": "stage_59d1f3e29da6422692b393775a09f031",
+      "key": "review_window",
+      "title": "Review 10.0-12.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 6532,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d41e-76d0-ad3e-26f0cf5b2c18"
+    },
+    {
+      "id": "stage_5ca2d098d74e4414bc6d71723127497a",
+      "parent_id": "stage_59d1f3e29da6422692b393775a09f031",
+      "key": "review_window",
+      "title": "Review 8.0-10.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 6131,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-d47a-7ada-ae6c-e7f3f4cda3ea"
+    },
+    {
+      "id": "stage_e7e4b567b0fa480cacec670fae69b8ae",
+      "parent_id": "stage_59d1f3e29da6422692b393775a09f031",
+      "key": "review_window",
+      "title": "Review 12.0-14.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 2825,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-e890-7002-afce-90d47ee9a5dd"
+    },
+    {
+      "id": "stage_34fb7bc72c444d5f9506dd5224076cb6",
+      "parent_id": "stage_ab531319ec3547ad9d8734fe6d0b3d03",
+      "key": "diagnose",
+      "title": "Diagnose weaknesses and preserve strengths",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 12527,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-ec77-7cec-9af9-f2829012b42f"
+    },
+    {
+      "id": "stage_59eef5d1ef0149c4a3d9d937d7210dbe",
+      "parent_id": "stage_89ca938f0c5e4280bb1ff9356b4cc7c6",
+      "key": "diagnose",
+      "title": "Diagnose weaknesses and preserve strengths",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 14656,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b6-f39a-753e-9ded-1c913aa9434a"
+    },
+    {
+      "id": "stage_f24ca134100e417b8a70039c05de7fe3",
+      "parent_id": "stage_ab531319ec3547ad9d8734fe6d0b3d03",
+      "key": "closeup_checks",
+      "title": "Verify suspected moments in close-up",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 4712,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-1d67-77ab-bac5-12c6eff80788"
+    },
+    {
+      "id": "stage_e36baf4811264e408bd7b8a63561b16b",
+      "parent_id": "stage_89ca938f0c5e4280bb1ff9356b4cc7c6",
+      "key": "closeup_checks",
+      "title": "Verify suspected moments in close-up",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 2535,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-2cdb-763a-9185-147af369b45a"
+    },
+    {
+      "id": "stage_e9e80e50537c42dcbe72290ec0f51cbe",
+      "parent_id": null,
+      "key": "align",
+      "title": "Align corresponding story beats",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 1,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-3a7f-7ce4-b9b0-bdc54808cb36"
+    },
+    {
+      "id": "stage_e7c872e788244db59ff108f9061addb7",
+      "parent_id": null,
+      "key": "compare_ab",
+      "title": "Compare A and B in both orders",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 12959,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-3a82-77e8-941e-9f37c5ba1e81"
+    },
+    {
+      "id": "stage_40f2b082bd6a4b7a90cf9526717207d8",
+      "parent_id": null,
+      "key": "iteration",
+      "title": "Iteration 1 - Directed C attempt",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 43975,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-6d21-70e7-9767-8f39c42dc14f"
+    },
+    {
+      "id": "stage_94b10e3373504ebe8cb0d1fee1cd6dc6",
+      "parent_id": "stage_40f2b082bd6a4b7a90cf9526717207d8",
+      "key": "plan_repair",
+      "title": "Direct the smallest supported C",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 15152,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-6d22-7f0e-a4c3-7c39a6b95fc5"
+    },
+    {
+      "id": "stage_9596416ec3ae4884aa3358dbbba367e8",
+      "parent_id": "stage_40f2b082bd6a4b7a90cf9526717207d8",
+      "key": "render",
+      "title": "Render candidate C",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 1028,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-a853-7a2c-a8eb-9a04b3416f07"
+    },
+    {
+      "id": "stage_7198ceb07b2d482d911c113548230bf5",
+      "parent_id": "stage_40f2b082bd6a4b7a90cf9526717207d8",
+      "key": "verify",
+      "title": "Verify C implements the plan",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 492,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-ac58-7119-88cd-b2350a6e5d41"
+    },
+    {
+      "id": "stage_841e81d2baad48ef9ef81a116328638b",
+      "parent_id": "stage_40f2b082bd6a4b7a90cf9526717207d8",
+      "key": "rejudge",
+      "title": "Fresh independent audit of C",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 17993,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-ae45-7a7a-865e-e38eb23b2432"
+    },
+    {
+      "id": "stage_ed1a90077e604c83810ed71ae3e96226",
+      "parent_id": "stage_841e81d2baad48ef9ef81a116328638b",
+      "key": "ingest",
+      "title": "Inspect video and prepare evidence",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 2237,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-ae47-74c6-a0d8-e2ae1db17879"
+    },
+    {
+      "id": "stage_f2008d183c964cd3a1fcd006d53ca218",
+      "parent_id": "stage_ed1a90077e604c83810ed71ae3e96226",
+      "key": "inspect_media",
+      "title": "Inspect rendered video",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 25,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-ae47-796d-bb99-a885d08a8b36"
+    },
+    {
+      "id": "stage_c3283aaa89304a1eaa0e505133968b32",
+      "parent_id": "stage_ed1a90077e604c83810ed71ae3e96226",
+      "key": "measure_signals",
+      "title": "Measure cuts, motion and loudness",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 376,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-ae61-7a47-972e-e0a0aeb8a872"
+    },
+    {
+      "id": "stage_2ad6cc80ff47443f8ff4168aaf1d56a2",
+      "parent_id": "stage_ed1a90077e604c83810ed71ae3e96226",
+      "key": "transcribe_audio",
+      "title": "Transcribe rendered audio",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 1833,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-afda-7f9f-8a2d-c17e80269804"
+    },
+    {
+      "id": "stage_0ad7e686773a4f528ae0d8d109d37e4e",
+      "parent_id": "stage_841e81d2baad48ef9ef81a116328638b",
+      "key": "cold_judge",
+      "title": "Cold audience judge",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 5368,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-b704-7916-b820-4d773ac1a291"
+    },
+    {
+      "id": "stage_7398af618fbf42cf9aa2647147b2d99c",
+      "parent_id": "stage_0ad7e686773a4f528ae0d8d109d37e4e",
+      "key": "review_window",
+      "title": "Review 0.0-2.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 2646,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-b705-77c3-a58a-00bdcba67510"
+    },
+    {
+      "id": "stage_797a8969ac714004b33350c1f4bc4635",
+      "parent_id": "stage_0ad7e686773a4f528ae0d8d109d37e4e",
+      "key": "review_window",
+      "title": "Review 2.0-4.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 3412,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-b705-7528-818e-fd1579149f24"
+    },
+    {
+      "id": "stage_e473158dadcb4f998080f80ce24508be",
+      "parent_id": "stage_0ad7e686773a4f528ae0d8d109d37e4e",
+      "key": "review_window",
+      "title": "Review 4.0-6.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 3536,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-b707-7bf0-9483-66bcafcd68a9"
+    },
+    {
+      "id": "stage_792c1f4c81b147e8ae5225826c2c1139",
+      "parent_id": "stage_0ad7e686773a4f528ae0d8d109d37e4e",
+      "key": "review_window",
+      "title": "Review 6.0-8.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 4598,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-b707-7350-bf72-935afb80273a"
+    },
+    {
+      "id": "stage_c6e20202e61041a59c1c5c3cb20335e8",
+      "parent_id": "stage_0ad7e686773a4f528ae0d8d109d37e4e",
+      "key": "review_window",
+      "title": "Review 8.0-10.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 5363,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-b709-79d0-9d42-d1fa266c0fc9"
+    },
+    {
+      "id": "stage_3b463d51596c457a91f3249df6f34a14",
+      "parent_id": "stage_0ad7e686773a4f528ae0d8d109d37e4e",
+      "key": "review_window",
+      "title": "Review 10.0-12.0s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 4356,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-b70b-73cc-a6c0-0d805b594445"
+    },
+    {
+      "id": "stage_068fecfc11b94f94aed6a844fa6b22b5",
+      "parent_id": "stage_0ad7e686773a4f528ae0d8d109d37e4e",
+      "key": "review_window",
+      "title": "Review 12.0-12.9s",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 2149,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-c15b-7634-a8fe-79315719256a"
+    },
+    {
+      "id": "stage_ebc0e90d2010425d879f48fed5286627",
+      "parent_id": "stage_841e81d2baad48ef9ef81a116328638b",
+      "key": "diagnose",
+      "title": "Diagnose weaknesses and preserve strengths",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 9854,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-cbfd-7e70-a249-290f8c39f85f"
+    },
+    {
+      "id": "stage_f18df9be09214ddcaf797ff50ac3a183",
+      "parent_id": "stage_40f2b082bd6a4b7a90cf9526717207d8",
+      "key": "compare",
+      "title": "Compare C against A and B",
+      "kind": "agent",
+      "status": "completed",
+      "duration_ms": 9292,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b7-f48f-7a01-8ca7-f3608872f6f4"
+    },
+    {
+      "id": "stage_58af3ac7b51f40d1be731e5bba94acfe",
+      "parent_id": "stage_40f2b082bd6a4b7a90cf9526717207d8",
+      "key": "decision",
+      "title": "Accept C or keep the inputs",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 1,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b8-18dc-7a21-bce2-d6d5ecb67934"
+    },
+    {
+      "id": "stage_f3c360b693b04459bdd742023704b2d6",
+      "parent_id": "stage_40f2b082bd6a4b7a90cf9526717207d8",
+      "key": "lesson",
+      "title": "Record the A/B/C experiment lesson",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 9,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b8-18df-71c0-a583-c6789f9c3ed8"
+    },
+    {
+      "id": "stage_e1393b75c5874510a35d20e5ebf9bfaa",
+      "parent_id": null,
+      "key": "final_selection",
+      "title": "Final selection and stop reason",
+      "kind": "tool",
+      "status": "completed",
+      "duration_ms": 0,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a097b8-18e8-751a-8361-e688797260c6"
+    }
+  ],
+  "comparison": {
+    "ab": {
+      "first": "A",
+      "second": "B",
+      "scope": "whole",
+      "region": null,
+      "dimensions": [
+        {
+          "dimension": "opening_interest",
+          "verdict": "unstable",
+          "votes": {
+            "same": 1,
+            "A": 1
+          },
+          "reasons": [
+            "[A shown first] same: Both open with the same immediate hook: friends measured a bridge using a body.",
+            "[B shown first] A: Version 2 opens with the full bridge setup and quickly begins explaining the method; Version 1 stays on the same claim longer."
+          ]
+        },
+        {
+          "dimension": "comprehension",
+          "verdict": "A",
+          "votes": {
+            "A": 2
+          },
+          "reasons": [
+            "[A shown first] A: Version 2 cuts the \u201claid him down, marked his height\u201d explanation, so the measurement method is less clear.",
+            "[B shown first] A: Version 2 explicitly says they laid him down and marked his height, while Version 1 skips those steps."
+          ]
+        },
+        {
+          "dimension": "information_progression",
+          "verdict": "A",
+          "votes": {
+            "A": 2
+          },
+          "reasons": [
+            "[A shown first] A: Version 2 jumps from measuring with his body to moving him forward without explaining the body-length mark.",
+            "[B shown first] A: Version 2 adds the missing measurement steps before the repeated movement; Version 1 jumps straight from measuring to moving him."
+          ]
+        },
+        {
+          "dimension": "pacing",
+          "verdict": "unstable",
+          "votes": {
+            "B": 1,
+            "A": 1
+          },
+          "reasons": [
+            "[A shown first] B: Version 1 lingers on the same simple animation and repeats setup text, while Version 2 reaches the result faster.",
+            "[B shown first] A: Version 1 spends several seconds repeating the same body-and-line visual, whereas Version 2 advances through each step."
+          ]
+        },
+        {
+          "dimension": "visual_narration_alignment",
+          "verdict": "A",
+          "votes": {
+            "A": 2
+          },
+          "reasons": [
+            "[A shown first] A: Version 1 visibly labels \u201cone body length\u201d as it says they marked his height; Version 2 omits that step.",
+            "[B shown first] A: Version 2 shows a body-length line as it says they marked his height; Version 1 only shows a generic outline."
+          ]
+        },
+        {
+          "dimension": "emotional_effect",
+          "verdict": "A",
+          "votes": {
+            "A": 2
+          },
+          "reasons": [
+            "[A shown first] A: The explicit lay-down, mark, and repeat sequence builds anticipation before the Smoot reveal; Version 2 rushes past it.",
+            "[B shown first] A: Version 2 builds the odd method step by step before revealing the name Smoot; Version 1 reveals it with less setup."
+          ]
+        },
+        {
+          "dimension": "payoff",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[A shown first] same: Both end on the same clear image of pavement marked \u201cSMOOTS\u201d and state that the bridge remains marked.",
+            "[B shown first] same: Both end on a clear photo of pavement lettering and state that the bridge is still marked in Smoots."
+          ]
+        },
+        {
+          "dimension": "memorability",
+          "verdict": "A",
+          "votes": {
+            "A": 2
+          },
+          "reasons": [
+            "[A shown first] A: Showing the body-length measurement step makes the odd origin of a Smoot easier to retell than Version 2\u2019s compressed sequence.",
+            "[B shown first] A: The explicit sequence of lying down, marking one body length, and moving forward makes the unusual measurement easier to retell."
+          ]
+        }
+      ],
+      "overall": {
+        "dimension": "overall",
+        "verdict": "A",
+        "votes": {
+          "A": 2
+        },
+        "reasons": [
+          "[A shown first] A: Version 1 better explains the central measurement process, while Version 2\u2019s faster edit removes the key marking step.",
+          "[B shown first] A: Version 2 more clearly explains the measurement process while retaining the same final Smoots payoff."
+        ]
+      },
+      "calls": 2,
+      "failed_calls": 0,
+      "rubric_version": "abc-rubric-v2",
+      "label": "MODEL JUDGMENT: both presentation orders; disagreement kept as 'unstable'"
+    },
+    "ca": {
+      "first": "C",
+      "second": "A",
+      "scope": "whole",
+      "region": null,
+      "dimensions": [
+        {
+          "dimension": "opening_interest",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[C shown first] same: Both open with the same bold claim that friends measured a bridge using his body.",
+            "[A shown first] same: Both open with the same direct hook: friends measured a bridge using his body."
+          ]
+        },
+        {
+          "dimension": "comprehension",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[C shown first] same: Both explain laying him down, marking one body length, and repeating it before naming a Smoot.",
+            "[A shown first] same: Both clearly explain lying Smoot down repeatedly and end by showing the surviving markings."
+          ]
+        },
+        {
+          "dimension": "information_progression",
+          "verdict": "unstable",
+          "votes": {
+            "same": 1,
+            "C": 1
+          },
+          "reasons": [
+            "[C shown first] same: Both reveal the measurement process and then the later bridge markings in the same order.",
+            "[A shown first] C: Version 1 lingers longer on repeated animation beats, while Version 2 moves through the same steps faster."
+          ]
+        },
+        {
+          "dimension": "pacing",
+          "verdict": "unstable",
+          "votes": {
+            "same": 1,
+            "C": 1
+          },
+          "reasons": [
+            "[C shown first] same: The spoken lines and matching animated steps appear at the same pace in both versions.",
+            "[A shown first] C: Version 1 drags the measuring sequence slightly longer; Version 2 gets to the reveal sooner."
+          ]
+        },
+        {
+          "dimension": "visual_narration_alignment",
+          "verdict": "unstable",
+          "votes": {
+            "same": 1,
+            "C": 1
+          },
+          "reasons": [
+            "[C shown first] same: Both show the illustrated body-length measurement during the explanation and real Smoot markings at the end.",
+            "[A shown first] C: Version 2 changes the on-screen steps closer to the spoken sequence, while Version 1 holds some earlier text longer."
+          ]
+        },
+        {
+          "dimension": "emotional_effect",
+          "verdict": "unstable",
+          "votes": {
+            "same": 1,
+            "C": 1
+          },
+          "reasons": [
+            "[C shown first] same: Both use the same gradual reveal of the unusual name and the surviving markings.",
+            "[A shown first] C: Version 2 reaches the surprising modern bridge marking sooner instead of stretching the setup."
+          ]
+        },
+        {
+          "dimension": "payoff",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[C shown first] same: Both end on the clear image and statement that the bridge is still marked in Smoots.",
+            "[A shown first] same: Both end on the same clear payoff: the bridge is still marked in Smoots."
+          ]
+        },
+        {
+          "dimension": "memorability",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[C shown first] same: Both use the same memorable body-as-unit illustration and large painted \u201cSMOOTS\u201d text.",
+            "[A shown first] same: Both use the same distinctive body-length illustration and large painted 'SMOOTS' marking."
+          ]
+        }
+      ],
+      "overall": {
+        "dimension": "overall",
+        "verdict": "unstable",
+        "votes": {
+          "same": 1,
+          "C": 1
+        },
+        "reasons": [
+          "[C shown first] same: No meaningful visual or spoken difference is shown between the two complete versions.",
+          "[A shown first] C: It delivers the same clear story and payoff with less dead time in the repeated measuring section."
+        ]
+      },
+      "calls": 2,
+      "failed_calls": 0,
+      "rubric_version": "abc-rubric-v2",
+      "label": "MODEL JUDGMENT: both presentation orders; disagreement kept as 'unstable'"
+    },
+    "cb": {
+      "first": "C",
+      "second": "B",
+      "scope": "whole",
+      "region": null,
+      "dimensions": [
+        {
+          "dimension": "opening_interest",
+          "verdict": "unstable",
+          "votes": {
+            "same": 1,
+            "C": 1
+          },
+          "reasons": [
+            "[C shown first] same: Both open with the same hook: friends measured a bridge using his body.",
+            "[B shown first] C: Version 2 opens with the full bridge setup and a clear 1958 context, while Version 1 starts on a generic close-up."
+          ]
+        },
+        {
+          "dimension": "comprehension",
+          "verdict": "C",
+          "votes": {
+            "C": 2
+          },
+          "reasons": [
+            "[C shown first] C: Version 2 skips laying him down and marking his height, so the measuring method is less clear.",
+            "[B shown first] C: Version 2 explicitly says they laid him down and marked his height before moving him."
+          ]
+        },
+        {
+          "dimension": "information_progression",
+          "verdict": "C",
+          "votes": {
+            "C": 2
+          },
+          "reasons": [
+            "[C shown first] C: Version 1 adds the missing marking step before showing him moved repeatedly.",
+            "[B shown first] C: Version 2 adds the missing measuring steps instead of jumping straight from measuring to moving."
+          ]
+        },
+        {
+          "dimension": "pacing",
+          "verdict": "C",
+          "votes": {
+            "C": 2
+          },
+          "reasons": [
+            "[C shown first] C: Version 2 rushes from the hook to moving him forward without explaining the setup.",
+            "[B shown first] C: Version 1 drags on the same body-and-lines animation, while Version 2 uses its extra time to explain the action."
+          ]
+        },
+        {
+          "dimension": "visual_narration_alignment",
+          "verdict": "C",
+          "votes": {
+            "C": 2
+          },
+          "reasons": [
+            "[C shown first] C: Version 1 visibly pairs \u201claid him down\u201d and \u201cmarked his height\u201d with the body-length marker.",
+            "[B shown first] C: Version 2 shows the body-length bracket as it says they marked his height and then shifts him forward."
+          ]
+        },
+        {
+          "dimension": "emotional_effect",
+          "verdict": "C",
+          "votes": {
+            "C": 2
+          },
+          "reasons": [
+            "[C shown first] C: Version 1 builds the odd method step by step before the reveal that his name was Smoot.",
+            "[B shown first] C: The clearer step-by-step setup makes the later reveal that the markings remain more satisfying."
+          ]
+        },
+        {
+          "dimension": "payoff",
+          "verdict": "unstable",
+          "votes": {
+            "same": 1,
+            "C": 1
+          },
+          "reasons": [
+            "[C shown first] same: Both end clearly on the visible modern bridge marking and the line that it is marked in Smoots.",
+            "[B shown first] C: Version 2 ends on the large visible \"SMOOTS\" marking after explaining exactly how a Smoot was made."
+          ]
+        },
+        {
+          "dimension": "memorability",
+          "verdict": "C",
+          "votes": {
+            "C": 2
+          },
+          "reasons": [
+            "[C shown first] C: Version 1 makes the repeated body-length process more concrete, making the Smoot reveal stick.",
+            "[B shown first] C: Version 2 gives the memorable name a concrete definition, \"1 Smoot,\" rather than only naming him."
+          ]
+        }
+      ],
+      "overall": {
+        "dimension": "overall",
+        "verdict": "C",
+        "votes": {
+          "C": 2
+        },
+        "reasons": [
+          "[C shown first] C: It explains the body-based measurement instead of cutting the crucial setup steps.",
+          "[B shown first] C: Version 2 explains the measurement method clearly and earns the final real-world marking reveal; Version 1 skips the key step."
+        ]
+      },
+      "calls": 2,
+      "failed_calls": 0,
+      "rubric_version": "abc-rubric-v2",
+      "label": "MODEL JUDGMENT: both presentation orders; disagreement kept as 'unstable'"
+    },
+    "target_region": {
+      "first": "C",
+      "second": "A",
+      "scope": "region",
+      "region": {
+        "c_ms": [
+          2630,
+          12890
+        ],
+        "a_ms": [
+          2630,
+          14000
+        ]
+      },
+      "dimensions": [
+        {
+          "dimension": "clarity",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[C shown first] same: Both versions use the same captions and diagrams to explain one body length becoming a Smoot.",
+            "[A shown first] same: Both versions use the same words and matching measurement visuals."
+          ]
+        },
+        {
+          "dimension": "curiosity_or_anticipation",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[C shown first] same: Both reveal the name and later bridge markings in the same sequence.",
+            "[A shown first] same: Both reveal the name Smoot and the lasting bridge markings at the same points."
+          ]
+        },
+        {
+          "dimension": "visual_narration_alignment",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[C shown first] same: Both show the illustrated body-length measurement and the painted SMOOTS marking as those words are spoken.",
+            "[A shown first] same: Both show the figure being measured and then the painted Smoot markings as described."
+          ]
+        },
+        {
+          "dimension": "pacing",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[C shown first] same: The spoken lines and matching visual changes occur at the same pace in both.",
+            "[A shown first] same: The transcript timings and frame progression are the same in both versions."
+          ]
+        }
+      ],
+      "overall": {
+        "dimension": "overall",
+        "verdict": "same",
+        "votes": {
+          "same": 2
+        },
+        "reasons": [
+          "[C shown first] same: Neither version shows a meaningful difference in this stretch.",
+          "[A shown first] same: Neither version differs meaningfully in this stretch."
+        ]
+      },
+      "calls": 2,
+      "failed_calls": 0,
+      "rubric_version": "abc-rubric-v2",
+      "label": "MODEL JUDGMENT: both presentation orders; disagreement kept as 'unstable'"
+    }
+  },
+  "experiment": {
+    "description": "Trim the 1.11-second silent tail from A. Preserve the opening, measurement explanation, name reveal, and real bridge-marking payoff.",
+    "decision": "reject_keep_inputs",
+    "reason": "no reliable gain on the target dimensions (pacing, payoff); overall vs A: unstable",
+    "change_verification": {
+      "intended": "Start from A; Shorten the 1.11s pause at the end of 'His name was Smoot. Nearly 70 years later, that br...'. (aimed at A's finding at 12.8-14.0s: The video resolves at 12.0s, then spends its final 1.2 seconds silently holding the same image. It adds no new fact, jok)",
+      "verified": true,
+      "checks": [
+        "duration 12900 ms vs planned 12890 ms: ok",
+        "loudness follows the planned sources: correlation 0.98 (threshold 0.80): ok",
+        "picture at 1.31s matches A at 1.31s: difference 0.001 (threshold 0.06): ok",
+        "picture at 4.98s matches A at 4.98s: difference 0.000 (threshold 0.06): ok",
+        "picture at 10.11s matches A at 10.11s: difference 0.000 (threshold 0.06): ok"
+      ]
+    },
+    "protected": [
+      {
+        "item": "The unusual opening premise: friends measured a bridge using Smoot\u2019s body.",
+        "kind": "content",
+        "status": "kept",
+        "evidence": "Version 2 retains the opening line, \u201cHis friends measured a bridge using his body,\u201d and the body-on-bridge illustration.",
+        "source": "A"
+      },
+      {
+        "item": "The explicit lay-down, mark-his-height, move-forward sequence that makes the measurement method clear.",
+        "kind": "content",
+        "status": "kept",
+        "evidence": "Version 2 shows the same sequence: \u201cThey laid him down,\u201d \u201cmarked his height,\u201d and \u201cthen moved him forward,\u201d including the one-body-length marker.",
+        "source": "A"
+      },
+      {
+        "item": "The name reveal and visible \u201c1 Smoot\u201d label.",
+        "kind": "content",
+        "status": "kept",
+        "evidence": "Version 2 displays \u201cHis name was Smoot.\u201d and the visible label \u201c1 Smoot.\u201d",
+        "source": "A"
+      },
+      {
+        "item": "The real bridge photo and nearly-70-years-later line showing that the markings remain.",
+        "kind": "content",
+        "status": "kept",
+        "evidence": "Version 2 retains the bridge photo, \u201cNearly seventy years later,\u201d and \u201cthat bridge is still marked in Smoots.\u201d",
+        "source": "A"
+      },
+      {
+        "item": "Do not add new claims or on-screen text",
+        "kind": "rule",
+        "status": "respected",
+        "evidence": "The Version 2 frames show the same claims and on-screen text as Version 1, with no visible additions.",
+        "source": "A"
+      }
+    ],
+    "uncertain": [
+      "information_progression vs A: unstable",
+      "pacing vs A: unstable",
+      "visual_narration_alignment vs A: unstable",
+      "emotional_effect vs A: unstable"
+    ],
+    "outcome": "tie",
+    "new_weaknesses": []
+  },
+  "provenance": {
+    "mode": "recorded",
+    "model_judgments_are_not_human_retention": true,
+    "source_record_sha256": "7581d98253747729429085e5ec4d7c1097b98cfcc68ddcaac0d83d37ae8d454f",
+    "mocked_stages": [],
+    "manual_interventions": [],
+    "exported_fields": "Curated public fields only; no local paths, account analytics, credentials, or unrelated video corpus."
+  }
+}
