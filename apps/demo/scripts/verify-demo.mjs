@@ -4,6 +4,8 @@ assert.equal(d.final_version,'A');assert.equal(d.experiment.decision,'reject_kee
 for(const v of d.versions){assert.equal(crypto.createHash('sha256').update(fs.readFileSync(new URL('../public'+v.src,import.meta.url))).digest('hex'),v.sha256);}
 const ids=new Set(d.workflow_stages.map(s=>s.id));for(const s of d.workflow_stages){assert.ok(!s.parent_id||ids.has(s.parent_id));assert.ok(s.weave_url.startsWith('https://wandb.ai/'));}
 for(const f of ['../public/evidence.json','../src/App.tsx','../src/Landing.tsx']){const text=fs.readFileSync(new URL(f,import.meta.url),'utf8');assert.ok(!/\/Users\/|api[_-]?key|Bearer |sk-proj-|wandb_v1_|127\.0\.0\.1/.test(text));}
-const app=fs.readFileSync(new URL('../src/App.tsx',import.meta.url),'utf8');assert.ok(!/fetch\(|XMLHttpRequest|\/api\//.test(app));console.log('Public demo verified: 3 exact media hashes; 60 connected stages; retained A; no API calls or private paths.');
+const app=fs.readFileSync(new URL('../src/App.tsx',import.meta.url),'utf8');assert.ok(!/fetch\(|XMLHttpRequest|\/api\//.test(app));console.log('Public demo verified: 3 exact media hashes; 60 connected stages; retained A; curated records and no private paths.');
 
-const landing=fs.readFileSync(new URL("../src/Landing.tsx",import.meta.url),"utf8");assert.ok(landing.includes("Find what loses the viewer."));assert.ok(landing.includes("URL.createObjectURL"));assert.ok(landing.includes("URL.revokeObjectURL"));assert.ok(!/fetch\(|XMLHttpRequest|\/api\//.test(landing));
+const landing=fs.readFileSync(new URL("../src/Landing.tsx",import.meta.url),"utf8");assert.ok(landing.includes("Find what loses the viewer."));assert.ok(landing.includes("URL.createObjectURL"));assert.ok(landing.includes("URL.revokeObjectURL"));assert.ok(landing.includes('LiveAnalysis'));
+
+const live=fs.readFileSync(new URL('../src/LiveAnalysis.tsx',import.meta.url),'utf8');assert.ok(!/localStorage|sessionStorage|sk-proj-|wandb_v1_|apikey_/.test(live));assert.ok(live.includes('Human review required'));assert.ok(live.includes('crypto.randomUUID()'));
