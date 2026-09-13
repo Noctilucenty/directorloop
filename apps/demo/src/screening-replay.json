@@ -73,7 +73,9 @@
             "asr_quote": null
           }
         ]
-      }
+      },
+      "display_reason": "Clear setup; the full measurement is still to come.",
+      "display_reason_source": "Editorial summary of this recorded model suggestion; original preserved in evidence details."
     },
     {
       "start_ms": 2000,
@@ -129,7 +131,9 @@
             "asr_quote": null
           }
         ]
-      }
+      },
+      "display_reason": "The final measurement has not been revealed yet.",
+      "display_reason_source": "Editorial summary of this recorded model suggestion; original preserved in evidence details."
     },
     {
       "start_ms": 12000,
@@ -172,7 +176,9 @@
             "asr_quote": null
           }
         ]
-      }
+      },
+      "display_reason": "The video ends cleanly; leaving here may simply mean the story is over.",
+      "display_reason_source": "Editorial summary of this recorded model suggestion; original preserved in evidence details."
     }
   ],
   "display_mode": "recorded",
