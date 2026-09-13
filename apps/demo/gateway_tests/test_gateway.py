@@ -145,14 +145,14 @@ def test_full_health_blocks_upload_when_only_quick_budget_fits(tmp_path):
         assert request.url.path == '/api/health'
         return httpx.Response(200, json={
             'screening': {'available': True, 'model': 'Qwen', 'reason': None},
-            'full_screening': {'available': False, 'model': 'Qwen', 'reason': 'Screening budget has insufficient headroom for 8 requests.'},
+            'full_screening': {'available': False, 'model': 'Qwen', 'reason': 'Screening budget has insufficient headroom for 16 requests.'},
             'weave': {'connected': True},
         })
 
     app = gateway.create_app(engine_token='offline', database=tmp_path/'registry.sqlite3', transport=httpx.MockTransport(handler))
     with TestClient(app) as client:
         health = client.get('/health').json()
-        assert health['available'] is False and health['max_model_calls'] == 8
+        assert health['available'] is False and health['max_model_calls'] == 16
         assert submit(client).status_code == 503
         assert all(method == 'GET' for method, _ in calls)
 
@@ -220,6 +220,31 @@ def test_scorecard_whitelist_keeps_zero_and_unknown_separate_and_redacts_nested_
     assert set(clean['metrics']) == {'creative','retention'}
     assert '/Users/' not in str(clean) and 'private_key' not in str(clean) and 'raw_output' not in str(clean)
     assert gateway.public_scorecard(None) is None
+
+
+def test_review_repair_whitelist_does_not_publish_original_outputs_or_private_paths():
+    repair = {'status': 'running', 'attempted_sections': 5, 'completed_sections': 2,
+              'version': 'evidence-repair-v1', 'raw_output': 'private original',
+              'artifact_path': '/Users/private/clip.mp4', 'originals': [{'judgment': 'private'}]}
+    assert gateway.public_review_repair(repair) == {'status': 'running', 'attempted_sections': 5,
+                                                   'completed_sections': 2, 'version': 'evidence-repair-v1'}
+    for invalid in [None, {}, {'status': 'running', 'attempted_sections': -1, 'completed_sections': 0},
+                    {'status': 'running', 'attempted_sections': 1, 'completed_sections': 2},
+                    {'status': 'running', 'attempted_sections': True, 'completed_sections': 0},
+                    {'status': '/Users/private/value', 'attempted_sections': 1, 'completed_sections': 0}]:
+        assert gateway.public_review_repair(invalid) is None
+
+
+def test_refreshing_a_saved_result_uses_only_fresh_get_requests(bridge):
+    client, calls = bridge
+    assert submit(client).status_code == 200
+    before = list(calls)
+    for _ in range(2):
+        response = client.get('/reports/screen_abc_def', headers=AUTH)
+        assert response.status_code == 200
+        assert response.headers['cache-control'] == 'no-store'
+        assert response.json()['review_repair'] is None
+    assert calls[len(before):] == [('GET', '/api/screenings/screen_abc_def')] * 2
 
 
 def test_upload_response_recovery_is_owned_and_read_only(bridge):

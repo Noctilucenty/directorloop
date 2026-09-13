@@ -47,6 +47,22 @@ def public_scorecard(value):
     return result
 
 
+def public_review_repair(value):
+    if not isinstance(value, dict):
+        return None
+    attempted, completed = value.get('attempted_sections'), value.get('completed_sections')
+    status = value.get('status')
+    if (type(attempted) is not int or type(completed) is not int
+            or attempted < 0 or completed < 0 or completed > attempted
+            or not isinstance(status, str) or not re.fullmatch(r'[a-z_]{1,40}', status)):
+        return None
+    result = {'attempted_sections': attempted, 'completed_sections': completed, 'status': status}
+    version = value.get('version')
+    if isinstance(version, str) and re.fullmatch(r'[a-zA-Z0-9._-]{1,80}', version):
+        result['version'] = version
+    return result
+
+
 class Guard:
     def __init__(self, app, origins):
         self.app, self.origins = app, origins
@@ -148,7 +164,7 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
         try:
             state = (await api('GET', '/api/health')).json()
             screen = state.get('full_screening', state['screening'])
-            return {'available': screen['available'], 'reason': clean(screen.get('reason')), 'max_upload_bytes': MAX_BYTES, 'max_duration_ms': 180000, 'max_model_calls': 8, 'weave_connected': state['weave']['connected'], 'model': screen['model']}
+            return {'available': screen['available'], 'reason': clean(screen.get('reason')), 'max_upload_bytes': MAX_BYTES, 'max_duration_ms': 180000, 'max_model_calls': 16, 'max_sections': 8, 'weave_connected': state['weave']['connected'], 'model': screen['model']}
         except HTTPException:
             return JSONResponse({'available': False, 'reason': 'The analysis engine is offline.'}, status_code=503)
 
@@ -255,6 +271,7 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
         data = (await api('GET', '/api/screenings/' + screen_id)).json()
         result = selected(data, ('id', 'status', 'recorded_status', 'view_validation', 'duration_ms', 'created_at', 'ended_at', 'error', 'review_required', 'semantic_grounding_verified', 'automatic_edit_allowed', 'model_calls', 'input_tokens', 'output_tokens', 'weave_url', 'protocol_fingerprint'))
         result['scorecard'] = public_scorecard(data.get('scorecard'))
+        result['review_repair'] = public_review_repair(data.get('review_repair'))
         result['windows'] = []
         for window in data.get('windows', []):
             item = selected(window, ('start_ms', 'end_ms', 'status', 'recorded_status', 'display_reason', 'attention_context', 'semantic_grounding_verified', 'weave_url'))
