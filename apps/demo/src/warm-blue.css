@@ -1,0 +1,114 @@
+/* Warm paper surfaces and a slowly shifting blue contour. */
+:root {
+  color-scheme: light;
+  --bg: #f8f6f0;
+  --surface: #f2efe7;
+  --surface-2: #ebe8df;
+  --surface-3: #e1e0d8;
+  --fg: #202a35;
+  --fg-2: #414d58;
+  --fg-3: #60676c;
+  --muted: #60676c;
+  --line: #d7d8d1;
+  --line-2: #c9cec9;
+  --line-3: #a6b4b8;
+  --accent: #386b9b;
+  --accent-ink: #fffdf8;
+  --accent-soft: #dee9ec;
+  --good: #386751;
+  --bad: #a14330;
+  --warn: #86522c;
+  --model: #536c83;
+  --info: #386b9b;
+  --blue-contour: linear-gradient(115deg, #376994, #81aab7, #658dc0, #376994);
+}
+
+::selection { background: #cee1ec; color: var(--fg); }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover:not(:disabled) { background: #2c5a86; border-color: #2c5a86; }
+.btn-primary:disabled { background: #e2e5e2; color: #727a7c; border-color: #d6dbd8; }
+.btn:focus-visible, a:focus-visible, summary:focus-visible, [role="button"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.drop {
+  border: 1px solid transparent;
+  background: linear-gradient(var(--surface), var(--surface)) padding-box,
+    var(--blue-contour) border-box;
+  background-size: 100% 100%, 240% 240%;
+  animation: blue-drift 18s ease-in-out infinite alternate;
+}
+.drop::before, .drop::after { display: none; }
+.loop-rotor > i, .loop-rotor > i:nth-child(3n), .brand-mark i {
+  border-color: transparent;
+  box-shadow: none;
+}
+.loop-rotor > i::after, .brand-mark i::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: var(--blue-contour);
+  background-size: 250% 250%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: blue-drift 18s ease-in-out infinite alternate;
+  opacity: .7;
+  pointer-events: none;
+}
+.loop-rotor > i:nth-child(3n)::after { animation-delay: -6s; opacity: .9; }
+.loop-shadow { background: #527b9524; }
+.source:hover { box-shadow: 0 20px 55px -45px #53738c50; }
+.loop-rotor b { opacity: .28; }
+.editorial-risk .risk-moments button.is-selected::after {
+  background: var(--blue-contour);
+  background-size: 250% 250%;
+  animation: blue-drift 18s ease-in-out infinite alternate;
+}
+@keyframes blue-drift {
+  from { background-position: 0% 30%; }
+  to { background-position: 100% 70%; }
+}
+
+.live-analysis, .live-progress li, .live-result-meta, .live-window,
+.live-window li, .complete-evidence, .editorial-risk .risk-moments {
+  border-color: var(--line);
+}
+.live-progress, .live-window { background: var(--surface); }
+.review-suggestion { background: var(--accent-soft); }
+.live-status, .live-result-meta a, .replay-review, .review-suggestion b,
+.risk-label b, .time-link { color: var(--accent); }
+.live-analysis.has-result:not(.is-running) .live-analysis-head .eyebrow,
+.live-analysis.has-result:not(.is-running) .live-source-name,
+.live-source-name, .live-result-meta, .live-progress .mono,
+.live-window small, .observation-kind, .risk-label, .window-state,
+.compact-window .screening-details, .screening-details > p,
+.risk-intro, .risk-gap, .editorial-risk .risk-kicker,
+.editorial-risk .risk-intro, .editorial-risk .risk-axis,
+.editorial-risk .risk-gap, .editorial-risk .risk-moments button,
+.editorial-risk .risk-moments button em, .reason-time span,
+.complete-evidence > summary, .live-window details { color: var(--fg-3); }
+.editorial-risk .risk-moments button.is-selected,
+.reason-time strong, .editorial-risk .reason-copy p { color: var(--fg); }
+.editorial-risk .reason-copy small, .editorial-risk .risk-moments button small,
+.citation-warning, .state-needs_review, .state-failed { color: var(--warn); }
+.editorial-risk .risk-moments button { background: transparent; }
+.risk-segment { transition: fill .2s, stroke .2s; }
+.beat-line span { background: #d8e3e7; color: #364b5c; }
+.beat-line .tail { background: #b9ced8; color: #273f52; }
+.decision-card { border-color: #a9beb0; }
+.callout-bad { background: #f5e7df; border-color: #c49d89; color: #803c2b; }
+.url-field.is-disabled { opacity: .7; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+.analysis-brand { display: inline-flex; align-items: center; gap: 12px; }
+.analysis-brand .brand-mark { width: 26px; height: 27px; transform: scale(.8); transform-origin: left center; }
+.is-running .analysis-brand .brand-mark { animation: brand-breathe 3s ease-in-out infinite; }
+@keyframes brand-breathe { 50% { opacity: .5; } }
+
+.brand-mark i::after { opacity: 1; padding: 1.5px; }
