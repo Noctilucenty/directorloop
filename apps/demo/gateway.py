@@ -227,10 +227,10 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
         if not SCREEN_ID.fullmatch(screen_id) or not rows('SELECT id FROM requests WHERE screen_id=? AND owner=?', (screen_id, request.scope['demo_owner'])):
             raise HTTPException(404, 'Unknown demo report.')
         data = (await api('GET', '/api/screenings/' + screen_id)).json()
-        result = selected(data, ('id', 'status', 'duration_ms', 'created_at', 'ended_at', 'error', 'review_required', 'semantic_grounding_verified', 'automatic_edit_allowed', 'model_calls', 'input_tokens', 'output_tokens', 'weave_url', 'protocol_fingerprint'))
+        result = selected(data, ('id', 'status', 'recorded_status', 'view_validation', 'duration_ms', 'created_at', 'ended_at', 'error', 'review_required', 'semantic_grounding_verified', 'automatic_edit_allowed', 'model_calls', 'input_tokens', 'output_tokens', 'weave_url', 'protocol_fingerprint'))
         result['windows'] = []
         for window in data.get('windows', []):
-            item = selected(window, ('start_ms', 'end_ms', 'status', 'attention_context', 'semantic_grounding_verified', 'weave_url'))
+            item = selected(window, ('start_ms', 'end_ms', 'status', 'recorded_status', 'display_reason', 'attention_context', 'semantic_grounding_verified', 'weave_url'))
             item['delivery_signals'] = window.get('delivery_signals')
             item['validation_issues'] = [clean(x) for x in window.get('validation_issues', [])]
             judgment = window.get('judgment')

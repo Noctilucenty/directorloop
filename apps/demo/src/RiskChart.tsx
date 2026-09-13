@@ -1,7 +1,11 @@
 import {useState} from 'react';
 import {summarizeReview,checkHasEvidence,type ReviewMoment as Moment} from './review-state';
-const shortReason=(text:string)=>text.split(/(?<=[.!?])\s+/).map(x=>x.trim()).find(x=>/[.!?]$/.test(x)&&x.length<=120&&x.split(/\s+/).length<=18)||'Full explanation in details.';
-const evidenceNote=(issues:string[])=>issues.some(x=>x.includes('checklist is incomplete'))?'The detailed review is incomplete.':issues.some(x=>x.includes('quote is absent'))?'A quoted line wasn’t found in the transcript.':issues.some(x=>x.includes('frame citation was not supplied'))?'A cited frame wasn’t supplied to the reviewer.':issues.some(x=>x.includes('no supporting observation')||x.includes('no anchored'))?'This estimate has no usable supporting observation.':issues.some(x=>x.includes('requires a verbatim quote'))?'A transcript claim is missing its quoted source.':'The evidence supporting this moment needs review.';
+const shortReason=(text:string)=>{
+ const first=text.split(/(?<=[.!?])\s+/)[0]?.trim()||'No short finding available.';
+ const words=first.split(/\s+/);
+ return words.length<=18?first:words.slice(0,18).join(' ')+'…';
+};
+const evidenceNote=(issues:string[])=>issues.some(x=>x.startsWith('Intermediate checkpoint:'))?'This finding may confuse a checkpoint with the ending.':issues.some(x=>x.includes('pending future payoff'))?'An unseen payoff is not proof of a problem.':issues.some(x=>x.includes('checklist is incomplete'))?'The detailed review is incomplete.':issues.some(x=>x.includes('quote is absent'))?'A quoted line wasn’t found in the transcript.':issues.some(x=>x.includes('frame citation was not supplied'))?'A cited frame wasn’t supplied to the reviewer.':issues.some(x=>x.includes('no supporting observation')||x.includes('no anchored'))?'This estimate has no usable supporting observation.':issues.some(x=>x.includes('requires a verbatim quote'))?'A transcript claim is missing its quoted source.':'The evidence supporting this moment needs review.';
 const seconds=(ms:number)=>Number((ms/1000).toFixed(1))+'s';
 const timecode=(ms:number)=>String(Math.floor(ms/60000)).padStart(2,'0')+':'+String(Math.floor(ms/1000)%60).padStart(2,'0');
 export default function RiskChart({windows,duration}:{windows:Moment[];duration:number}){
