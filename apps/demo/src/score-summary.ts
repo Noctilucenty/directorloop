@@ -7,7 +7,12 @@ export type ScoreMetric = {
   total_sections: number;
   provisional: boolean;
   reason: string;
+  explanation?: string;
+  drivers?: ScoreEvidence[];
 };
+
+export type ScoreEvidence = {window_index:number;start_ms:number;end_ms:number;reason:string;observation_indices:number[]};
+export type ScoreStrength = ScoreEvidence & {aspect:string};
 
 export type ScoreImprovement = {
   window_index: number;
@@ -26,6 +31,8 @@ export type Scorecard = {
   predicts_audience_outcomes: false;
   metrics: {creative: ScoreMetric; retention: ScoreMetric; virality: ScoreMetric};
   improvements: ScoreImprovement[];
+  strengths?: ScoreStrength[];
+  timeline?: {window_index:number;start_ms:number;end_ms:number;score:number|null;reason:string|null;observation_indices:number[]}[];
   method: string;
   limitations: string[];
 };
@@ -36,6 +43,31 @@ export const SCORE_LABELS = {
   retention: 'Retention potential',
   virality: 'Virality potential',
 } as const;
+
+const completeScoreReason = (text?:string) => typeof text==='string'&&text.trim().length>0&&text.trim().length<=320&&
+  !/[?？؟]|\.\.\.|…/.test(text)&&!/^(?:does|do|did|is|are|was|were|can|could|would|should|will|has|have)\b/i.test(text.trim())&&/[.!。！]["”’']?$/.test(text.trim());
+function usableScoreEvidence(item:ScoreEvidence) {
+  return completeScoreReason(item.reason)&&Number.isInteger(item.window_index)&&item.window_index>=0&&
+    Number.isInteger(item.start_ms)&&Number.isInteger(item.end_ms)&&item.start_ms>=0&&item.end_ms>item.start_ms&&
+    Array.isArray(item.observation_indices)&&item.observation_indices.length>0&&item.observation_indices.every(index=>Number.isInteger(index)&&index>=0);
+}
+export function scoreDrivers(metric:ScoreMetric):ScoreEvidence[] {
+  return (metric.drivers??[]).filter(item=>usableScoreEvidence(item)&&item.end_ms<=metric.total_ms).slice(0,3);
+}
+export function metricExplanation(metric:ScoreMetric):string {
+  const drivers=scoreDrivers(metric);
+  if(drivers.length&&completeScoreReason(metric.explanation))return metric.explanation!.trim();
+  if(drivers.length)return drivers[0].reason.trim();
+  return metric.score===null?'Not enough supported evidence to rate this.':'A specific explanation was not recorded for this score.';
+}
+export function supportedStrengths(strengths:ScoreStrength[]=[]):ScoreStrength[] {
+  const seen=new Set<string>();
+  return strengths.filter(item=>{
+    if(!usableScoreEvidence(item)||typeof item.aspect!=='string'||!item.aspect.trim())return false;
+    const key=`${item.window_index}:${item.aspect}:${item.reason.trim()}`;
+    if(seen.has(key))return false;seen.add(key);return true;
+  }).slice(0,3);
+}
 
 /** Format backend ratings only. Missing or malformed evidence never becomes zero. */
 export function metricPresentation(metric: ScoreMetric, partial = false) {

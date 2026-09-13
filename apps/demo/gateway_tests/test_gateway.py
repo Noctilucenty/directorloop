@@ -235,6 +235,24 @@ def test_review_repair_whitelist_does_not_publish_original_outputs_or_private_pa
         assert gateway.public_review_repair(invalid) is None
 
 
+def test_score_explanations_and_strengths_keep_only_public_evidence_fields():
+    evidence = {'window_index': 1, 'start_ms': 2000, 'end_ms': 4000,
+                'reason': 'A clear landscape shot in /Users/private/clip.mp4.',
+                'observation_indices': [0], 'artifact_path': '/Users/private/clip.mp4', 'raw_output': 'private'}
+    value = {'metrics': {'creative': {'score': 75, 'explanation': 'The location is clear.',
+                                     'drivers': [evidence]}},
+             'strengths': [{**evidence, 'aspect': 'visual_clarity'}], 'improvements': [],
+             'timeline': [{**evidence, 'score': 50}, {'window_index': 2, 'start_ms': 4000, 'end_ms': 6000,
+                                                    'score': None, 'reason': None, 'observation_indices': []}]}
+    public = gateway.public_scorecard(value)
+    assert public['metrics']['creative']['explanation'] == 'The location is clear.'
+    assert public['metrics']['creative']['drivers'][0]['observation_indices'] == [0]
+    assert public['strengths'][0]['aspect'] == 'visual_clarity'
+    assert public['timeline'][0]['score'] == 50
+    assert public['timeline'][1]['score'] is None and public['timeline'][1]['reason'] is None
+    assert '/Users/' not in str(public) and 'raw_output' not in str(public) and 'artifact_path' not in str(public)
+
+
 def test_refreshing_a_saved_result_uses_only_fresh_get_requests(bridge):
     client, calls = bridge
     assert submit(client).status_code == 200

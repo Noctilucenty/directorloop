@@ -1,5 +1,6 @@
 export type ReviewCheck = {aspect:string;status:string;reason:string;observation_indices?:number[]};
 export type ReviewObservation = {text:string;kind:string;frame_timestamps_ms:number[];asr_quote:string|null};
+export type AttentionStrengthRating = {window_index:number;start_ms:number;end_ms:number;score:number|null;reason:string|null;observation_indices:number[]};
 export type AttentionAssessment = {version:'attention-evidence-v1';status:'supported'|'blocked';risk:'low'|'medium'|'high'|'unknown';reason:string;excluded_checks:string[];semantic_grounding_verified:false};
 export type ReviewMoment = {attention_context?:string;attention_assessment?:AttentionAssessment|null;display_reason?:string;start_ms:number;end_ms:number;status:string;validation_issues:string[];judgment:null|{attention_risk:string;suggestion:string;review_checks?:ReviewCheck[];observations?:ReviewObservation[]}};
 export function attentionAssessment(w:ReviewMoment):AttentionAssessment|null {
@@ -33,6 +34,23 @@ export function summarizeReview(windows:ReviewMoment[],duration:number) {
  const incomplete=gaps.length>0 || levels.some(risk=>risk==='unknown');
  const state=windows.length===0?'unknown':actionable.some(risk=>rank(risk)>=2)?'concern':incomplete?'incomplete':actionable.every(risk=>risk==='unknown')?'unknown':'clear';
  return {levels,preferred,gaps,state,checked:levels.filter(risk=>risk!=='unknown').length};
+}
+
+/** Plot admitted section ratings as supplied; missing points are gaps, never interpolated. */
+export function summarizeAttentionStrength(windows:ReviewMoment[],timeline:AttentionStrengthRating[]) {
+ const points=windows.map((w,index)=>{
+  const candidates=timeline.filter(point=>point.window_index===index);
+  if(candidates.length!==1||!['complete','needs_review'].includes(w.status)||!w.judgment)return null;
+  const point=candidates[0],observations=w.judgment.observations??[];
+  if(point.start_ms!==w.start_ms||point.end_ms!==w.end_ms||!Number.isInteger(point.score)||
+   ![0,25,50,75,100].includes(point.score as number)||!declarativeFinding(point.reason??undefined)||
+   !Array.isArray(point.observation_indices)||!point.observation_indices.length||
+   point.observation_indices.some(i=>!Number.isInteger(i)||i<0||i>=observations.length||w.validation_issues.some(issue=>issue.startsWith('Observation '+(i+1)+':'))))return null;
+  return point as AttentionStrengthRating&{score:number;reason:string};
+ });
+ const rated=points.flatMap((point,index)=>point?[{point,index}]:[]);
+ const preferred=rated.reduce((best,item)=>item.point.score<(points[best]?.score??Infinity)?item.index:best,rated[0]?.index??0);
+ return {points,preferred,checked:rated.length,hasVariation:new Set(rated.map(item=>item.point.score)).size>1};
 }
 export function checkHasEvidence(check:ReviewCheck,issues:string[]) {
  return !issues.some(issue=>issue.startsWith('Review check '+check.aspect+':') ||

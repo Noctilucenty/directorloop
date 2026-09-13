@@ -42,8 +42,19 @@ def public_scorecard(value):
     result = selected(value, ('version', 'status', 'evidence_level', 'predicts_audience_outcomes', 'method'))
     result['limitations'] = [clean(x) for x in value.get('limitations', []) if isinstance(x, str)]
     metrics = value.get('metrics') or {}
-    result['metrics'] = {name: selected(metrics[name], ('score', 'coverage', 'rated_ms', 'total_ms', 'rated_sections', 'total_sections', 'provisional', 'reason')) for name in ('creative', 'retention', 'virality') if isinstance(metrics.get(name), dict)}
+    result['metrics'] = {name: selected(metrics[name], ('score', 'coverage', 'rated_ms', 'total_ms', 'rated_sections', 'total_sections', 'provisional', 'reason', 'explanation')) for name in ('creative', 'retention', 'virality') if isinstance(metrics.get(name), dict)}
+    for name, metric in result['metrics'].items():
+        drivers = metrics[name].get('drivers') or []
+        metric['drivers'] = [selected(item, ('window_index', 'start_ms', 'end_ms', 'reason', 'observation_indices'))
+                             for item in drivers[:3] if isinstance(item, dict)] if isinstance(drivers, list) else []
     result['improvements'] = [selected(item, ('window_index', 'start_ms', 'end_ms', 'aspect', 'action', 'reason', 'observation_indices')) for item in value.get('improvements', [])[:3] if isinstance(item, dict)]
+    strengths = value.get('strengths') or []
+    result['strengths'] = [selected(item, ('window_index', 'start_ms', 'end_ms', 'aspect', 'reason', 'observation_indices'))
+                           for item in strengths[:3] if isinstance(item, dict)] if isinstance(strengths, list) else []
+    timeline = value.get('timeline')
+    if isinstance(timeline, list):
+        result['timeline'] = [selected(item, ('window_index', 'start_ms', 'end_ms', 'score', 'reason', 'observation_indices'))
+                              for item in timeline[:64] if isinstance(item, dict)]
     return result
 
 

@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {metricPresentation, scoreSummaryState, supportedImprovements, SCORE_DISCLAIMER, SCORE_LABELS} from '../src/score-summary.ts';
+import {metricPresentation, metricExplanation, scoreDrivers, scoreSummaryState, supportedImprovements, supportedStrengths, SCORE_DISCLAIMER, SCORE_LABELS} from '../src/score-summary.ts';
 
 const metric = (overrides = {}) => ({score: 75, coverage: 1, rated_ms: 12000, total_ms: 12000, rated_sections: 4, total_sections: 4, provisional: false, reason: 'Supported creative evidence.', ...overrides});
 const card = (overrides = {}) => ({version: 'creative-potential-v1', status: 'complete', evidence_level: 'model_rubric', predicts_audience_outcomes: false, metrics: {creative: metric(), retention: metric(), virality: metric()}, improvements: [], method: 'Duration-weighted rubric.', limitations: [], ...overrides});
@@ -82,4 +82,28 @@ test('evidence-backed improvements remain available when the report has no numer
   assert.equal(metricPresentation(scorecard.metrics.creative).value, 'Not rated');
   const component = readFileSync(new URL('../src/ScoreSummary.tsx', import.meta.url), 'utf8');
   assert.ok(component.includes('const improvements = supportedImprovements(scorecard.improvements)'));
+});
+
+const driver=(overrides={})=>({window_index:0,start_ms:0,end_ms:2000,reason:'The opening names a clear question about the landscape.',observation_indices:[0],...overrides});
+test('score explanations use admitted timestamped reasons and preserve their qualification',()=>{
+ const supplied=metric({score:45,explanation:'The specific reason to share may be less clear than the visual appeal.',drivers:[driver()]});
+ assert.equal(metricExplanation(supplied),supplied.explanation);
+ assert.equal(scoreDrivers(supplied).length,1);
+ assert.equal(metricExplanation(metric({explanation:'Does this work?',drivers:[driver()]})),driver().reason);
+ assert.match(metricExplanation(metric({score:null,drivers:[]})),/Not enough supported evidence/);
+ assert.match(metricExplanation(metric({explanation:'Unsupported claim.',drivers:[]})),/not recorded/);
+});
+
+test('strengths require real evidence references and valid times; empty feedback never invents weaknesses',()=>{
+ const strength={...driver(),aspect:'visual_clarity'};
+ assert.deepEqual(supportedStrengths([strength,{...strength}]),[strength]);
+ for(const invalid of [{observation_indices:[]},{start_ms:-1},{end_ms:0},{reason:'Is the image clear?'},{reason:'The image is clear…'}]){
+  assert.deepEqual(supportedStrengths([{...strength,...invalid}]),[]);
+ }
+ assert.deepEqual(scoreDrivers(metric({drivers:[driver({end_ms:13000})]})),[]);
+ assert.deepEqual(supportedStrengths(),[]);
+ const component=readFileSync(new URL('../src/ScoreSummary.tsx',import.meta.url),'utf8');
+ assert.ok(component.includes('What’s working'));assert.ok(component.includes('What to improve'));
+ assert.ok(component.includes('No specific edit is supported by the checked evidence.'));
+ assert.ok(component.includes('metricExplanation(supplied)'));
 });
