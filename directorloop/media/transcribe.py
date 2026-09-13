@@ -13,6 +13,7 @@ import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from ..config import get_settings
 from .probe import FFMPEG, MediaError
 
 WHISPER_CLI = shutil.which("whisper-cli") or "/opt/homebrew/bin/whisper-cli"
@@ -42,6 +43,8 @@ class Transcript:
     model: str = ""
     has_speech: bool = True
     note: str = ""
+    requested_language: str = "en"
+    detected_language: str | None = None
 
     def to_dict(self) -> dict:
         return {
@@ -54,6 +57,8 @@ class Transcript:
             "model": self.model,
             "has_speech": self.has_speech,
             "note": self.note,
+            "requested_language": self.requested_language,
+            "detected_language": self.detected_language,
         }
 
 
@@ -85,17 +90,20 @@ def extract_wav16k(path: str | Path, out_path: str | Path) -> None:
         raise MediaError(f"audio extraction failed: {proc.stderr[:200]}")
 
 
-def transcribe(path: str | Path, model_path: Path | None = None, timeout: int = 180) -> Transcript:
+def transcribe(path: str | Path, model_path: Path | None = None, timeout: int = 180, language: str | None = None) -> Transcript:
     """Transcribe the audio track of a media file. Returns an empty transcript if there is no audio."""
     model_path = model_path or DEFAULT_MODEL
+    language = language or get_settings().dl_asr_language
+    if not (language == "auto" or language.isalpha() and language.islower() and 2 <= len(language) <= 3):
+        raise ValueError("ASR language must be auto or a two/three-letter lowercase language code")
     if not whisper_available():
-        return Transcript(text="", segments=[], has_speech=False, note="whisper.cpp unavailable; transcript missing")
+        return Transcript(text="", segments=[], has_speech=False, note="whisper.cpp unavailable; transcript missing", requested_language=language)
     with tempfile.TemporaryDirectory(prefix="dl_asr_") as tmp:
         wav = Path(tmp) / "audio.wav"
         try:
             extract_wav16k(path, wav)
         except MediaError as exc:
-            return Transcript(text="", segments=[], has_speech=False, note=f"no audio: {exc}")
+            return Transcript(text="", segments=[], has_speech=False, note=f"no audio: {exc}", requested_language=language)
         out_base = Path(tmp) / "out"
         cmd = [
             WHISPER_CLI,
@@ -109,7 +117,7 @@ def transcribe(path: str | Path, model_path: Path | None = None, timeout: int = 
             "-ml",
             "0",
             "-l",
-            "en",
+            language,
             "-np",
         ]
         proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=False)
@@ -141,4 +149,6 @@ def transcribe(path: str | Path, model_path: Path | None = None, timeout: int = 
         model=model_path.name,
         has_speech=bool(text),
         note="" if text else "no speech detected",
+        requested_language=language,
+        detected_language=data.get("result", {}).get("language") or None,
     )

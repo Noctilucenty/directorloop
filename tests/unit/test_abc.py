@@ -344,10 +344,12 @@ def test_provider_failure_is_an_explicit_failed_record(monkeypatch: pytest.Monke
     install(monkeypatch, clips, {"AB:whole": "A"})
 
     def broken_audit(**kw: Any) -> AuditReport:
-        raise ProviderError("openai request failed: Error code: 429 insufficient_quota")
+        raise ProviderError("openai request failed: Error code: 429 insufficient_quota private-abc-provider-value")
 
     monkeypatch.setattr(R, "run_audit", broken_audit)
     run = R.run_abc(config(clips), bundle(ScriptedPlanner([None])), tmp_path / "data")
-    assert run.status == "failed" and run.stop_reason.startswith("the model provider failed") and "429" in run.stop_reason
+    assert run.status == "failed" and run.stop_reason.startswith("the model provider failed") and "credits exhausted" in run.stop_reason
+    assert "private-abc-provider-value" not in run.model_dump_json()
+    assert "private-abc-provider-value" not in (tmp_path / "data" / "abc" / f"{run.id}.json").read_text()
     stored = R.load_abc(tmp_path / "data", run.id)
     assert stored is not None and stored.status == "failed", "no record is left running"

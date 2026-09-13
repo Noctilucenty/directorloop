@@ -5,19 +5,22 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:recorded": "vite --mode recorded",
     "build": "tsc -p tsconfig.json --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "fixtures": "node scripts/build-fixtures.mjs",
+    "test": "node scripts/test-workflow.mjs && node scripts/test-attention.mjs && node scripts/test-transfer.mjs && node scripts/test-causal.mjs && node scripts/test-screening.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.30.0"
+    "react-router-dom": "7.18.3"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "5.2.0",
     "typescript": "^5.6.3",
-    "vite": "^5.4.11"
+    "vite": "7.3.6"
   }
 }

@@ -33,8 +33,8 @@ def client(tmp_path: Path) -> TestClient:
     comps = [FitnessComponent(name="model_full_preference_vs_control", value=0.0, unit="share of 4 calls", evidence=EvidenceClass.MODEL_EVAL, valid=4),
              FitnessComponent(name="message_comprehension", value=3, evidence=EvidenceClass.MODEL_EVAL)]
     control_fit = CreativeFitness(arm_id="cexp_1a_2b_control", hard_gates_passed=True, components=[FitnessComponent(name="message_comprehension", value=3, evidence=EvidenceClass.MODEL_EVAL)])
-    arms = [ExperimentArm(id="cexp_1a_2b_control", label="control", artifact_path=f"/x/{sha}.mp4", fitness=control_fit, status="evaluated"),
-            ExperimentArm(id="cexp_1a_2b_A", label="A", artifact_path=f"/x/{sha}.mp4", fitness=CreativeFitness(arm_id="cexp_1a_2b_A", hard_gates_passed=True, components=comps), status="evaluated")]
+    arms = [ExperimentArm(id="cexp_1a_2b_control", label="control", artifact_path=str(data / "renders" / f"{sha}.mp4"), fitness=control_fit, status="evaluated"),
+            ExperimentArm(id="cexp_1a_2b_A", label="A", artifact_path=str(data / "renders" / f"{sha}.mp4"), fitness=CreativeFitness(arm_id="cexp_1a_2b_A", hard_gates_passed=True, components=comps), status="evaluated")]
     exp = CreativeExperiment(id="cexp_1a_2b", project_id="p", video_id="aptip", question="q", policy_mode="learned", policy_version_before=0, policy_version_after=1,
                              genome_id="g", hypotheses=[], ranking=[], arms=arms, suite_id="s", suite_hash="h", status="completed", created_at="2026-09-12T20:00:00Z",
                              decision=ExperimentDecision(outcome="no_clear_winner", reason="r", primary_metric="model_full_preference_vs_control", per_arm={"cexp_1a_2b_A": "loss"}))

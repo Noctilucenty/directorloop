@@ -1,0 +1,291 @@
+{
+  "id": "audit_1a09798aaaf_cd259af9",
+  "video_id": "smoot-police-payoff-v5",
+  "version_id": "A",
+  "artifact_hash": "340d3c2016c0f2e5f6002e2f87d72f1fcebaf7a8e4de925010336a1a70e15351",
+  "duration_ms": 7466,
+  "created_at": "2026-09-12T21:49:39.105+00:00",
+  "status": "complete",
+  "coverage": {
+    "mode": "sampled_frames_plus_asr",
+    "duration_ms": 7466,
+    "windows": [
+      {
+        "kind": "prefix",
+        "start_ms": 0,
+        "end_ms": 2000,
+        "frame_timestamps_ms": [
+          166,
+          500,
+          833,
+          1166,
+          1499,
+          1833
+        ],
+        "frame_width": 448,
+        "context_frames": 0,
+        "context_width": 256,
+        "transcript_words": 9
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 2000,
+        "end_ms": 4000,
+        "frame_timestamps_ms": [
+          2166,
+          2500,
+          2833,
+          3166,
+          3500,
+          3833
+        ],
+        "frame_width": 448,
+        "context_frames": 2,
+        "context_width": 256,
+        "transcript_words": 15
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 4000,
+        "end_ms": 6000,
+        "frame_timestamps_ms": [
+          4166,
+          4500,
+          4833,
+          5166,
+          5499,
+          5833
+        ],
+        "frame_width": 448,
+        "context_frames": 4,
+        "context_width": 256,
+        "transcript_words": 23
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 6000,
+        "end_ms": 7466,
+        "frame_timestamps_ms": [
+          6166,
+          6500,
+          6833,
+          7166
+        ],
+        "frame_width": 448,
+        "context_frames": 6,
+        "context_width": 256,
+        "transcript_words": 24
+      },
+      {
+        "kind": "diagnostic",
+        "start_ms": 0,
+        "end_ms": 7466,
+        "frame_timestamps_ms": [
+          250,
+          750,
+          1250,
+          1750,
+          2250,
+          2750,
+          3250,
+          3750,
+          4250,
+          4750,
+          5250,
+          5750,
+          6250,
+          6750,
+          7250
+        ],
+        "frame_width": 384,
+        "context_frames": 0,
+        "context_width": 0,
+        "transcript_words": 24
+      }
+    ],
+    "total_frames_sent": 49,
+    "transcript_source": "whisper.cpp:ggml-large-v3-turbo-q5_0.bin",
+    "audio_inspection": "whisper.cpp transcript with word timings plus software loudness and silence measurements; the reviewer did not listen to music, sound effects, voice tone or audio-visual sync",
+    "provider": "openai",
+    "model": "gpt-5.6-terra",
+    "limitations": [
+      "frames are samples (3 per second in reviewed windows, 2 per second for diagnosis, 5 per second in close-ups); events between samples can be missed",
+      "not a frame-by-frame audiovisual review; the provider receives still images, not the video file",
+      "native video input unavailable with the configured provider (the Gemini native-video path is out of credit)"
+    ]
+  },
+  "window_reactions": [
+    {
+      "start_ms": 0,
+      "end_ms": 2000,
+      "understanding": "It looks like a story about a guy lying on a bridge while his friends use his body like a ruler to measure it.",
+      "expectation": "I expect it to explain why they measured the bridge this way and what happens to him afterward.",
+      "open_question": "Why are his friends using him as the ruler?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The odd visual of the man laid out beside measurement marks, plus the line about using him as a ruler, is a solid hook.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2357,
+      "error": null
+    },
+    {
+      "start_ms": 2000,
+      "end_ms": 4000,
+      "understanding": "It’s explaining a guy named Smoot whose friends used his body length like a ruler to measure a bridge.",
+      "expectation": "I expect it to say how many Smoots long the bridge was and why this became a thing.",
+      "open_question": "How did measuring the bridge with him turn into something notable?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The reveal that the human ruler is named Smoot, plus the visible “1 Smoot” label, makes the setup clear and interesting.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2552,
+      "error": null
+    },
+    {
+      "start_ms": 4000,
+      "end_ms": 6000,
+      "understanding": "It’s explaining how a guy named Smoot was used as a human measuring unit on a bridge, and that police used the bridge’s Smoot markings to locate accidents.",
+      "expectation": "I expect it to explain how the markings are used and why this weird measurement stuck around.",
+      "open_question": "How do police actually use the Smoot markings to pinpoint an accident?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The cut to the real bridge pavement painted with huge yellow “SMOOTS” makes the story feel real and more interesting.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2238,
+      "error": null
+    },
+    {
+      "start_ms": 6000,
+      "end_ms": 7466,
+      "understanding": "It’s explaining how a person named Smoot was used as a human measuring unit on a bridge, and that police use the bridge’s Smoot markings to locate accidents.",
+      "expectation": "I expect either more weird facts about the Smoot markings or the story of how they became official.",
+      "open_question": "Why did police actually adopt these markings?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The big painted “SMOOTS” photo and the line about locating accidents make the odd fact feel real and useful.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2805,
+      "error": null
+    }
+  ],
+  "findings": [],
+  "strengths": [
+    {
+      "id": "audit_1a09798aaaf_cd259af9_s1",
+      "start_ms": 0,
+      "end_ms": 2750,
+      "what": "The opening immediately visualizes the bizarre premise.",
+      "why": "The figure is visibly laid along measurement marks on a bridge while the caption and spoken line explain that his friends used him as a ruler; the unprimed viewer model identified this as a clear hook with low attention risk.",
+      "evidence_frames": [
+        {
+          "t_ms": 250,
+          "url": "/media/audit/audit_1a09798aaaf_cd259af9/000250.jpg"
+        },
+        {
+          "t_ms": 1250,
+          "url": "/media/audit/audit_1a09798aaaf_cd259af9/001250.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a09798aaaf_cd259af9_s2",
+      "start_ms": 2900,
+      "end_ms": 5300,
+      "what": "The name reveal makes the measurement concept concrete.",
+      "why": "“His name was Smoot” is followed by a visible “1 Smoot” label beside the figure, turning the joke-like setup into an understandable unit of measurement.",
+      "evidence_frames": [
+        {
+          "t_ms": 3250,
+          "url": "/media/audit/audit_1a09798aaaf_cd259af9/003250.jpg"
+        },
+        {
+          "t_ms": 3750,
+          "url": "/media/audit/audit_1a09798aaaf_cd259af9/003750.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a09798aaaf_cd259af9_s3",
+      "start_ms": 5300,
+      "end_ms": 7500,
+      "what": "The real-photo payoff supports the claim and gives the fact practical relevance.",
+      "why": "The cut to pavement marked “SMOOTS,” paired with the spoken/captioned explanation that police use the markings to locate accidents, makes the story feel real and useful.",
+      "evidence_frames": [
+        {
+          "t_ms": 5750,
+          "url": "/media/audit/audit_1a09798aaaf_cd259af9/005750.jpg"
+        },
+        {
+          "t_ms": 6250,
+          "url": "/media/audit/audit_1a09798aaaf_cd259af9/006250.jpg"
+        }
+      ]
+    }
+  ],
+  "audience": {
+    "label": "MODEL JUDGMENT (predicted), not measured audience behavior",
+    "stop": {
+      "verdict": "YES",
+      "reason": "The opening image of a person being used as a bridge ruler is odd, immediate, and clearly captioned.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "continue_watching": {
+      "verdict": "YES",
+      "reason": "Each line adds information: the bridge measurement, the name Smoot, then the practical police use.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "finish": {
+      "verdict": "YES",
+      "reason": "The video is only 7.5 seconds and reaches a clear factual payoff with the real “SMOOTS” marking photo.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "like": {
+      "verdict": "MAYBE",
+      "reason": "It delivers a compact, unusual fact with a visual proof point, though no explicit emotional or social prompt is shown.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "send": {
+      "verdict": "YES",
+      "reason": "The strange but useful bridge-measurement fact is naturally shareable with friends interested in trivia, bridges, or odd history.",
+      "at_ms": null,
+      "to_whom": "Friends who like unusual trivia or infrastructure facts."
+    },
+    "comment": {
+      "verdict": "MAYBE",
+      "reason": "Viewers may react to the unusual fact, but the video does not pose a question or invite a response.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "save_or_replay": {
+      "verdict": "NO",
+      "reason": "The information is simple and fully delivered in one pass; no repeat-use instruction or dense detail is shown.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "visit_creator": {
+      "verdict": "INSUFFICIENT_EVIDENCE",
+      "reason": "The frames show no creator identity, series cue, or call to visit for more.",
+      "at_ms": null,
+      "to_whom": null
+    }
+  },
+  "overall_summary": "This is a clean, fast visual fact story: the human-ruler image hooks, “1 Smoot” explains the name, and the real pavement photo validates the payoff. The supplied viewer model remains engaged throughout, so there is no evidence-supported editing failure to repair.",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09798-aaaf-7a42-8c14-7100066329ad",
+  "weave_call_id": "01a09798-aaaf-7a42-8c14-7100066329ad",
+  "timings_ms": {
+    "signals_asr_ms": 3488,
+    "cold_review_ms": 5928,
+    "diagnose_ms": 9258,
+    "closeup_ms": 0,
+    "total_ms": 19185
+  },
+  "model_calls": 5,
+  "notes": [],
+  "incomplete_reasons": [],
+  "primed_with": [],
+  "media_url": "/media/renders/340d3c2016c0f2e5f6002e2f87d72f1fcebaf7a8e4de925010336a1a70e15351.mp4"
+}

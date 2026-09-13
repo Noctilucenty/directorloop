@@ -1,0 +1,26 @@
+{
+  "status": "ok",
+  "features": {
+    "runs": false,
+    "abc": false,
+    "url_ingest": false,
+    "classify": false
+  },
+  "weave": {
+    "connected": false,
+    "project": "leondragon3798-curio/directorloop",
+    "traces_url": null,
+    "reason": "mock API: not connected"
+  },
+  "providers": [],
+  "policy_version": 8,
+  "corpus": {
+    "references": 47,
+    "with_metrics": 4,
+    "patterns": 6
+  },
+  "review": {
+    "public_url": null,
+    "local_url": "http://127.0.0.1:8790"
+  }
+}

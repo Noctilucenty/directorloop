@@ -9,11 +9,13 @@ from __future__ import annotations
 
 import contextlib
 import logging
+import re
 import subprocess
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from functools import wraps
 from typing import Any, TypeVar
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import weave
 
@@ -23,7 +25,37 @@ log = logging.getLogger(__name__)
 
 F = TypeVar("F", bound=Callable[..., Any])
 
-_REDACT_KEYS = {"api_key", "authorization", "token", "secret", "password", "correct_option_id", "answer_key"}
+_REDACT_KEYS = {"apikey", "authorization", "token", "secret", "password", "correctoptionid", "answerkey",
+                "accesstoken", "refreshtoken", "clientsecret", "cookie", "setcookie", "sessiontoken",
+                "xamzsignature", "xamzcredential", "xamzsecuritytoken", "signature", "sig"}
+
+
+def _sensitive_key(key: Any) -> bool:
+    normalized = re.sub(r"[^a-z0-9]", "", str(key).lower())
+    return normalized in _REDACT_KEYS or normalized.endswith(("apikey", "accesstoken", "refreshtoken", "clientsecret", "password"))
+
+
+def _safe_text(value: str) -> str:
+    """Scrub common credentials embedded in diagnostics and signed media URLs."""
+    value = re.sub(r"\bBearer\s+[A-Za-z0-9._~+/=-]{12,}", "[redacted authorization]", value, flags=re.I)
+    value = re.sub(r"\bAuthorization\s*[:=]\s*Basic\s+[A-Za-z0-9+/=]+", "[redacted authorization]", value, flags=re.I)
+    value = re.sub(r"\b(?:sk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{16,}|wandb_v1_[A-Za-z0-9_-]{16,}|apikey_[A-Za-z0-9_-]{16,})", "[redacted key]", value)
+
+    def safe_url(match: re.Match) -> str:
+        raw = match.group(0)
+        try:
+            parts = urlsplit(raw)
+            query = parse_qsl(parts.query, keep_blank_values=True)
+            sensitive = any(_sensitive_key(k) for k, _ in query)
+            if not sensitive and parts.username is None:
+                return raw
+            host = parts.netloc.rsplit("@", 1)[-1]
+            return urlunsplit((parts.scheme, host, parts.path,
+                               urlencode([(k, "[redacted]" if _sensitive_key(k) else v) for k, v in query]), parts.fragment))
+        except ValueError:
+            return "[unparseable URL]"
+
+    return re.sub(r"https?://[^\s\"<>]+", safe_url, value)
 
 
 def _redact(obj: Any, depth: int = 0) -> Any:
@@ -35,16 +67,16 @@ def _redact(obj: Any, depth: int = 0) -> Any:
     from pathlib import PurePath
 
     if depth > 8:
-        return str(obj)[:200]
+        return "[depth limit]"
     if hasattr(obj, "model_dump") and not isinstance(obj, type):
         try:
             obj = obj.model_dump(mode="json")
         except Exception:  # noqa: BLE001
-            return str(obj)[:200]
+            return f"<{type(obj).__name__}>"
     elif dataclasses.is_dataclass(obj) and not isinstance(obj, type):
         obj = {f.name: getattr(obj, f.name) for f in dataclasses.fields(obj)}
     if isinstance(obj, dict):
-        return {str(k): ("[redacted]" if str(k).lower() in _REDACT_KEYS else _redact(v, depth + 1)) for k, v in list(obj.items())[:200]}
+        return {str(k): ("[redacted]" if _sensitive_key(k) else _redact(v, depth + 1)) for k, v in list(obj.items())[:200]}
     if isinstance(obj, list | tuple | set):
         return [_redact(v, depth + 1) for v in list(obj)[:200]]
     if isinstance(obj, bytes):
@@ -53,9 +85,11 @@ def _redact(obj: Any, depth: int = 0) -> Any:
         return obj.value
     if isinstance(obj, PurePath):
         return str(obj)
-    if obj is None or isinstance(obj, bool | int | float | str):
+    if isinstance(obj, str):
+        return _safe_text(obj)
+    if obj is None or isinstance(obj, bool | int | float):
         return obj
-    return str(obj)[:200]
+    return f"<{type(obj).__name__}>"
 
 
 def redact_inputs(inputs: dict[str, Any]) -> dict[str, Any]:
@@ -63,7 +97,7 @@ def redact_inputs(inputs: dict[str, Any]) -> dict[str, Any]:
     for k, v in inputs.items():
         if k in ("self", "provider", "providers", "planner", "on_stage", "is_cancelled") or str(k).startswith("_"):
             continue
-        out[k] = "[redacted]" if str(k).lower() in _REDACT_KEYS else _redact(v)
+        out[k] = "[redacted]" if _sensitive_key(k) else _redact(v)
     return out
 
 

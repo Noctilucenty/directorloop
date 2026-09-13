@@ -1,0 +1,150 @@
+{
+  "id": "abc_1a09799dc01_f3bd31aa",
+  "status": "failed",
+  "created_at": "2026-09-12T21:50:38.081+00:00",
+  "ended_at": "2026-09-12T21:52:21.151+00:00",
+  "context": {
+    "creative_type": "educational short",
+    "audience": "general viewers who do not know the topic",
+    "objective": "Make a first-time viewer understand how the bridge was measured in Smoots and why the markings still matter, and keep them watching to the end.",
+    "expected_payoff": "",
+    "encounter": "a cold scrolling feed on a phone with sound on",
+    "source": "declared_by_owner"
+  },
+  "constraints": [
+    "Do not add new claims or on-screen text"
+  ],
+  "limits": {
+    "iteration_budget": 2,
+    "max_model_calls": 260,
+    "deadline_s": 1500
+  },
+  "rubric": {
+    "version": "abc-rubric-v2",
+    "whole_dimensions": {
+      "opening_interest": "In the first seconds, which version gives this viewer a clearer reason to keep watching?",
+      "comprehension": "By the end, which version leaves this viewer understanding what happened and why?",
+      "information_progression": "Which version adds new information or meaning at a better rate, without confusing jumps or needless repetition?",
+      "pacing": "Which version's pacing better fits what is shown and said at each moment (neither rushed nor dragging)?",
+      "visual_narration_alignment": "Which version's pictures better show what is being said at the same moment?",
+      "emotional_effect": "Which version creates more curiosity, anticipation, surprise or delight at the right moments?",
+      "payoff": "Which version lands its final point or payoff more clearly?",
+      "memorability": "Which version is this viewer more likely to remember or retell?"
+    },
+    "region_dimensions": {
+      "clarity": "In this stretch, which version makes what is happening easier to follow?",
+      "curiosity_or_anticipation": "In this stretch, which version builds or keeps more curiosity or anticipation?",
+      "visual_narration_alignment": "In this stretch, which version's pictures better show what is being said?",
+      "pacing": "In this stretch, which version's timing better fits what is shown and said?"
+    },
+    "sampling": {
+      "whole": {
+        "fps": 2,
+        "max_frames": 24,
+        "width": 320,
+        "words": "timed words of the rendered speech"
+      },
+      "region": {
+        "fps": 3,
+        "max_frames": 10,
+        "width": 384,
+        "words": "timed words inside the stretch"
+      }
+    },
+    "verdict_rules": "Each dimension is asked in both presentation orders (repeats=1). Same label in both orders -> that label; 'same' in both -> same; different answers -> unstable; no valid answer -> unclear. Votes are kept.",
+    "core_dimensions": [
+      "comprehension",
+      "payoff"
+    ],
+    "instruction_template": "Frames with timestamps under 100 s belong to Version 1; frames at 100 s or later belong to Version 2 (subtract 100 s).\nBoth versions present the same idea. They are {scope_text}.\nThe viewing situation for both: {encounter}. The intended viewer: {audience}. The purpose of the video: {objective}.{payoff}\nYou did not hear the audio; the words are a transcript of the rendered speech with times.\nAnswer every question with '1', '2', 'same' (no meaningful difference) or 'unclear' (these frames and words cannot tell), and one short, blunt reason tied to what you saw or read: say plainly what is worse in the losing version, not polite generalities.\nQuestions:\n{questions}\nFinally, overall: which version better serves this viewer and purpose {overall_text}?",
+    "context": {
+      "creative_type": "educational short",
+      "audience": "general viewers who do not know the topic",
+      "objective": "Make a first-time viewer understand how the bridge was measured in Smoots and why the markings still matter, and keep them watching to the end.",
+      "expected_payoff": "",
+      "encounter": "a cold scrolling feed on a phone with sound on",
+      "source": "declared_by_owner"
+    },
+    "reviewer": "openai:gpt-5.6-terra",
+    "selector": "openai:gpt-5.6-sol",
+    "sha256": "e9e6722af4254f5d959910663695821dbf474c930e4cd1897fb9e0cbe3b9bb1f"
+  },
+  "versions": {
+    "A": {
+      "label": "A",
+      "video_id": "smoot-progress-proof-v2",
+      "title": "",
+      "role": "input",
+      "original_hash": "2d76574493790add7f6279617ee7490e9249637612057306a5bbde00cd1c1fe7",
+      "evaluated_hash": "6c5271a125a6cea3906c8bcb1b585566bfad597711f85f4f504a2cc3f3de03a9",
+      "duration_ms": 13312,
+      "audit_id": null,
+      "audit_status": null,
+      "genome_cached": false,
+      "notes": [
+        "evaluated file is the original re-rendered through the same pipeline as C (identical timeline)"
+      ],
+      "media_url": "/media/renders/6c5271a125a6cea3906c8bcb1b585566bfad597711f85f4f504a2cc3f3de03a9.mp4"
+    },
+    "B": {
+      "label": "B",
+      "video_id": "smoot-hybrid-v3",
+      "title": "",
+      "role": "input",
+      "original_hash": "c418234e4347bcae2551b288dc3f0717a51d2c1c011d39cc0f420c697397fcdb",
+      "evaluated_hash": "933ea7232827ff7232d0de96cc1b9c1f701163659befd68fe94f138011b98ad5",
+      "duration_ms": 14000,
+      "audit_id": null,
+      "audit_status": null,
+      "genome_cached": false,
+      "notes": [
+        "evaluated file is the original re-rendered through the same pipeline as C (identical timeline)"
+      ],
+      "media_url": "/media/renders/933ea7232827ff7232d0de96cc1b9c1f701163659befd68fe94f138011b98ad5.mp4"
+    }
+  },
+  "comparison": null,
+  "attempts": [],
+  "final_version": "",
+  "final_decision": "",
+  "stop_reason": "the model provider ran out of credits during the independent audits of A and B; no comparison or C was produced",
+  "usage": {},
+  "runtime": {
+    "runtime_version": "director-v1",
+    "git_commit": "8ab45d3",
+    "prompt_sources_uncommitted_changes": false,
+    "prompt_source_sha256_16": {
+      "directorloop/audit/review.py": "4aea52c4f9ec6254",
+      "directorloop/audit/repairs.py": "4669a98d5c4d943c",
+      "directorloop/audit/revise.py": "1e34fddc4abc28bf",
+      "directorloop/runtime/director.py": "f62afc52039597e6",
+      "directorloop/providers/base.py": "3f38a4d6f438b9e3",
+      "directorloop/compare/judge.py": "0969ab9a03f42b78",
+      "directorloop/compare/recombine.py": "7743e99320ba64ad",
+      "directorloop/runtime/abc.py": "d7195d0ae5b4672f"
+    },
+    "reviewer": {
+      "provider": "openai",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "low"
+    },
+    "selector": {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high"
+    },
+    "decision_rules": "decide_next_action (deterministic, no model call)",
+    "renderer": "ffmpeg from typed, validated edit plans",
+    "asr": "whisper.cpp large-v3-turbo q5_0 (local)"
+  },
+  "mocked_stages": [],
+  "manual_interventions": [],
+  "annotations": [
+    "2026-09-12 14:57 PDT: record closed by the development session after the CLI process crashed on the provider error; the runtime did not catch provider failures at that commit (fixed in the next commit)"
+  ],
+  "launched_via": "cli",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09799-dc01-7c04-8d4c-546942ef3ea0",
+  "weave_call_id": "01a09799-dc01-7c04-8d4c-546942ef3ea0",
+  "timings_ms": {},
+  "error": "ProviderError: openai request failed: HTTP 429 insufficient_quota (credit_balance_exhausted)"
+}

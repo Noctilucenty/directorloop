@@ -54,10 +54,12 @@ from ..compare.recombine import (
 from ..creative.genome import GENOME_VERSION, extract_genome
 from ..creative.signals import audio_rms
 from ..domain.ids import new_id, sha256_file, utc_now_iso
+from ..jobs.worker import safe_failure, safe_limit_reason
 from ..media import render_plan
 from ..media.probe import inspect_media
 from ..media.transcribe import transcribe
 from ..observability.weave_ops import current_call_ref, set_display_name, traced
+from ..observability.workflow import attach_workflow, workflow_session, workflow_stage
 from ..providers.base import ProviderError
 from ..providers.registry import ProviderBundle
 from .budget import BudgetedProvider, BudgetExceeded, CallBudget
@@ -238,7 +240,7 @@ def select_c(planner: Any, config: ABCConfig, comparison: ABComparison, audits: 
     try:
         res = planner.complete_json(SELECT_SYSTEM, user, SELECT_SCHEMA)
     except ProviderError as exc:
-        return None, f"the selector failed: {str(exc)[:160]}"
+        return None, f"the selector failed: {safe_failure(exc)}"
     d = res.data
     chosen = next(((o, p) for o, p in options if o.key == d.get("choice")), None)
     if chosen is None and d.get("choice"):
@@ -300,12 +302,13 @@ def _new_weaknesses(c_audit: AuditReport, plan: Any, audits: dict[str, AuditRepo
 
 
 @traced("directorloop.abc_run", kind="agent")
+@workflow_session(persist=save_abc)
 def run_abc(config: ABCConfig, providers: ProviderBundle, data_dir: Path, on_stage: Any = None, abc_id: str | None = None, launched_via: str = "python") -> ABCRun:
     def emit(stage: str, msg: str, data: dict | None = None) -> None:
         if on_stage:
             on_stage(stage, msg, data)
 
-    set_display_name(f"abc_{config.a_video_id}_vs_{config.b_video_id}")
+    set_display_name(f"DirectorLoop A/B to C | {config.a_video_id} + {config.b_video_id}")
     started = time.monotonic()
     budget = CallBudget(config.max_model_calls, config.deadline_s)
     probe = BudgetedProvider(providers.probe, budget) if providers.probe is not None else None
@@ -316,238 +319,308 @@ def run_abc(config: ABCConfig, providers: ProviderBundle, data_dir: Path, on_sta
                  limits={"iteration_budget": config.iteration_budget, "max_model_calls": config.max_model_calls, "deadline_s": config.deadline_s},
                  rubric=rubric_record(config.context, reviewer, selector), runtime=runtime_record(providers), mocked_stages=mocked_stages(providers),
                  launched_via=launched_via)
+    attach_workflow(run)
     run.weave_call_id, run.weave_url = current_call_ref()
     save_abc(run, data_dir)
     emit("STARTED", f"A/B-to-C run {run.id}: rubric {run.rubric['version']} frozen (sha256 {run.rubric['sha256'][:12]})", {"abc_id": run.id, "weave_url": run.weave_url})
 
     def finish(status: str, stop_reason: str, error: str | None = None) -> ABCRun:
-        run.status, run.stop_reason, run.error = status, stop_reason, error  # type: ignore[assignment]
-        run.ended_at = utc_now_iso()
-        run.usage = budget.summary()
-        run.timings_ms["total_ms"] = int((time.monotonic() - started) * 1000)
-        accepted = next((a for a in run.attempts if a.decision == "accept"), None)
-        if accepted is not None:
-            run.final_version = "C"
-            run.final_decision = f"keep C: {accepted.reason}"
-        elif run.comparison is not None and run.comparison.best_supported:
-            run.final_version = run.comparison.best_supported
-            run.final_decision = (f"keep {run.comparison.best_supported}: no C demonstrated an improvement; {run.comparison.best_supported} was preferred over "
-                                  f"{'B' if run.comparison.best_supported == 'A' else 'A'} as a whole")
-        else:
-            run.final_version = ""
-            run.final_decision = "keep both inputs: no C demonstrated an improvement and A vs B gave no reliable overall preference"
-        save_abc(run, data_dir)
-        emit("DONE" if status == "completed" else "FAILED", f"{run.id}: {run.final_decision}. Stop reason: {stop_reason}",
-             {"abc_id": run.id, "weave_url": run.weave_url, "final_version": run.final_version})
-        return run
+        with workflow_stage("final_selection", "Final selection and stop reason") as stage:
+            run.status, run.stop_reason, run.error = status, stop_reason, error  # type: ignore[assignment]
+            run.ended_at = utc_now_iso()
+            run.usage = budget.summary()
+            run.timings_ms["total_ms"] = int((time.monotonic() - started) * 1000)
+            accepted = next((a for a in run.attempts if a.decision == "accept"), None)
+            if accepted is not None:
+                run.final_version = "C"
+                run.final_decision = f"keep C: {accepted.reason}"
+            elif run.comparison is not None and run.comparison.best_supported:
+                run.final_version = run.comparison.best_supported
+                run.final_decision = (f"keep {run.comparison.best_supported}: no C demonstrated an improvement; {run.comparison.best_supported} was preferred over "
+                                      f"{'B' if run.comparison.best_supported == 'A' else 'A'} as a whole")
+            else:
+                run.final_version = ""
+                run.final_decision = "keep both inputs: no C demonstrated an improvement and A vs B gave no reliable overall preference"
+            save_abc(run, data_dir)
+            emit("DONE" if status == "completed" else "FAILED", f"{run.id}: {run.final_decision}. Stop reason: {stop_reason}",
+                 {"abc_id": run.id, "weave_url": run.weave_url, "final_version": run.final_version})
+            stage.update(status=status, final_decision=run.final_decision, stop_reason=stop_reason, final_version=run.final_version, usage=run.usage)
+            if status == "failed":
+                stage.status = "failed"
+            return run
 
-    for label, path in (("A", config.a_path), ("B", config.b_path)):
-        problem = validate_video_path(Path(path))
-        if problem:
-            return finish("failed", f"input {label} refused: {problem}", error=problem)
-    if probe is None or planner is None:
-        return finish("failed", "no vision reviewer or no text selector is configured", error="providers missing")
+    with workflow_stage("ingest", "Ingest and validate A and B", inputs={"a_video_id": config.a_video_id, "b_video_id": config.b_video_id}) as stage:
+        for label, path in (("A", config.a_path), ("B", config.b_path)):
+            problem = validate_video_path(Path(path))
+            if problem:
+                stage.status = "failed"
+                stage.update(version=label, reason=problem)
+                return finish("failed", f"input {label} refused: {problem}", error=problem)
+        if probe is None or planner is None:
+            stage.status = "failed"
+            stage.update(reason="providers missing")
+            return finish("failed", "no vision reviewer or no text selector is configured", error="providers missing")
+        stage.update(inputs_valid=True, rubric_version=run.rubric["version"])
 
     try:
         # ---- materials: genomes, same-pipeline renders, words, loudness --------------------------------------------------
-        emit("PREPARING", "sentence beats for A and B; re-rendering both through the pipeline C will use")
-        mats: dict[str, VersionMaterial] = {}
-        genome_dir = data_dir / "creative" / "genomes"
+        with workflow_stage("prepare", "Prepare matching evaluation inputs", kind="agent") as prepare_stage:
+            emit("PREPARING", "sentence beats for A and B; re-rendering both through the pipeline C will use")
+            mats: dict[str, VersionMaterial] = {}
+            genome_dir = data_dir / "creative" / "genomes"
 
-        def prepare(label: str) -> VersionMaterial:
-            src = Path(config.a_path if label == "A" else config.b_path)
-            src_hash = sha256_file(src)
-            cached = any(genome_dir.glob(f"genome_{src_hash[:24]}_{GENOME_VERSION}_*.json"))
-            genome = extract_genome(src, probe, genome_dir, category=config.category)
-            info = inspect_media(src)
-            m = VersionMaterial(label=label, path=src, artifact_hash=src_hash, genome=genome, words=words_from_transcript(transcribe(src)), audit=None,
-                                width=int(info.width or 0), height=int(info.height or 0), duration_ms=int(info.duration_ms or 0), rms=audio_rms(src))
-            m.genome_cached = cached  # type: ignore[attr-defined]
-            return m
+            def prepare(label: str) -> VersionMaterial:
+                with workflow_stage("prepare_input", f"Prepare input {label}", inputs={"version": label}) as stage:
+                    src = Path(config.a_path if label == "A" else config.b_path)
+                    src_hash = sha256_file(src)
+                    cached = any(genome_dir.glob(f"genome_{src_hash[:24]}_{GENOME_VERSION}_*.json"))
+                    genome = extract_genome(src, probe, genome_dir, category=config.category)
+                    info = inspect_media(src)
+                    m = VersionMaterial(label=label, path=src, artifact_hash=src_hash, genome=genome, words=words_from_transcript(transcribe(src)), audit=None,
+                                        width=int(info.width or 0), height=int(info.height or 0), duration_ms=int(info.duration_ms or 0), rms=audio_rms(src))
+                    m.genome_cached = cached  # type: ignore[attr-defined]
+                    stage.update(version=label, artifact_hash=src_hash, duration_ms=m.duration_ms, genome_cached=cached)
+                    return m
 
-        with weave.ThreadPoolExecutor(max_workers=2) as ex:
-            for m in ex.map(prepare, ["A", "B"]):
-                mats[m.label] = m
-        from ..compare.recombine import output_profile, two_asset_manifest
+            with weave.ThreadPoolExecutor(max_workers=2) as ex:
+                for m in ex.map(prepare, ["A", "B"]):
+                    mats[m.label] = m
+            from ..compare.recombine import output_profile, two_asset_manifest
 
-        out_profile = output_profile(mats["A"], mats["B"])
-        manifest = two_asset_manifest(f"abc_{run.id}", mats["A"], mats["B"])
-        evaluated: dict[str, dict[str, Any]] = {}
-        for label in ("A", "B"):
-            evaluated[label] = render_c(version_plan(mats[label], out_profile), manifest, mats, data_dir)
-            run.versions[label] = VersionRef(label=label, video_id=config.a_video_id if label == "A" else config.b_video_id, role="input",  # type: ignore[arg-type]
-                                             original_path=str(mats[label].path), original_hash=mats[label].artifact_hash, evaluated_path=evaluated[label]["path"],
-                                             evaluated_hash=evaluated[label]["artifact_hash"], duration_ms=evaluated[label]["duration_ms"],
-                                             genome_cached=getattr(mats[label], "genome_cached", None),
-                                             notes=["evaluated file is the original re-rendered through the same pipeline as C (identical timeline)"])
-        save_abc(run, data_dir)
+            out_profile = output_profile(mats["A"], mats["B"])
+            manifest = two_asset_manifest(f"abc_{run.id}", mats["A"], mats["B"])
+            evaluated: dict[str, dict[str, Any]] = {}
+            for label in ("A", "B"):
+                with workflow_stage("baseline_render", f"Prepare matched evaluation copy {label}", inputs={"version": label}) as stage:
+                    evaluated[label] = render_c(version_plan(mats[label], out_profile), manifest, mats, data_dir)
+                    run.versions[label] = VersionRef(label=label, video_id=config.a_video_id if label == "A" else config.b_video_id, role="input",  # type: ignore[arg-type]
+                                                     original_path=str(mats[label].path), original_hash=mats[label].artifact_hash, evaluated_path=evaluated[label]["path"],
+                                                     evaluated_hash=evaluated[label]["artifact_hash"], duration_ms=evaluated[label]["duration_ms"],
+                                                     genome_cached=getattr(mats[label], "genome_cached", None),
+                                                     notes=["evaluated file is the original re-rendered through the same pipeline as C (identical timeline)"])
+                    stage.update(version=label, artifact_hash=evaluated[label]["artifact_hash"], duration_ms=evaluated[label]["duration_ms"], timeline="unchanged input")
+
+            save_abc(run, data_dir)
+            prepare_stage.update(versions=["A", "B"], comparison_pipeline="same render pipeline for A, B, and C")
 
         # ---- independent audits ---------------------------------------------------------------------------------------------
-        emit("AUDITING", "independent cold-audience audits of A and B (neither reviewer sees the other edit or the objective)")
-        audits: dict[str, AuditReport] = {}
+        with workflow_stage("original", "Iteration 0 - Independent A and B audits", kind="agent", iteration=0) as stage:
+            emit("AUDITING", "independent cold-audience audits of A and B (neither reviewer sees the other edit or the objective)")
+            audits: dict[str, AuditReport] = {}
 
-        def audit(label: str) -> AuditReport:
-            return run_audit(video_id=run.versions[label].video_id, video_path=Path(evaluated[label]["path"]), version_id=label, provider=probe, data_dir=data_dir)
+            def audit(label: str) -> AuditReport:
+                with workflow_stage("audit_input", f"Cold-audience audit {label}", kind="agent", iteration=0, inputs={"version": label}) as stage:
+                    report = run_audit(video_id=run.versions[label].video_id, video_path=Path(evaluated[label]["path"]), version_id=label, provider=probe, data_dir=data_dir)
+                    stage.update(version=label, audit_id=report.id, findings=len(report.findings), strengths=len(report.strengths), audit_status=report.status)
+                    if report.status != "complete":
+                        stage.status = "incomplete"
+                    return report
 
-        with weave.ThreadPoolExecutor(max_workers=2) as ex:
-            for label, rep in zip(["A", "B"], ex.map(audit, ["A", "B"]), strict=True):
-                audits[label] = rep
-                mats[label].audit = rep
-                run.versions[label].audit_id, run.versions[label].audit_status = rep.id, rep.status
-        save_abc(run, data_dir)
-        emit("AUDITS_DONE", f"A: {len(audits['A'].findings)} findings, {len(audits['A'].strengths)} strengths; B: {len(audits['B'].findings)} findings, "
-             f"{len(audits['B'].strengths)} strengths", {"audit_ids": {k: v.id for k, v in audits.items()}})
+            with weave.ThreadPoolExecutor(max_workers=2) as ex:
+                for label, rep in zip(["A", "B"], ex.map(audit, ["A", "B"]), strict=True):
+                    audits[label] = rep
+                    mats[label].audit = rep
+                    run.versions[label].audit_id, run.versions[label].audit_status = rep.id, rep.status
+            save_abc(run, data_dir)
+            emit("AUDITS_DONE", f"A: {len(audits['A'].findings)} findings, {len(audits['A'].strengths)} strengths; B: {len(audits['B'].findings)} findings, "
+                 f"{len(audits['B'].strengths)} strengths", {"audit_ids": {k: v.id for k, v in audits.items()}})
+            stage.update(audit_ids={k: v.id for k, v in audits.items()}, incomplete_inputs=[k for k, v in audits.items() if v.status != "complete"])
+            if any(v.status != "complete" for v in audits.values()):
+                stage.status = "incomplete"
+
         incomplete = [k for k, v in audits.items() if v.status != "complete"]
         if incomplete:
             return finish("completed", f"the audit of {', '.join(incomplete)} was incomplete; A and B are not compared on partial evidence")
 
         # ---- alignment and A vs B comparison ----------------------------------------------------------------------------------
-        emit("ALIGNING", "aligning equivalent story parts of A and B")
-        units = align_beats(mats["A"].genome.beats, mats["B"].genome.beats)
-        sim = text_similarity(" ".join(w.text for w in mats["A"].words), " ".join(w.text for w in mats["B"].words))
-        confounds = []
-        if sim < 0.6:
-            confounds.append(f"the narration differs substantially (wording similarity {sim:.2f}); differences may come from content, not editing")
-        if (mats["A"].width, mats["A"].height) != (mats["B"].width, mats["B"].height):
-            confounds.append("the two edits have different frame sizes; both are scaled to the same output")
-        comparison = ABComparison(comparable=sim >= 0.6, confounds=confounds, transcript_similarity=round(sim, 3), alignment=units)
-        run.comparison = comparison
-        emit("COMPARING_AB", f"{len(units)} aligned parts (wording similarity {sim:.2f}); whole-video comparison in both orders")
-        a_media = whole_media(Path(evaluated["A"]["path"]), evaluated["A"]["duration_ms"], mats["A"].words)
-        b_media = whole_media(Path(evaluated["B"]["path"]), evaluated["B"]["duration_ms"], mats["B"].words)
-        comparison.whole = compare_pair(probe, "A", a_media, "B", b_media, config.context, "whole")
-        differing = [u for u in units if u.a_start_ms is not None and u.b_start_ms is not None
-                     and (u.kind != "shared" or abs((u.a_end_ms - u.a_start_ms) - (u.b_end_ms - u.b_start_ms)) > 300)][:4]  # type: ignore[operator]
+        with workflow_stage("align", "Align corresponding story beats") as stage:
+            emit("ALIGNING", "aligning equivalent story parts of A and B")
+            units = align_beats(mats["A"].genome.beats, mats["B"].genome.beats)
+            sim = text_similarity(" ".join(w.text for w in mats["A"].words), " ".join(w.text for w in mats["B"].words))
+            confounds = []
+            if sim < 0.6:
+                confounds.append(f"the narration differs substantially (wording similarity {sim:.2f}); differences may come from content, not editing")
+            if (mats["A"].width, mats["A"].height) != (mats["B"].width, mats["B"].height):
+                confounds.append("the two edits have different frame sizes; both are scaled to the same output")
+            comparison = ABComparison(comparable=sim >= 0.6, confounds=confounds, transcript_similarity=round(sim, 3), alignment=units)
+            run.comparison = comparison
+            stage.update(aligned_parts=len(units), transcript_similarity=comparison.transcript_similarity, confounds=confounds)
 
-        def region(u: Any) -> PairComparison:
-            ra = region_media(Path(evaluated["A"]["path"]), u.a_start_ms, u.a_end_ms, mats["A"].words)
-            rb = region_media(Path(evaluated["B"]["path"]), u.b_start_ms, u.b_end_ms, mats["B"].words)
-            return compare_pair(probe, "A", ra, "B", rb, config.context, "region", region={"unit_index": u.index, "a_ms": [u.a_start_ms, u.a_end_ms], "b_ms": [u.b_start_ms, u.b_end_ms]})
+        with workflow_stage("compare_ab", "Compare A and B in both orders", kind="agent") as stage:
+            emit("COMPARING_AB", f"{len(units)} aligned parts (wording similarity {sim:.2f}); whole-video comparison in both orders")
+            a_media = whole_media(Path(evaluated["A"]["path"]), evaluated["A"]["duration_ms"], mats["A"].words)
+            b_media = whole_media(Path(evaluated["B"]["path"]), evaluated["B"]["duration_ms"], mats["B"].words)
+            comparison.whole = compare_pair(probe, "A", a_media, "B", b_media, config.context, "whole")
+            differing = [u for u in units if u.a_start_ms is not None and u.b_start_ms is not None
+                         and (u.kind != "shared" or abs((u.a_end_ms - u.a_start_ms) - (u.b_end_ms - u.b_start_ms)) > 300)][:4]  # type: ignore[operator]
 
-        with weave.ThreadPoolExecutor(max_workers=4) as ex:
-            comparison.regions = list(ex.map(region, differing))
-        for label in ("A", "B"):
-            for f in audits[label].findings:
-                for u in units:
-                    s0, s1 = (u.a_start_ms, u.a_end_ms) if label == "A" else (u.b_start_ms, u.b_end_ms)
-                    if s0 is not None and max(f.start_ms, s0) < min(f.end_ms, s1):  # type: ignore[type-var]
-                        comparison.findings_by_unit.setdefault(f"{label}:{u.index}", []).append(f"{f.start_ms / 1000:.1f}-{f.end_ms / 1000:.1f}s {f.weakness[:140]}")
-            for st in audits[label].strengths:
-                for u in units:
-                    s0, s1 = (u.a_start_ms, u.a_end_ms) if label == "A" else (u.b_start_ms, u.b_end_ms)
-                    if s0 is not None and max(st.start_ms, s0) < min(st.end_ms, s1):  # type: ignore[type-var]
-                        comparison.strengths_by_unit.setdefault(f"{label}:{u.index}", []).append(f"{st.what[:140]}")
-        ov = comparison.whole.overall.verdict
-        if ov in ("A", "B"):
-            comparison.best_supported, comparison.best_supported_reason = ov, f"{ov} was preferred as a whole in both presentation orders"
-        else:
-            comparison.best_supported_reason = f"no reliable overall preference between A and B ({ov})"
-        save_abc(run, data_dir)
-        emit("COMPARED_AB", "A vs B: " + ", ".join(f"{d.dimension} {d.verdict}" for d in comparison.whole.dimensions) + f"; overall {ov}")
+            def region(u: Any) -> PairComparison:
+                ra = region_media(Path(evaluated["A"]["path"]), u.a_start_ms, u.a_end_ms, mats["A"].words)
+                rb = region_media(Path(evaluated["B"]["path"]), u.b_start_ms, u.b_end_ms, mats["B"].words)
+                return compare_pair(probe, "A", ra, "B", rb, config.context, "region", region={"unit_index": u.index, "a_ms": [u.a_start_ms, u.a_end_ms], "b_ms": [u.b_start_ms, u.b_end_ms]})
+
+            with weave.ThreadPoolExecutor(max_workers=4) as ex:
+                comparison.regions = list(ex.map(region, differing))
+            for label in ("A", "B"):
+                for f in audits[label].findings:
+                    for u in units:
+                        s0, s1 = (u.a_start_ms, u.a_end_ms) if label == "A" else (u.b_start_ms, u.b_end_ms)
+                        if s0 is not None and max(f.start_ms, s0) < min(f.end_ms, s1):  # type: ignore[type-var]
+                            comparison.findings_by_unit.setdefault(f"{label}:{u.index}", []).append(f"{f.start_ms / 1000:.1f}-{f.end_ms / 1000:.1f}s {f.weakness[:140]}")
+                for st in audits[label].strengths:
+                    for u in units:
+                        s0, s1 = (u.a_start_ms, u.a_end_ms) if label == "A" else (u.b_start_ms, u.b_end_ms)
+                        if s0 is not None and max(st.start_ms, s0) < min(st.end_ms, s1):  # type: ignore[type-var]
+                            comparison.strengths_by_unit.setdefault(f"{label}:{u.index}", []).append(f"{st.what[:140]}")
+            ov = comparison.whole.overall.verdict
+            if ov in ("A", "B"):
+                comparison.best_supported, comparison.best_supported_reason = ov, f"{ov} was preferred as a whole in both presentation orders"
+            else:
+                comparison.best_supported_reason = f"no reliable overall preference between A and B ({ov})"
+            save_abc(run, data_dir)
+            emit("COMPARED_AB", "A vs B: " + ", ".join(f"{d.dimension} {d.verdict}" for d in comparison.whole.dimensions) + f"; overall {ov}")
+            stage.update(overall=ov, best_supported=comparison.best_supported, reason=comparison.best_supported_reason, dimensions={d.dimension: d.verdict for d in comparison.whole.dimensions})
 
         # ---- C attempts -----------------------------------------------------------------------------------------------------------
         exclude: set[str] = set()
         prior: list[str] = []
         for i in range(config.iteration_budget):
-            t_it = time.monotonic()
-            left = config.iteration_budget - i - 1
-            emit("DIRECTING", f"attempt {i + 1}: building executable C options and choosing one")
-            options, manifest, out_profile = build_c_options(mats, units, f"abc_{run.id}", config.context.objective, exclude)
-            if not options:
-                run.attempts.append(CAttempt(index=i + 1, decision="stop", reason="no executable C option remains", next_action="stop", next_action_reason="no executable C option remains"))
-                return finish("completed", "no executable C option remains")
-            proposal, why_none = select_c(planner, config, comparison, audits, options, prior)
-            if proposal is None:
-                run.attempts.append(CAttempt(index=i + 1, decision="stop", reason=why_none, next_action="stop", next_action_reason=why_none))
-                return finish("completed", why_none)
-            opt, plan = next((o, p) for o, p in options if o.key == proposal.option_key)
-            exclude.add(opt.key)
-            att = CAttempt(index=i + 1, proposal=proposal, decision="incomplete", reason="", next_action="stop")
-            run.attempts.append(att)
-            save_abc(run, data_dir)
-            emit("RENDERING_C", f"attempt {i + 1}: {opt.description}", {"option": opt.key, "target_dimensions": proposal.target_dimensions})
-            t = time.monotonic()
-            try:
-                rend = render_c(plan, manifest, mats, data_dir)
-            except Exception as exc:  # noqa: BLE001
-                att.reason = f"render failed: {str(exc)[:200]}"
-                att.next_action, att.next_action_reason = ("try_another_c", "another option may still render") if left else ("stop", "attempt budget used")
-                prior.append(f"{opt.key}: render failed")
-                continue
-            att.render_path, att.render_hash = rend["path"], rend["artifact_hash"]
-            att.version_id = f"C{i + 1}-{rend['artifact_hash'][:8]}"
-            evaluation = CEvaluation()
-            att.evaluation = evaluation
-            evaluation.change_verification = verify_c_render(opt, plan, Path(rend["path"]), mats)
-            render_ms = int((time.monotonic() - t) * 1000)
-            emit("VERIFYING_C", ("C implements the plan: " if evaluation.change_verification.verified else "C does NOT implement the plan: ")
-                 + "; ".join(evaluation.change_verification.checks))
-            if not evaluation.change_verification.verified:
-                att.reason = "the rendered C does not implement the planned change, so it is not reviewed"
-                att.next_action, att.next_action_reason = ("try_another_c", "another option may render correctly") if left else ("stop", "attempt budget used")
-                prior.append(f"{opt.key}: render did not match the plan")
-                save_abc(run, data_dir)
-                continue
-            t = time.monotonic()
-            emit("REVIEWING_C", "fresh cold-audience audit of C (no access to A, B, the comparison, the proposal or the objective)")
-            c_audit = run_audit(video_id=f"{config.a_video_id}-{config.b_video_id}-c", video_path=Path(rend["path"]), version_id=att.version_id, provider=probe, data_dir=data_dir)
-            evaluation.candidate_audit_id, evaluation.candidate_audit_status = c_audit.id, c_audit.status
-            run.versions[f"C{i + 1}"] = VersionRef(label="C", video_id=att.version_id.lower(), role="director", evaluated_path=rend["path"], evaluated_hash=rend["artifact_hash"],
-                                                   duration_ms=rend["duration_ms"], audit_id=c_audit.id, audit_status=c_audit.status,
-                                                   notes=[f"rendered from the original A and B files by plan option {opt.key}"])
-            if c_audit.status != "complete":
-                att.reason = "the fresh audit of C was incomplete; C is not judged on partial evidence"
-                att.next_action, att.next_action_reason = ("try_another_c", "retry with another option") if left else ("stop", "attempt budget used")
-                prior.append(f"{opt.key}: fresh audit incomplete")
-                save_abc(run, data_dir)
-                continue
-            emit("JUDGING_C", f"C vs {opt.base} and C vs {'B' if opt.base == 'A' else 'A'} with the frozen rubric, both presentation orders; the changed stretch; protected strengths")
-            base_label, other_label = opt.base, "B" if opt.base == "A" else "A"
-            from ..compare.recombine import planned_words_multi
+            with workflow_stage("iteration", f"Iteration {i + 1} - Directed C attempt", kind="agent", iteration=i + 1) as iteration_stage:
+                t_it = time.monotonic()
+                left = config.iteration_budget - i - 1
+                with workflow_stage("plan_repair", "Direct the smallest supported C", kind="agent", iteration=i + 1) as stage:
+                    emit("DIRECTING", f"attempt {i + 1}: building executable C options and choosing one")
+                    options, manifest, out_profile = build_c_options(mats, units, f"abc_{run.id}", config.context.objective, exclude)
+                    if not options:
+                        run.attempts.append(CAttempt(index=i + 1, decision="stop", reason="no executable C option remains", next_action="stop", next_action_reason="no executable C option remains"))
+                        stage.update(decision="stop", reason="no executable C option remains")
+                        iteration_stage.update(decision="stop", reason="no executable C option remains")
+                        return finish("completed", "no executable C option remains")
+                    proposal, why_none = select_c(planner, config, comparison, audits, options, prior)
+                    if proposal is None:
+                        run.attempts.append(CAttempt(index=i + 1, decision="stop", reason=why_none, next_action="stop", next_action_reason=why_none))
+                        stage.update(decision="stop", reason=why_none)
+                        iteration_stage.update(decision="stop", reason=why_none)
+                        return finish("completed", why_none)
+                    opt, plan = next((o, p) for o, p in options if o.key == proposal.option_key)
+                    exclude.add(opt.key)
+                    att = CAttempt(index=i + 1, proposal=proposal, decision="incomplete", reason="", next_action="stop")
+                    run.attempts.append(att)
+                    save_abc(run, data_dir)
+                    stage.update(option_key=opt.key, description=opt.description, target_dimensions=proposal.target_dimensions, expected_improvement=proposal.expected_improvement, tradeoffs=proposal.tradeoffs)
 
-            c_words = planned_words_multi(plan, {ASSET_ID[k]: m.words for k, m in mats.items()})
-            c_media = whole_media(Path(rend["path"]), rend["duration_ms"], c_words)
-            media = {"A": a_media, "B": b_media}
-            by_source: dict[str, list[str]] = {}
-            for ps in proposal.protected_strengths:
-                by_source.setdefault(ps["source"], []).append(ps["item"])
-            by_source[base_label] = by_source.get(base_label, []) + list(config.constraints)
-            results = judge_c(probe, config.context, c_media, media, base_label, other_label, Path(rend["path"]), c_words, opt,
-                              Path(evaluated[base_label]["path"]), mats[base_label].words, {k: v for k, v in by_source.items() if v})
-            evaluation.vs_base, evaluation.vs_other, evaluation.target_region = results["vs_base"], results["vs_other"], results["target"]
-            evaluation.protected = results["protected"]
-            evaluation.new_weaknesses, variance = _new_weaknesses(c_audit, plan, audits, opt.candidate_region_ms)
-            verdict = decide_c(vs_base=evaluation.vs_base, vs_other=evaluation.vs_other, target=evaluation.target_region, target_dimensions=proposal.target_dimensions,
-                               base_label=base_label, other_label=other_label, protected=evaluation.protected, new_weaknesses=evaluation.new_weaknesses)
-            evaluation.outcome, evaluation.outcome_reason = verdict["outcome"], verdict["reason"]
-            evaluation.improved, evaluation.regressed, evaluation.unchanged = verdict["improved"], verdict["regressed"], verdict["unchanged"]
-            evaluation.uncertain = verdict["uncertain"] + variance
-            att.decision = "accept" if verdict["outcome"] == "improvement" else "reject_keep_inputs"
-            att.reason = verdict["reason"]
-            if att.decision == "accept":
-                att.next_action, att.next_action_reason = "stop", "C demonstrated an improvement under the frozen rubric"
-            elif left:
-                att.next_action, att.next_action_reason = "try_another_c", "the failed option is excluded and its result is given to the selector"
-            else:
-                att.next_action, att.next_action_reason = "stop", "attempt budget used"
-            att.timings_ms = {"render_and_verify_ms": render_ms, "review_and_judge_ms": int((time.monotonic() - t) * 1000), "attempt_ms": int((time.monotonic() - t_it) * 1000)}
-            lesson = _record_lesson(data_dir, run, config, opt, proposal, evaluation)
-            att.lesson_id = lesson["lesson_id"]
-            prior.append(f"{opt.key} ({opt.description[:120]}) targeting {', '.join(proposal.target_dimensions) or 'overall'} -> {verdict['outcome']}: {verdict['reason'][:200]}")
-            save_abc(run, data_dir)
-            emit("DECIDED_C", f"attempt {i + 1}: {verdict['outcome'].upper()} -> {att.decision}: {verdict['reason'][:240]}", {"attempt": i + 1, "decision": att.decision})
-            if att.decision == "accept":
-                return finish("completed", "C accepted")
+                emit("RENDERING_C", f"attempt {i + 1}: {opt.description}", {"option": opt.key, "target_dimensions": proposal.target_dimensions})
+                t = time.monotonic()
+                with workflow_stage("render", "Render candidate C", iteration=i + 1) as stage:
+                    try:
+                        rend = render_c(plan, manifest, mats, data_dir)
+                    except Exception as exc:  # noqa: BLE001
+                        att.reason = f"render failed: {safe_failure(exc)}"
+                        att.next_action, att.next_action_reason = ("try_another_c", "another option may still render") if left else ("stop", "attempt budget used")
+                        prior.append(f"{opt.key}: render failed")
+                        stage.status = "failed"
+                        stage.update(reason=att.reason)
+                        iteration_stage.update(decision=att.decision, reason=att.reason, next_action=att.next_action)
+                        continue
+                    stage.update(artifact_hash=rend["artifact_hash"], duration_ms=rend["duration_ms"])
+
+                att.render_path, att.render_hash = rend["path"], rend["artifact_hash"]
+                att.version_id = f"C{i + 1}-{rend['artifact_hash'][:8]}"
+                evaluation = CEvaluation()
+                att.evaluation = evaluation
+                with workflow_stage("verify", "Verify C implements the plan", iteration=i + 1) as stage:
+                    evaluation.change_verification = verify_c_render(opt, plan, Path(rend["path"]), mats)
+                    render_ms = int((time.monotonic() - t) * 1000)
+                    emit("VERIFYING_C", ("C implements the plan: " if evaluation.change_verification.verified else "C does NOT implement the plan: ")
+                         + "; ".join(evaluation.change_verification.checks))
+                    if not evaluation.change_verification.verified:
+                        att.reason = "the rendered C does not implement the planned change, so it is not reviewed"
+                        att.next_action, att.next_action_reason = ("try_another_c", "another option may render correctly") if left else ("stop", "attempt budget used")
+                        stage.status = "incomplete"
+                        stage.update(verified=False, checks=evaluation.change_verification.checks, reason=att.reason)
+                        iteration_stage.update(decision=att.decision, reason=att.reason, next_action=att.next_action)
+                        prior.append(f"{opt.key}: render did not match the plan")
+                        save_abc(run, data_dir)
+                        continue
+                    stage.update(verified=evaluation.change_verification.verified, checks=evaluation.change_verification.checks)
+
+                t = time.monotonic()
+                with workflow_stage("rejudge", "Fresh independent audit of C", kind="agent", iteration=i + 1) as stage:
+                    emit("REVIEWING_C", "fresh cold-audience audit of C (no access to A, B, the comparison, the proposal or the objective)")
+                    c_audit = run_audit(video_id=f"{config.a_video_id}-{config.b_video_id}-c", video_path=Path(rend["path"]), version_id=att.version_id, provider=probe, data_dir=data_dir)
+                    evaluation.candidate_audit_id, evaluation.candidate_audit_status = c_audit.id, c_audit.status
+                    run.versions[f"C{i + 1}"] = VersionRef(label="C", video_id=att.version_id.lower(), role="director", evaluated_path=rend["path"], evaluated_hash=rend["artifact_hash"],
+                                                           duration_ms=rend["duration_ms"], audit_id=c_audit.id, audit_status=c_audit.status,
+                                                           notes=[f"rendered from the original A and B files by plan option {opt.key}"])
+                    if c_audit.status != "complete":
+                        att.reason = "the fresh audit of C was incomplete; C is not judged on partial evidence"
+                        att.next_action, att.next_action_reason = ("try_another_c", "retry with another option") if left else ("stop", "attempt budget used")
+                        stage.status = "incomplete"
+                        stage.update(audit_id=c_audit.id, audit_status=c_audit.status, reason=att.reason)
+                        iteration_stage.update(decision=att.decision, reason=att.reason, next_action=att.next_action)
+                        prior.append(f"{opt.key}: fresh audit incomplete")
+                        save_abc(run, data_dir)
+                        continue
+                    stage.update(audit_id=c_audit.id, findings=len(c_audit.findings), strengths=len(c_audit.strengths), audit_status=c_audit.status)
+
+                with workflow_stage("compare", "Compare C against A and B", kind="agent", iteration=i + 1) as stage:
+                    emit("JUDGING_C", f"C vs {opt.base} and C vs {'B' if opt.base == 'A' else 'A'} with the frozen rubric, both presentation orders; the changed stretch; protected strengths")
+                    base_label, other_label = opt.base, "B" if opt.base == "A" else "A"
+                    from ..compare.recombine import planned_words_multi
+
+                    c_words = planned_words_multi(plan, {ASSET_ID[k]: m.words for k, m in mats.items()})
+                    c_media = whole_media(Path(rend["path"]), rend["duration_ms"], c_words)
+                    media = {"A": a_media, "B": b_media}
+                    by_source: dict[str, list[str]] = {}
+                    for ps in proposal.protected_strengths:
+                        by_source.setdefault(ps["source"], []).append(ps["item"])
+                    by_source[base_label] = by_source.get(base_label, []) + list(config.constraints)
+                    results = judge_c(probe, config.context, c_media, media, base_label, other_label, Path(rend["path"]), c_words, opt,
+                                      Path(evaluated[base_label]["path"]), mats[base_label].words, {k: v for k, v in by_source.items() if v})
+                    evaluation.vs_base, evaluation.vs_other, evaluation.target_region = results["vs_base"], results["vs_other"], results["target"]
+                    evaluation.protected = results["protected"]
+                    evaluation.new_weaknesses, variance = _new_weaknesses(c_audit, plan, audits, opt.candidate_region_ms)
+                    stage.update(base=base_label, other=other_label, new_weaknesses=evaluation.new_weaknesses, reviewer_variance=variance)
+
+                with workflow_stage("decision", "Accept C or keep the inputs", iteration=i + 1) as stage:
+                    verdict = decide_c(vs_base=evaluation.vs_base, vs_other=evaluation.vs_other, target=evaluation.target_region, target_dimensions=proposal.target_dimensions,
+                                       base_label=base_label, other_label=other_label, protected=evaluation.protected, new_weaknesses=evaluation.new_weaknesses)
+                    evaluation.outcome, evaluation.outcome_reason = verdict["outcome"], verdict["reason"]
+                    evaluation.improved, evaluation.regressed, evaluation.unchanged = verdict["improved"], verdict["regressed"], verdict["unchanged"]
+                    evaluation.uncertain = verdict["uncertain"] + variance
+                    att.decision = "accept" if verdict["outcome"] == "improvement" else "reject_keep_inputs"
+                    att.reason = verdict["reason"]
+                    if att.decision == "accept":
+                        att.next_action, att.next_action_reason = "stop", "C demonstrated an improvement under the frozen rubric"
+                    elif left:
+                        att.next_action, att.next_action_reason = "try_another_c", "the failed option is excluded and its result is given to the selector"
+                    else:
+                        att.next_action, att.next_action_reason = "stop", "attempt budget used"
+                    stage.update(decision=att.decision, outcome=evaluation.outcome, reason=att.reason, next_action=att.next_action, improved=evaluation.improved, regressed=evaluation.regressed, uncertain=evaluation.uncertain)
+
+                att.timings_ms = {"render_and_verify_ms": render_ms, "review_and_judge_ms": int((time.monotonic() - t) * 1000), "attempt_ms": int((time.monotonic() - t_it) * 1000)}
+                with workflow_stage("lesson", "Record the A/B/C experiment lesson", iteration=i + 1) as stage:
+                    lesson = _record_lesson(data_dir, run, config, opt, proposal, evaluation)
+                    att.lesson_id = lesson["lesson_id"]
+                    stage.update(lesson_id=att.lesson_id, outcome=evaluation.outcome)
+
+                prior.append(f"{opt.key} ({opt.description[:120]}) targeting {', '.join(proposal.target_dimensions) or 'overall'} -> {verdict['outcome']}: {verdict['reason'][:200]}")
+                save_abc(run, data_dir)
+                emit("DECIDED_C", f"attempt {i + 1}: {verdict['outcome'].upper()} -> {att.decision}: {verdict['reason'][:240]}", {"attempt": i + 1, "decision": att.decision})
+                iteration_stage.update(decision=att.decision, reason=att.reason, next_action=att.next_action, candidate_version_id=att.version_id)
+                if att.decision == "accept":
+                    return finish("completed", "C accepted")
+
         return finish("completed", f"attempt budget of {config.iteration_budget} used")
     except BudgetExceeded as exc:
-        return finish("completed", f"stopped by a run limit: {exc}")
+        return finish("completed", f"stopped by a run limit: {safe_limit_reason(exc)}")
     except Exception as exc:  # noqa: BLE001 - a failed provider or stage is an explicit stop state, never a record left "running"
         if type(exc).__name__ == "JobCanceled":
-            run.manual_interventions.append(f"canceled by the operator during a run: {str(exc)[:160]}")
-            finish("failed", "the run was canceled", error=str(exc)[:300])
+            run.manual_interventions.append("canceled by the operator during a run")
+            finish("failed", "the run was canceled", error=safe_failure(exc))
             raise
         kind = "the model provider failed" if isinstance(exc, ProviderError) else f"a stage failed ({type(exc).__name__})"
-        return finish("failed", f"{kind}: {str(exc)[:300]}", error=f"{type(exc).__name__}: {str(exc)[:300]}")
+        return finish("failed", f"{kind}: {safe_failure(exc)}", error=safe_failure(exc))
 
 
 def judge_c(probe: Any, context: DeclaredContext, c_media: Any, media: dict[str, Any], base_label: str, other_label: str, c_path: Path, c_words: list[Any],

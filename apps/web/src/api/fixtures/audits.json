@@ -1,0 +1,200 @@
+[
+  {
+    "id": "audit_1a09798aaaf_cd259af9",
+    "video_id": "smoot-police-payoff-v5",
+    "version_id": "A",
+    "status": "complete",
+    "created_at": "2026-09-12T21:49:39.105+00:00",
+    "findings": 0,
+    "strengths": 3,
+    "duration_ms": 7466,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09798-aaaf-7a42-8c14-7100066329ad"
+  },
+  {
+    "id": "audit_1a09798aaaf_6e616ea1",
+    "video_id": "smoot-relaxed-read-v6",
+    "version_id": "B",
+    "status": "complete",
+    "created_at": "2026-09-12T21:49:52.549+00:00",
+    "findings": 1,
+    "strengths": 3,
+    "duration_ms": 10400,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09798-aaaf-78a4-8d83-2b8c44bc020e"
+  },
+  {
+    "id": "audit_1a0978ff6f5_dadfba47",
+    "video_id": "smoot-cinematic-reedit-v1-smoot-earlier-action-v3-c",
+    "version_id": "C1-65ec8e0a",
+    "status": "complete",
+    "created_at": "2026-09-12T21:40:15.518+00:00",
+    "findings": 1,
+    "strengths": 3,
+    "duration_ms": 10500,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0978f-f6f5-7e33-8d19-2f67bd1fe208"
+  },
+  {
+    "id": "audit_1a0978f3720_cfd5e38a",
+    "video_id": "smoot-cinematic-reedit-v1",
+    "version_id": "A",
+    "status": "complete",
+    "created_at": "2026-09-12T21:39:30.877+00:00",
+    "findings": 1,
+    "strengths": 3,
+    "duration_ms": 11000,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0978f-3720-7dc4-9cff-410afecac33e"
+  },
+  {
+    "id": "audit_1a0978f371f_9846f386",
+    "video_id": "smoot-earlier-action-v3",
+    "version_id": "B",
+    "status": "complete",
+    "created_at": "2026-09-12T21:39:29.177+00:00",
+    "findings": 1,
+    "strengths": 3,
+    "duration_ms": 11000,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0978f-371f-7243-9c53-5bbf70ba6b22"
+  },
+  {
+    "id": "audit_1a09789ac34_a9880f19",
+    "video_id": "smoot-action-first-v1-smoot-cinematic-reedit-v1-c",
+    "version_id": "C1-3b901cca",
+    "status": "complete",
+    "created_at": "2026-09-12T21:33:19.164+00:00",
+    "findings": 1,
+    "strengths": 4,
+    "duration_ms": 12900,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09789-ac34-7def-a352-8a9d2edf6fcd"
+  },
+  {
+    "id": "audit_1a09788d7da_f179f7ab",
+    "video_id": "smoot-action-first-v1",
+    "version_id": "A",
+    "status": "complete",
+    "created_at": "2026-09-12T21:32:31.654+00:00",
+    "findings": 1,
+    "strengths": 4,
+    "duration_ms": 14000,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09788-d7da-785e-8e7b-e42740991eca"
+  },
+  {
+    "id": "audit_1a09788d7da_d7441606",
+    "video_id": "smoot-cinematic-reedit-v1",
+    "version_id": "B",
+    "status": "complete",
+    "created_at": "2026-09-12T21:32:27.631+00:00",
+    "findings": 1,
+    "strengths": 3,
+    "duration_ms": 11000,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09788-d7da-7312-bbbc-4aa3a92c509c"
+  },
+  {
+    "id": "audit_1a09779e521_b31daf11",
+    "video_id": "ocean-v7-before-quiet-repair",
+    "version_id": "v0",
+    "status": "complete",
+    "created_at": "2026-09-12T21:16:21.217+00:00",
+    "findings": 2,
+    "strengths": 4,
+    "duration_ms": 12033,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09779-e521-73c0-904e-da5bdd9c0308"
+  },
+  {
+    "id": "audit_1a097793f13_7872218d",
+    "video_id": "beavers-v7",
+    "version_id": "v0",
+    "status": "complete",
+    "created_at": "2026-09-12T21:15:32.332+00:00",
+    "findings": 1,
+    "strengths": 3,
+    "duration_ms": 11066,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09779-3f12-7708-b7df-0276bd78dab1"
+  },
+  {
+    "id": "audit_1a09778cbc6_0265fbd7",
+    "video_id": "aplaze",
+    "version_id": "v0",
+    "status": "complete",
+    "created_at": "2026-09-12T21:14:54.436+00:00",
+    "findings": 0,
+    "strengths": 3,
+    "duration_ms": 15567,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09778-cbc6-7b73-8bc9-0aec177188a6"
+  },
+  {
+    "id": "audit_1a097780c19_2b4cd97f",
+    "video_id": "aptip",
+    "version_id": "v0",
+    "status": "complete",
+    "created_at": "2026-09-12T21:14:14.629+00:00",
+    "findings": 1,
+    "strengths": 3,
+    "duration_ms": 13867,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09778-0c19-7878-b242-5cfa20e1fb7b"
+  },
+  {
+    "id": "audit_1a097723ab1_644b891d",
+    "video_id": "aptip",
+    "version_id": "v1-ed861c36",
+    "status": "complete",
+    "created_at": "2026-09-12T21:07:46.907+00:00",
+    "findings": 1,
+    "strengths": 3,
+    "duration_ms": 13900,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09772-3ab1-7f61-9593-73704910b1b9"
+  },
+  {
+    "id": "audit_1a097719e54_89c7a8e5",
+    "video_id": "aptip",
+    "version_id": "v0",
+    "status": "complete",
+    "created_at": "2026-09-12T21:07:10.887+00:00",
+    "findings": 1,
+    "strengths": 4,
+    "duration_ms": 13867,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09771-9e53-7f64-b0a9-dcbcae55d041"
+  },
+  {
+    "id": "audit_1a09770fb44_cb7c53c2",
+    "video_id": "beavers-v7",
+    "version_id": "v0",
+    "status": "complete",
+    "created_at": "2026-09-12T21:06:30.110+00:00",
+    "findings": 1,
+    "strengths": 3,
+    "duration_ms": 11066,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09770-fb44-788d-a34f-add557315670"
+  },
+  {
+    "id": "audit_1a0976cfe14_aa5d9529",
+    "video_id": "beavers-v7",
+    "version_id": "v0",
+    "status": "complete",
+    "created_at": "2026-09-12T21:02:11.597+00:00",
+    "findings": 2,
+    "strengths": 3,
+    "duration_ms": 11066,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0976c-fe02-7459-999c-1b4a13b574dc"
+  },
+  {
+    "id": "audit_1a0976b6f33_adc12b66",
+    "video_id": "aptip",
+    "version_id": "v0",
+    "status": "complete",
+    "created_at": "2026-09-12T21:00:30.385+00:00",
+    "findings": 1,
+    "strengths": 4,
+    "duration_ms": 13867,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0976b-6f33-7918-831c-8c3db4aa6f07"
+  },
+  {
+    "id": "audit_1a0975a060a_4f19c2cb",
+    "video_id": "aptip",
+    "version_id": "original",
+    "status": "complete",
+    "created_at": "2026-09-12T20:41:26.247+00:00",
+    "findings": 1,
+    "strengths": 3,
+    "duration_ms": 13867,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0975a-0607-702f-868c-dff63df5ef58"
+  }
+]

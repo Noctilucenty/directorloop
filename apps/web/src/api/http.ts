@@ -1,160 +1,175 @@
-import { ApiError, type ApiClient, type ReviewAnswers } from "./client";
+import type { CausalRun, CausalStart, CausalSummary } from "./causal";
+import type { ScreeningReport, ScreeningStart, ScreeningSummary } from "./screening";
+import { ApiError, type ApiClient } from "./client";
+import { markSessionLocked } from "./session";
 import type {
-  BenchmarkRun,
-  Comparison,
-  HealthReady,
+  ABCRun,
+  ABCStart,
+  ABCSummary,
+  Audit,
+  AuditSummary,
+  Corpus,
+  DesignPreview,
+  ExperimentDetail,
+  ExperimentSummary,
+  Health,
+  IngestStart,
+  Job,
   JobEvent,
-  JobView,
   PolicyStore,
-  ProjectDetail,
-  ProjectSummary,
-  ProviderEntry,
-  ReviewAssignment,
+  Repair,
+  ReviewQr,
   ReviewSummary,
-  VersionDetail,
-  VersionView,
+  RunDetail,
+  RunStart,
+  RunSummary,
+  TransferReport,
+  UploadResult,
+  VideoDetail,
+  VideoSummary,
 } from "./types";
 
-const TOKEN_KEY = "dl_local_token";
+const enc = encodeURIComponent;
 
-export function getLocalToken(): string {
-  try {
-    return localStorage.getItem(TOKEN_KEY) ?? "";
-  } catch {
-    return "";
-  }
+function detailOf(body: unknown, fallback: string): string {
+  const detail = (body as { detail?: unknown } | null)?.detail;
+  if (typeof detail === "string") return detail;
+  if (detail && typeof detail === "object" && "message" in detail && typeof detail.message === "string") return detail.message;
+  if (detail) return JSON.stringify(detail);
+  return fallback;
 }
 
-export function setLocalToken(token: string): void {
-  try {
-    if (token) localStorage.setItem(TOKEN_KEY, token);
-    else localStorage.removeItem(TOKEN_KEY);
-  } catch {
-    // storage unavailable; ignore
-  }
-}
-
-function authHeaders(): Record<string, string> {
-  const token = getLocalToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
+export const UNREACHABLE = "Cannot reach the DirectorLoop API. Check that the server is running, then try again.";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`/api${path}`, {
-    ...init,
-    headers: {
-      Accept: "application/json",
-      ...(init?.body ? { "Content-Type": "application/json" } : {}),
-      ...authHeaders(),
-      ...(init?.headers ?? {}),
-    },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`/api${path}`, {
+      ...init,
+      headers: {
+        Accept: "application/json",
+        ...(init?.body ? { "Content-Type": "application/json" } : {}),
+        ...(init?.headers ?? {}),
+      },
+    });
+  } catch (err) {
+    if (err instanceof DOMException && err.name === "AbortError") throw err;
+    throw new ApiError(0, UNREACHABLE);
+  }
   if (!res.ok) {
+    if (res.status === 401) markSessionLocked();
     let detail = res.statusText;
     try {
-      const body = (await res.json()) as { detail?: unknown };
-      if (typeof body.detail === "string") detail = body.detail;
-      else if (body.detail) detail = JSON.stringify(body.detail);
+      detail = detailOf(await res.json(), detail);
     } catch {
       // non-JSON error body
     }
-    throw new ApiError(res.status, `${res.status} ${detail}`);
+    throw new ApiError(res.status, detail || `HTTP ${res.status}`);
   }
   if (res.status === 204) return undefined as T;
-  return (await res.json()) as T;
+  try {
+    return (await res.json()) as T;
+  } catch {
+    throw new ApiError(res.status, `The API answered ${path.split("?")[0]} with something that is not readable JSON.`);
+  }
 }
 
-/** Parses a text/event-stream body and invokes onEvent for each `data:` payload. */
-export async function readEventStream(
-  path: string,
-  onEvent: (event: JobEvent) => void,
-  signal: AbortSignal,
-): Promise<void> {
-  const res = await fetch(`/api${path}`, {
-    headers: { Accept: "text/event-stream", ...authHeaders() },
-    signal,
-  });
-  if (!res.ok || !res.body) {
-    throw new ApiError(res.status, `event stream ${res.status} ${res.statusText}`);
-  }
+/** Reads a text/event-stream body. Only frames carrying a job event (a numeric seq) are delivered; the server's
+ *  closing `event: end` frame ends the stream. */
+async function readEventStream(path: string, onEvent: (event: JobEvent) => void, signal: AbortSignal): Promise<void> {
+  const res = await fetch(`/api${path}`, { headers: { Accept: "text/event-stream" }, signal });
+  if (res.status === 401) markSessionLocked();
+  if (!res.ok || !res.body) throw new ApiError(res.status, `event stream ${res.status} ${res.statusText}`);
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
   let buffer = "";
   for (;;) {
     const { value, done } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
+    if (done) return;
+    buffer += decoder.decode(value, { stream: true }).replace(/\r\n/g, "\n");
     let idx: number;
     while ((idx = buffer.indexOf("\n\n")) >= 0) {
       const chunk = buffer.slice(0, idx);
       buffer = buffer.slice(idx + 2);
-      const dataLines = chunk
-        .split("\n")
-        .filter((line) => line.startsWith("data:"))
-        .map((line) => line.slice(5).trimStart());
-      if (dataLines.length === 0) continue;
-      const raw = dataLines.join("\n");
+      const lines = chunk.split("\n");
+      const eventName = lines.find((l) => l.startsWith("event:"))?.slice(6).trim() ?? "message";
+      const data = lines
+        .filter((l) => l.startsWith("data:"))
+        .map((l) => l.slice(5).trimStart())
+        .join("\n");
+      if (eventName === "end") {
+        await reader.cancel().catch(() => undefined);
+        return;
+      }
+      if (!data) continue;
       try {
-        onEvent(JSON.parse(raw) as JobEvent);
+        const parsed = JSON.parse(data) as JobEvent;
+        if (typeof parsed.seq === "number") onEvent(parsed);
       } catch {
-        // ignore malformed frames; the polling fallback keeps state correct
+        // a malformed frame is skipped; polling keeps the state correct
       }
     }
   }
 }
 
+function upload(file: File, onProgress: (sent: number, total: number) => void, signal?: AbortSignal): Promise<UploadResult> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/uploads");
+    xhr.responseType = "json";
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) onProgress(e.loaded, e.total);
+    };
+    xhr.onload = () => {
+      if (xhr.status === 401) markSessionLocked();
+      if (xhr.status >= 200 && xhr.status < 300) resolve(xhr.response as UploadResult);
+      else reject(new ApiError(xhr.status, detailOf(xhr.response, `upload failed (${xhr.status})`)));
+    };
+    xhr.onerror = () => reject(new ApiError(0, "the upload could not reach the API"));
+    xhr.onabort = () => reject(new ApiError(0, "upload canceled"));
+    signal?.addEventListener("abort", () => xhr.abort());
+    const form = new FormData();
+    form.append("file", file);
+    xhr.send(form);
+  });
+}
+
 export function createHttpClient(): ApiClient {
   return {
     mode: "live",
-    healthReady: () => request<HealthReady>("/health/ready"),
-    listProjects: () => request<ProjectSummary[]>("/projects"),
-    importProject: (packDir) =>
-      request<ProjectDetail>("/projects/import", { method: "POST", body: JSON.stringify({ pack_dir: packDir }) }),
-    getProject: (id) => request<ProjectDetail>(`/projects/${encodeURIComponent(id)}`),
-    listVersions: (projectId) => request<VersionView[]>(`/projects/${encodeURIComponent(projectId)}/versions`),
-    getVersion: (id) => request<VersionDetail>(`/versions/${encodeURIComponent(id)}`),
-    getComparison: (versionId, against) =>
-      request<Comparison>(`/versions/${encodeURIComponent(versionId)}/comparison?against=${encodeURIComponent(against)}`),
-    approveVersion: (versionId, note) =>
-      request<VersionView>(`/versions/${encodeURIComponent(versionId)}/approve`, {
-        method: "POST",
-        body: JSON.stringify({ note }),
-      }),
-    rejectVersion: (versionId, note) =>
-      request<VersionView>(`/versions/${encodeURIComponent(versionId)}/reject`, {
-        method: "POST",
-        body: JSON.stringify({ note }),
-      }),
-    startBaselineJob: (projectId, idempotencyKey) =>
-      request<JobView>(`/projects/${encodeURIComponent(projectId)}/baseline-jobs`, {
-        method: "POST",
-        body: JSON.stringify({ idempotency_key: idempotencyKey }),
-      }),
-    startImprovementJob: (projectId, baseVersionId, idempotencyKey, policy) =>
-      request<JobView>(`/projects/${encodeURIComponent(projectId)}/improvement-jobs`, {
-        method: "POST",
-        body: JSON.stringify({ base_version_id: baseVersionId, idempotency_key: idempotencyKey, policy }),
-      }),
-    getJob: (id) => request<JobView>(`/jobs/${encodeURIComponent(id)}`),
-    listJobs: (projectId) => request<JobView[]>(`/projects/${encodeURIComponent(projectId)}/jobs`),
-    cancelJob: (id) => request<JobView>(`/jobs/${encodeURIComponent(id)}/cancel`, { method: "POST" }),
-    streamJobEvents: (jobId, afterSeq, onEvent, signal) =>
-      readEventStream(`/jobs/${encodeURIComponent(jobId)}/events?after=${afterSeq}`, onEvent, signal),
-    getPolicies: () => request<PolicyStore>("/policies"),
-    getBenchmarks: () => request<BenchmarkRun[]>("/benchmarks"),
-    getProviders: () => request<ProviderEntry[]>("/providers"),
-    createReviewSession: (projectId) =>
-      request<{ token: string; url: string }>("/review/sessions", {
-        method: "POST",
-        body: JSON.stringify({ project_id: projectId }),
-      }),
-    getReview: (token) => request<ReviewAssignment>(`/review/${encodeURIComponent(token)}`),
-    submitReview: (token, body: ReviewAnswers) =>
-      request<{ recorded: boolean }>(`/review/${encodeURIComponent(token)}/answers`, {
-        method: "POST",
-        body: JSON.stringify(body),
-      }),
-    getReviewSummary: (projectId) =>
-      request<ReviewSummary>(`/projects/${encodeURIComponent(projectId)}/review-summary`),
+    getHealth: () => request<Health>("/health"),
+    listVideos: () => request<VideoSummary[]>("/videos"),
+    uploadVideo: upload,
+    startCausal: (body) => request<CausalStart>("/causal", { method: "POST", body: JSON.stringify(body) }),
+    listCausal: (videoId) => request<CausalSummary[]>(`/causal${videoId ? `?video_id=${enc(videoId)}` : ""}`),
+    getCausal: (id) => request<CausalRun>(`/causal/${enc(id)}`),
+    startRun: (body) => request<RunStart>("/runs", { method: "POST", body: JSON.stringify(body) }),
+    listRuns: () => request<RunSummary[]>("/runs"),
+    getRun: (id) => request<RunDetail>(`/runs/${enc(id)}`),
+    getAudit: (id) => request<Audit>(`/audits/${enc(id)}`),
+    listAudits: (videoId) => request<AuditSummary[]>(`/audits?video_id=${enc(videoId)}`),
+    startAudit: (videoId, key) => request<{ job_id: string }>("/audits", { method: "POST", body: JSON.stringify({ video_id: videoId, idempotency_key: key }) }),
+    startScreening: (videoId, key) => request<ScreeningStart>("/screenings", { method: "POST", body: JSON.stringify({ video_id: videoId, idempotency_key: key }) }),
+    getScreening: (id) => request<ScreeningReport>(`/screenings/${enc(id)}`),
+    listScreenings: (videoId) => request<ScreeningSummary[]>(`/screenings${videoId ? `?video_id=${enc(videoId)}` : ""}`),
+    ingestUrl: (url, key) => request<IngestStart>("/ingest/url", { method: "POST", body: JSON.stringify({ url, idempotency_key: key }) }),
+    startAbc: (body) => request<ABCStart>("/abc", { method: "POST", body: JSON.stringify(body) }),
+    listAbc: () => request<ABCSummary[]>("/abc"),
+    getAbc: (id) => request<ABCRun>(`/abc/${enc(id)}`),
+    getRepair: (id) => request<Repair>(`/repairs/${enc(id)}`),
+    getJob: (id) => request<Job>(`/jobs/${enc(id)}`),
+    streamJobEvents: (id, after, onEvent, signal) => readEventStream(`/jobs/${enc(id)}/events?after=${after}`, onEvent, signal),
+    getJobEvents: (id, after) => request<JobEvent[]>(`/jobs/${enc(id)}/events.json?after=${after}`),
+    cancelJob: (id) => request<Job>(`/jobs/${enc(id)}/cancel`, { method: "POST" }),
+    getVideo: (id) => request<VideoDetail>(`/videos/${enc(id)}`),
+    getDesign: (id, mode) => request<DesignPreview>(`/videos/${enc(id)}/design?mode=${enc(mode)}`),
+    startExperiment: (body) => request<{ job_id: string }>("/experiments", { method: "POST", body: JSON.stringify(body) }),
+    listExperiments: () => request<ExperimentSummary[]>("/experiments"),
+    getExperiment: (id) => request<ExperimentDetail>(`/experiments/${enc(id)}`),
+    getPolicy: () => request<PolicyStore>("/policy"),
+    getCorpus: () => request<Corpus>("/corpus"),
+    listTransfers: () => request<TransferReport[]>("/transfer"),
+    getReviewSummary: () => request<ReviewSummary>("/reviews/summary"),
+    getReviewQr: () => request<ReviewQr>("/reviews/qr"),
   };
 }

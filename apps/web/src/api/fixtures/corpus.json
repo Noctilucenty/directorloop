@@ -1,0 +1,87 @@
+{
+  "id": "curio_owned_v1",
+  "version": 2,
+  "references": 47,
+  "with_metrics": 4,
+  "patterns": [
+    {
+      "pattern_id": "early_proof_or_payoff",
+      "description": "A proof or payoff beat starts within the first third of the video",
+      "count": 10,
+      "total_comparable": 40,
+      "support_ratio": 0.25,
+      "top_group_count": null,
+      "top_group_total": null,
+      "bottom_group_count": null,
+      "bottom_group_total": null,
+      "performance_metric": "avg_watch_fraction",
+      "note": "descriptive counts; not causal; only 4 references with avg_watch_fraction, no performance split"
+    },
+    {
+      "pattern_id": "short_context_before_payoff",
+      "description": "Less than 2 s of setup or context before the first proof or payoff",
+      "count": 32,
+      "total_comparable": 40,
+      "support_ratio": 0.8,
+      "top_group_count": null,
+      "top_group_total": null,
+      "bottom_group_count": null,
+      "bottom_group_total": null,
+      "performance_metric": "avg_watch_fraction",
+      "note": "descriptive counts; not causal; only 4 references with avg_watch_fraction, no performance split"
+    },
+    {
+      "pattern_id": "no_long_static_span",
+      "description": "No static stretch (no cut, little motion) of 2.5 s or longer",
+      "count": 12,
+      "total_comparable": 47,
+      "support_ratio": 0.255,
+      "top_group_count": null,
+      "top_group_total": null,
+      "bottom_group_count": null,
+      "bottom_group_total": null,
+      "performance_metric": "avg_watch_fraction",
+      "note": "descriptive counts; not causal; only 4 references with avg_watch_fraction, no performance split"
+    },
+    {
+      "pattern_id": "claim_question_or_result_hook",
+      "description": "The first beat is a claim, a question or a result rather than setup",
+      "count": 43,
+      "total_comparable": 47,
+      "support_ratio": 0.915,
+      "top_group_count": null,
+      "top_group_total": null,
+      "bottom_group_count": null,
+      "bottom_group_total": null,
+      "performance_metric": "hold_3s",
+      "note": "descriptive counts; not causal; only 2 references with hold_3s, no performance split"
+    },
+    {
+      "pattern_id": "loop_resolved_by_60pct",
+      "description": "The opening question or promise is resolved by 60% of the runtime",
+      "count": 14,
+      "total_comparable": 38,
+      "support_ratio": 0.368,
+      "top_group_count": null,
+      "top_group_total": null,
+      "bottom_group_count": null,
+      "bottom_group_total": null,
+      "performance_metric": "avg_watch_fraction",
+      "note": "descriptive counts; not causal; only 3 references with avg_watch_fraction, no performance split"
+    },
+    {
+      "pattern_id": "visual_change_within_1s",
+      "description": "The first visual change happens within 1 s",
+      "count": 6,
+      "total_comparable": 47,
+      "support_ratio": 0.128,
+      "top_group_count": null,
+      "top_group_total": null,
+      "bottom_group_count": null,
+      "bottom_group_total": null,
+      "performance_metric": "hold_3s",
+      "note": "descriptive counts; not causal; only 2 references with hold_3s, no performance split"
+    }
+  ],
+  "label": "REFERENCE CREATIVE (owned Curio shorts; descriptive counts)"
+}

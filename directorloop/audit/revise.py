@@ -8,6 +8,7 @@ video, new weaknesses, audience predictions and protected content, with both pre
 from __future__ import annotations
 
 import io
+import re
 import time
 from pathlib import Path
 from typing import Any
@@ -20,11 +21,14 @@ from ..creative.mutate import VIDEO_ASSET_ID
 from ..domain.edit_plan import EditPlan
 from ..domain.ids import new_id, utc_now_iso
 from ..media import render_plan
-from ..media.frames import SampledFrame, extract_frame, sample_frames
+from ..media.frames import SampledFrame, extract_frame, sample_timestamps
 from ..media.transcribe import transcribe
 from ..observability.weave_ops import set_display_name, traced
 from ..providers.base import MediaProbeProvider, ProbeMedia, ProviderError
+from .attention import compare_attention_timelines
 from .models import (
+    COMPARISON_VERSION,
+    AttentionComparison,
     AuditComparison,
     AuditFinding,
     AuditReport,
@@ -46,6 +50,29 @@ def map_interval(plan: EditPlan, start_ms: int, end_ms: int) -> list[tuple[int, 
             out.append((t + (a - seg.source_in_ms), t + (b - seg.source_in_ms)))
         t += seg.duration_ms
     return out
+
+
+def aligned_sample_times(plan: EditPlan, original_duration_ms: int, candidate_duration_ms: int, count: int = 8) -> tuple[list[int], list[int]]:
+    """Frame times for the original and the candidate that show the same source moments. The original is sampled evenly and
+    each sampled moment that survives the edit is shown at its place in the candidate; a removed moment appears only on the
+    original side, which is the real difference. Sampling two different lengths evenly would instead show different caption
+    and motion states of identical footage, which judges read as added or missing content."""
+    original_times = sample_timestamps(original_duration_ms, count)
+    candidate_times: set[int] = set()
+    for t in original_times:
+        for start, _end in map_interval(plan, t, t + 1):
+            candidate_times.add(max(0, min(start, candidate_duration_ms - 60)))
+    return original_times, sorted(candidate_times)
+
+
+def candidate_to_source_ms(plan: EditPlan, t_ms: int) -> int | None:
+    """The original (identity timeline) time shown at candidate time t_ms, or None past the end of the plan."""
+    t = 0
+    for seg in plan.segments:
+        if t <= t_ms < t + seg.duration_ms:
+            return seg.source_in_ms + (t_ms - t)
+        t += seg.duration_ms
+    return None
 
 
 def interval_mappings(plan: EditPlan, findings: list[AuditFinding]) -> list[IntervalMapping]:
@@ -248,9 +275,21 @@ def verify_change(mutation_type: str, description: str, original_path: Path, can
 PAIR_SCHEMA = {"type": "object", "properties": {"choice": {"type": "string", "enum": ["1", "2", "no_preference"]}, "reason": {"type": "string"}}, "required": ["choice", "reason"]}
 
 
-def _clip_media(path: Path, start_ms: int, end_ms: int, fps: float, width: int, words_text: str) -> ProbeMedia:
+def clip_times(start_ms: int, end_ms: int, fps: float, duration_ms: int | None) -> list[int]:
+    """Frame times inside [start, end), at most 10. An interval shorter than one step gets its midpoint; nothing is requested
+    after the end of the interval or within 60 ms of the end of the file, where no frame can be decoded."""
     step = 1000.0 / fps
     times = [int(start_ms + step / 2 + i * step) for i in range(max(1, int((end_ms - start_ms) / step)))][:10]
+    times = [t if t < end_ms else (start_ms + end_ms) // 2 for t in times]
+    if duration_ms:
+        times = [max(0, min(t, duration_ms - 60)) for t in times]
+    return sorted(set(times))
+
+
+def _clip_media(path: Path, start_ms: int, end_ms: int, fps: float, width: int, words_text: str) -> ProbeMedia:
+    from ..media.probe import inspect_media
+
+    times = clip_times(start_ms, end_ms, fps, inspect_media(path).duration_ms)
     frames = [extract_frame(path, t, width) for t in times]
     return ProbeMedia(kind="frames", duration_ms=end_ms - start_ms, frames=frames, transcript=words_text)
 
@@ -352,6 +391,40 @@ def planned_words(plan: EditPlan, words: list[Any], start_ms: int = 0, end_ms: i
     return out
 
 
+def attention_evidence(original: AuditReport, candidate: AuditReport, finding: AuditFinding, candidate_plan: EditPlan) -> tuple[AttentionComparison, list[str], list[str], list[str]]:
+    """(comparison, regressions, improvements, notes) from the two predicted attention timelines. A new high-risk moment or
+    any rise in the opening counts as a regression; smaller rises elsewhere are notes. Nothing counts when the two audits
+    were produced under different evaluation settings."""
+
+    def to_candidate(s: int, e: int) -> tuple[int, int] | None:
+        found = map_interval(candidate_plan, s, e)
+        return (min(p[0] for p in found), max(p[1] for p in found)) if found else None
+
+    cmp = compare_attention_timelines(original.attention, candidate.attention, target=(finding.start_ms, finding.end_ms), to_after=to_candidate,
+                                      to_before=lambda t: candidate_to_source_ms(candidate_plan, t))
+    regressed: list[str] = []
+    improved: list[str] = []
+    notes: list[str] = []
+    if cmp.comparable and original.attention is not None:
+        opening_ms = original.attention.evaluator.coarse_window_ms  # the first coarse window is the opening
+        for ch in cmp.regression_changes:
+            line = f"predicted attention: {ch.start_ms / 1000:.1f}-{ch.end_ms / 1000:.1f}s is at {ch.after} risk, {ch.before} at the same moment of the original"
+            if ch.after == "high" or ch.start_ms < opening_ms:
+                regressed.append(line + (" (opening)" if ch.start_ms < opening_ms else ""))
+            else:
+                notes.append(line)
+        if cmp.target_region_improved:
+            improved.append(f"predicted attention at the target moment: {cmp.target_peak_before} risk before, {cmp.target_peak_after} after")
+    notes += [f"predicted attention: {line}" for line in cmp.decision_evidence + cmp.comparability_notes]
+    return cmp, regressed, improved, notes
+
+
+def same_weakness(original: AuditFinding, fresh: AuditFinding) -> bool:
+    """Whether a fresh finding continues the original weakness: the same specific issue type, or the same objective. The
+    catch-all issue type 'other' says nothing about sameness, so two 'other' findings match only through their objective."""
+    return (original.issue_type != "other" and fresh.issue_type == original.issue_type) or fresh.objective == original.objective
+
+
 def _overlaps(a0: int, a1: int, b0: int, b1: int, min_frac: float = 0.3) -> bool:
     inter = max(0, min(a1, b1) - max(a0, b0))
     return inter >= min_frac * max(1, min(a1 - a0, b1 - b0))
@@ -384,8 +457,19 @@ def compare_versions(*, provider: MediaProbeProvider, original: AuditReport, can
         target_ev += reasons[:4]
     else:
         target_ev.append("the target interval no longer exists in the candidate (removed)")
-    o_full = ProbeMedia(kind="frames", duration_ms=original.duration_ms, frames=sample_frames(orig_path, original.duration_ms, count=8, max_width=384), transcript=text(o_words_all))
-    c_full = ProbeMedia(kind="frames", duration_ms=candidate.duration_ms, frames=sample_frames(cand_path, candidate.duration_ms, count=8, max_width=384), transcript=text(c_words_all))
+    o_times, c_times = aligned_sample_times(candidate_plan, original.duration_ms, candidate.duration_ms, count=8)
+    if not c_times:
+        c_times = sample_timestamps(candidate.duration_ms, 8)
+        notes.append("no sampled moment of the original survives in the candidate; the candidate's frames are sampled evenly instead")
+    else:
+        notes.append("whole-video and protected-content frames show the same source moments in both versions (mapped through the edit plan); "
+                     "a moment the edit removed appears only in the original")
+
+    def frames_at(path: Path, times: list[int], width: int) -> list[SampledFrame]:
+        return [extract_frame(path, t, max_width=width) for t in times]
+
+    o_full = ProbeMedia(kind="frames", duration_ms=original.duration_ms, frames=frames_at(orig_path, o_times, 384), transcript=text(o_words_all))
+    c_full = ProbeMedia(kind="frames", duration_ms=candidate.duration_ms, frames=frames_at(cand_path, c_times, 384), transcript=text(c_words_all))
     full_pref, stab_full, full_reasons = pairwise(provider, o_full, c_full, "These are two versions of the same short video. Which version would a typical viewer be more likely to watch to the end and understand?")
 
     # audit diff: does a matching weakness persist at the mapped interval? what is new?
@@ -393,9 +477,14 @@ def compare_versions(*, provider: MediaProbeProvider, original: AuditReport, can
     if pieces:
         ns, ne = min(p[0] for p in pieces), max(p[1] for p in pieces)
         for cf_ in candidate.findings:
-            if _overlaps(cf_.start_ms, cf_.end_ms, ns, ne) and (cf_.issue_type == finding.issue_type or cf_.objective == finding.objective):
+            if not _overlaps(cf_.start_ms, cf_.end_ms, ns, ne):
+                continue
+            if same_weakness(finding, cf_):
                 persists = True
                 target_ev.append(f"fresh audit still flags {cf_.start_ms / 1000:.1f}-{cf_.end_ms / 1000:.1f}s: {cf_.weakness[:140]}")
+            else:
+                target_ev.append(f"fresh audit flags a different weakness at {cf_.start_ms / 1000:.1f}-{cf_.end_ms / 1000:.1f}s "
+                                 f"({cf_.issue_type}/{cf_.objective}, the target was {finding.issue_type}/{finding.objective}): {cf_.weakness[:140]}")
     mapped_orig: list[tuple[int, int]] = []  # where the current version's findings sit in the candidate (removed ones have no place)
     for f in original.findings:
         f_pieces = map_interval(candidate_plan, f.start_ms, f.end_ms)
@@ -418,9 +507,13 @@ def compare_versions(*, provider: MediaProbeProvider, original: AuditReport, can
             regressed.append(f"predicted {key}: {ov['verdict']} -> {cv['verdict']} ({cv['reason'][:100]})")
         else:
             unchanged.append(f"{key}: {ov['verdict']}")
-    o_prot = ProbeMedia(kind="frames", duration_ms=original.duration_ms, frames=sample_frames(orig_path, original.duration_ms, count=8, max_width=320), transcript=text(o_words_all))
-    c_prot = ProbeMedia(kind="frames", duration_ms=candidate.duration_ms, frames=sample_frames(cand_path, candidate.duration_ms, count=8, max_width=320), transcript=text(c_words_all))
-    for item in check_protected(provider, o_prot, c_prot, protected_items):
+    o_prot = ProbeMedia(kind="frames", duration_ms=original.duration_ms, frames=frames_at(orig_path, o_times, 320), transcript=text(o_words_all))
+    c_prot = ProbeMedia(kind="frames", duration_ms=candidate.duration_ms, frames=frames_at(cand_path, c_times, 320), transcript=text(c_words_all))
+    protected_results = check_protected(provider, o_prot, c_prot, protected_items)
+    protected_unchecked = unchecked_items(protected_items, protected_results)
+    if protected_unchecked:
+        notes.append(f"no check result for {len(protected_unchecked)} protected item(s): " + "; ".join(protected_unchecked)[:300])
+    for item in protected_results:
         status = item.get("status")
         if status == "lost":
             regressed.append(f"protected content lost: {item.get('item')} ({str(item.get('evidence', ''))[:120]})")
@@ -432,10 +525,19 @@ def compare_versions(*, provider: MediaProbeProvider, original: AuditReport, can
             unchanged.append(f"{item.get('kind')} {status}: {item.get('item')}")
     if new_weak:
         regressed += [f"new weakness: {w}" for w in new_weak]
+    if target_pref is not None and target_pref <= 0.25 and stab_target is not None:
+        regressed.append(f"target moment {finding.start_ms / 1000:.1f}-{finding.end_ms / 1000:.1f}s: the original was preferred "
+                         f"({target_pref:.2f} for the candidate; {stab_target.agreement})")
     if full_pref is not None and full_pref <= 0.25:
         regressed.append(f"whole video: the original was preferred ({full_pref:.2f} for the candidate; {stab_full.agreement})")
     elif full_pref is not None and full_pref >= 0.75:
         improved.append(f"whole video: the candidate was preferred ({full_pref:.2f}; {stab_full.agreement})")
+
+    # Predicted attention, from the two independent audits (each reviewer was blind to the other version and to the repair).
+    attention, att_regressed, att_improved, att_notes = attention_evidence(original, candidate, finding, candidate_plan)
+    regressed += att_regressed
+    improved += att_improved
+    notes += att_notes
 
     if not pieces:
         resolved = "yes" if not persists else "no"
@@ -467,7 +569,25 @@ def compare_versions(*, provider: MediaProbeProvider, original: AuditReport, can
                                 agreement=f"target: {stab_target.agreement if stab_target else 'n/a'}; whole video: {stab_full.agreement}")
     notes += [f"whole-video reasons: {r}" for r in full_reasons[:4]]
     return AuditComparison(improved=improved, regressed=regressed, unchanged=unchanged, target_resolved=resolved, target_evidence=target_ev, new_weaknesses=new_weak,
-                           outcome=outcome, target_preference=target_pref, full_preference=full_pref, stability=stability, notes=notes)
+                           outcome=outcome, target_preference=target_pref, full_preference=full_pref, stability=stability, notes=notes, attention=attention,
+                           comparison_version=COMPARISON_VERSION, protected_requested=list(protected_items), protected_checks=[{k: str(v)[:300] for k, v in x.items()} for x in protected_results],
+                           protected_unchecked=protected_unchecked)
+
+
+def _item_words(text: str) -> str:
+    return " ".join(re.findall(r"[a-z0-9]+", text.lower()))
+
+
+def unchecked_items(requested: list[str], results: list[dict[str, Any]]) -> list[str]:
+    """Requested protected items with no returned result. A returned item counts for a request when their words match or one
+    contains the other (the reviewer may shorten or quote the item)."""
+    returned = [_item_words(str(r.get("item", ""))) for r in results]
+    out = []
+    for item in requested:
+        words = _item_words(item)
+        if not any(words and r and (words == r or words in r or r in words) for r in returned):
+            out.append(item)
+    return out
 
 
 def new_repair_id() -> str:

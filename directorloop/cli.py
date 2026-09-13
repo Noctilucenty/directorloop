@@ -4,6 +4,8 @@
                    [--allow-edit REMOVE_BEAT ...] [--video-id ID] [--category NAME]
   directorloop show RUN_ID            print a stored run: every iteration, decision and reason
   directorloop audit VIDEO [--video-id ID]
+  directorloop causal VIDEO [--arms N] [--plan-only] [--audit AUDIT_ID] [--constraint TEXT ...] [--video-id ID]
+  directorloop causal-replay CAUSAL_ID  re-run a stored plan from its frozen inputs, with and without the policy
   directorloop serve                  start the API and web app (loopback by default)
 
 A run is one launch: cold-audience audit, diagnosis, repair selection, render, change verification, fresh audit,
@@ -180,9 +182,135 @@ def cmd_abc(args: argparse.Namespace) -> int:
     return 0 if run.status == "completed" else 1
 
 
+def print_causal(run) -> None:  # noqa: ANN001
+    c = run.config
+    print(f"\nCAUSAL RUN {run.id}  status={run.status}  launched via {run.launched_via}  ({run.version})")
+    print(f"video: {c.video_id} sha256 {run.artifact_hash[:16]}  audit: {run.audit_id} ({run.audit_source})  arms: {c.arms}{'  plan only' if c.plan_only else ''}")
+    print(f"reviewer: {run.runtime.get('reviewer')}  commit: {run.runtime.get('git_commit')}  mocked stages: {run.mocked_stages or 'none'}")
+    d = run.dossier
+    if d is not None:
+        print(f"\nSYMPTOM: {d.symptom.description} ({d.symptom.start_ms / 1000:.1f}-{d.symptom.end_ms / 1000:.1f}s, resolution {d.symptom.resolution_ms} ms)")
+        print("EVIDENCE:")
+        for e in d.evidence:
+            print(f"  {e.id} [{e.source}] {e.text}" + (f"  for {e.supports}" if e.supports else "") + (f"  against {e.against}" if e.against else ""))
+        print(f"CONDITIONS: {d.conditions}")
+    plan = run.plan
+    if plan is not None:
+        print("\nHYPOTHESES:")
+        for h in plan.hypotheses:
+            print(f"  {h.id} {h.cause_type} [{h.status}, {h.strength}, share {h.evidence_share}] for {h.evidence_for} against {h.evidence_against}"
+                  + (f"; not high: {', '.join(h.why_not_high)}" if h.why_not_high else "") + ("" if h.testable else "; no edit on this file tests it"))
+        print("EXPERIMENT QUEUE (priority = 2 x evidence level + information gain + 1.5 x policy prior + 0.5 if single-variable):")
+        for x in plan.experiments:
+            tests = ", ".join([x.hypothesis_id, *x.also_tests])
+            print(f"  #{x.rank} {x.id} {x.mutation_type} tests {tests} ({x.cause_type}): priority {x.priority} (without policy {x.priority_without_policy}, rank {x.rank_without_policy}); "
+                  f"gain {x.information_gain}; {'discriminating' if x.discriminating else 'NOT discriminating'}; {x.isolation}")
+            print(f"      edit: {x.description}  [{x.intervention_id}]")
+            print(f"      changes: {'; '.join(x.changes) or 'nothing measurable'}  | side effects: {'; '.join(x.side_effects) or 'none named'}")
+            if x.prior.records or x.prior.excluded:
+                print(f"      prior {x.prior.score:+.2f} from {x.prior.records} record(s): {[(m['video_id'], m['outcome'], m['weight']) for m in x.prior.matches]}"
+                      + (f"; excluded {[(m['video_id'], m['reason']) for m in x.prior.excluded]}" if x.prior.excluded else ""))
+        print(f"DECISION: {plan.decision}: {plan.decision_reason}")
+        print(f"chosen {plan.chosen}; without policy {plan.chosen_without_policy}")
+        print(f"POLICY EFFECT: {plan.policy_effect.summary}")
+        for line in plan.policy_effect.score_changes + plan.policy_effect.rank_changes:
+            print(f"  {line}")
+        print(f"uncertainty: {plan.uncertainty or 'none stated'}")
+        if plan.best_discriminating_test:
+            print(f"best discriminating test: {plan.best_discriminating_test}")
+    for a in run.arms:
+        print(f"\n  ARM {a.experiment_id} {a.mutation_type} for {', '.join([a.hypothesis_id, *a.also_tests])} ({a.cause_type}): {a.verdict.upper()}")
+        print(f"    render {a.render_hash[:16] if a.render_hash else 'none'} ({a.duration_ms} ms)  verified {a.verified}  blind audit {a.candidate_audit_id}  model calls {a.model_calls}")
+        if a.evaluator_differences:
+            print(f"    evaluator differences: {a.evaluator_differences}")
+        ax = a.axes
+        if ax is not None:
+            print(f"    whole-video preference {ax.continue_watching_preference} ({ax.continue_watching_agreement}); target preference {ax.target_moment_preference} "
+                  f"({ax.target_moment_agreement}); target resolved {ax.target_resolved}")
+            print(f"    predicted attention at the target {ax.attention_target_before} -> {ax.attention_target_after}; direction {ax.attention_direction}; "
+                  f"elevated {ax.elevated_attention_ms_before} -> {ax.elevated_attention_ms_after} ms; confused readings {ax.confused_readings_before} -> {ax.confused_readings_after}")
+            print(f"    protected items checked {ax.protected_checked}, unchecked {ax.protected_unchecked or 'none'}; regressions {ax.regressions or 'none'}")
+        print(f"    reason: {a.verdict_reason}")
+    if run.conclusions:
+        print("\nCONCLUSIONS:")
+        for line in run.conclusions:
+            print(f"  {line}")
+    if run.policy_after or run.policy_before:
+        print("POLICY" + (" (after this run)" if run.policy_after else " (before this run)") + ":")
+        for line in run.policy_after or run.policy_before:
+            print(f"  {line}")
+    print(f"\nstop reason: {run.stop_reason}")
+    print(f"budget: {run.budget}")
+    print(f"weave: {run.weave_url}")
+
+
+def cmd_causal(args: argparse.Namespace) -> int:
+    from .domain.ids import new_id
+    from .observability import flush, init_weave
+    from .providers import build_providers
+    from .runtime.causal import CausalConfig, load_causal, run_causal
+
+    s = get_settings()
+    video = Path(args.video).expanduser().resolve()
+    if not video.is_file():
+        print(f"video not found: {video}", file=sys.stderr)
+        return 2
+    config = CausalConfig(video_id=args.video_id or _video_id(video), video_path=str(video), category=args.category, constraints=args.constraint or [],
+                          arms=args.arms, plan_only=args.plan_only, audit_id=args.audit, max_model_calls=args.max_calls, deadline_s=args.deadline,
+                          **({"objective": args.objective} if args.objective else {}))
+    w = init_weave(s)
+    print(f"weave: {'connected to ' + w.project if w.connected else 'not connected (' + w.reason + ')'}")
+    run_id = new_id("causal")
+    try:
+        run = run_causal(config, build_providers(s), s.data_dir, on_stage=_progress, run_id=run_id, launched_via="cli")
+    except Exception as exc:  # noqa: BLE001 - print the stored record with the real reason
+        flush()
+        stored = load_causal(s.data_dir, run_id)
+        if stored is not None:
+            print_causal(stored)
+        print(f"causal run {run_id} stopped: {type(exc).__name__}: {str(exc)[:300]}", file=sys.stderr)
+        return 1
+    flush()
+    print_causal(run)
+    return 0 if run.status == "completed" else 1
+
+
+def cmd_causal_replay(args: argparse.Namespace) -> int:
+    from .runtime.causal import load_causal, replay_plan
+
+    run = load_causal(get_settings().data_dir, args.run_id)
+    if run is None or run.plan is None:
+        print(f"causal run with a plan not found: {args.run_id}", file=sys.stderr)
+        return 2
+    stored = [(x.intervention_id, x.rank, x.priority) for x in run.plan.experiments]
+    replayed = replay_plan(run)
+    same = [(x.intervention_id, x.rank, x.priority) for x in replayed.experiments] == stored and replayed.chosen == run.plan.chosen
+    print(f"replay of {run.id} from its frozen inputs (policy snapshot sha256 {run.plan_inputs.policy_sha256[:16] if run.plan_inputs else '?'}): "
+          f"{'identical to the stored plan' if same else 'DIFFERS from the stored plan'}")
+    without = replay_plan(run, use_policy=False)
+    print("rank  with policy                                      without policy")
+    for i in range(max(len(replayed.experiments), len(without.experiments))):
+        a = replayed.experiments[i] if i < len(replayed.experiments) else None
+        b = without.experiments[i] if i < len(without.experiments) else None
+        print(f"  {i + 1}   {(a.intervention_id + ' ' + str(a.priority)) if a else '':48s} {(b.intervention_id + ' ' + str(b.priority)) if b else ''}")
+    print(f"selected with policy: {[x.intervention_id for x in replayed.experiments if x.id in replayed.chosen]}")
+    print(f"selected without policy: {[x.intervention_id for x in without.experiments if x.id in without.chosen]}")
+    print(f"policy effect: {replayed.policy_effect.summary}")
+    return 0 if same else 1
+
+
 def cmd_show(args: argparse.Namespace) -> int:
     from .runtime.director import load_run
 
+    if args.run_id.startswith("causal_"):
+        from .runtime.causal import load_causal
+
+        causal = load_causal(get_settings().data_dir, args.run_id)
+        if causal is None:
+            print(f"run not found: {args.run_id}", file=sys.stderr)
+            return 2
+        print_causal(causal)
+        return 0
     if args.run_id.startswith("abc_"):
         from .runtime.abc import load_abc
 
@@ -254,6 +382,21 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--a-id")
     c.add_argument("--b-id")
     c.set_defaults(fn=cmd_abc)
+    ca = sub.add_parser("causal", help="explain a weakness with competing causes, test them with single-variable edits, update the policy")
+    ca.add_argument("video")
+    ca.add_argument("--video-id")
+    ca.add_argument("--objective")
+    ca.add_argument("--constraint", action="append", help="repeatable; every constraint is sent to the protected-content check")
+    ca.add_argument("--arms", type=int, default=2, help="maximum experiment renders (0-3)")
+    ca.add_argument("--plan-only", action="store_true", help="rank the experiments and stop before rendering")
+    ca.add_argument("--audit", help="reuse a stored audit of this exact file made under the current evaluator settings")
+    ca.add_argument("--max-calls", type=int, default=120)
+    ca.add_argument("--deadline", type=int, default=1800, help="seconds, checked before model calls and renders")
+    ca.add_argument("--category", default="educational_short")
+    ca.set_defaults(fn=cmd_causal)
+    cr = sub.add_parser("causal-replay", help="re-run a stored causal plan from its frozen inputs, with and without the policy snapshot")
+    cr.add_argument("run_id")
+    cr.set_defaults(fn=cmd_causal_replay)
     sh = sub.add_parser("show", help="print a stored run")
     sh.add_argument("run_id")
     sh.set_defaults(fn=cmd_show)

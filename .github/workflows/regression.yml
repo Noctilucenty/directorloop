@@ -1,0 +1,47 @@
+name: DirectorLoop regression checks
+
+on:
+  push:
+    branches: [main, 'codex/**']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DL_ENV_FILE: /dev/null
+      WANDB_MODE: disabled
+      WANDB_DISABLED: 'true'
+      WEAVE_DISABLED: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install '.[dev]'
+      - name: Replay frozen failures and valid controls without network or inference
+        run: python -m pytest -p scripts.regression_offline_pytest tests/unit/test_weave_trace_regression.py tests/unit/test_weave_online_checks.py tests/unit/test_trace_regression_watcher.py
+
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        app: [apps/demo, apps/web]
+    defaults:
+      run:
+        working-directory: ${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci
+      - run: npm test
+      - run: npm run build

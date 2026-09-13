@@ -1,0 +1,491 @@
+{
+  "id": "audit_1a097723ab1_644b891d",
+  "video_id": "aptip",
+  "version_id": "v1-ed861c36",
+  "artifact_hash": "ed861c36e1e6d5551a91e31e347fc119c7ea5a951dd8ed3754867b01848dfb70",
+  "duration_ms": 13900,
+  "created_at": "2026-09-12T21:07:46.907+00:00",
+  "status": "complete",
+  "coverage": {
+    "mode": "sampled_frames_plus_asr",
+    "duration_ms": 13900,
+    "windows": [
+      {
+        "kind": "prefix",
+        "start_ms": 0,
+        "end_ms": 2000,
+        "frame_timestamps_ms": [
+          166,
+          500,
+          833,
+          1166,
+          1499,
+          1833
+        ],
+        "frame_width": 448,
+        "context_frames": 0,
+        "context_width": 256,
+        "transcript_words": 5
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 2000,
+        "end_ms": 4000,
+        "frame_timestamps_ms": [
+          2166,
+          2500,
+          2833,
+          3166,
+          3500,
+          3833
+        ],
+        "frame_width": 448,
+        "context_frames": 2,
+        "context_width": 256,
+        "transcript_words": 10
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 4000,
+        "end_ms": 6000,
+        "frame_timestamps_ms": [
+          4166,
+          4500,
+          4833,
+          5166,
+          5499,
+          5833
+        ],
+        "frame_width": 448,
+        "context_frames": 4,
+        "context_width": 256,
+        "transcript_words": 15
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 6000,
+        "end_ms": 8000,
+        "frame_timestamps_ms": [
+          6166,
+          6500,
+          6833,
+          7166,
+          7499,
+          7833
+        ],
+        "frame_width": 448,
+        "context_frames": 6,
+        "context_width": 256,
+        "transcript_words": 22
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 8000,
+        "end_ms": 10000,
+        "frame_timestamps_ms": [
+          8166,
+          8500,
+          8833,
+          9166,
+          9500,
+          9833
+        ],
+        "frame_width": 448,
+        "context_frames": 8,
+        "context_width": 256,
+        "transcript_words": 31
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 10000,
+        "end_ms": 12000,
+        "frame_timestamps_ms": [
+          10166,
+          10500,
+          10833,
+          11166,
+          11500,
+          11833
+        ],
+        "frame_width": 448,
+        "context_frames": 10,
+        "context_width": 256,
+        "transcript_words": 37
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 12000,
+        "end_ms": 13900,
+        "frame_timestamps_ms": [
+          12166,
+          12500,
+          12833,
+          13166,
+          13500,
+          13833
+        ],
+        "frame_width": 448,
+        "context_frames": 12,
+        "context_width": 256,
+        "transcript_words": 41
+      },
+      {
+        "kind": "diagnostic",
+        "start_ms": 0,
+        "end_ms": 13900,
+        "frame_timestamps_ms": [
+          250,
+          750,
+          1250,
+          1750,
+          2250,
+          2750,
+          3250,
+          3750,
+          4250,
+          4750,
+          5250,
+          5750,
+          6250,
+          6750,
+          7250,
+          7750,
+          8250,
+          8750,
+          9250,
+          9750,
+          10250,
+          10750,
+          11250,
+          11750,
+          12250,
+          12750,
+          13250,
+          13750
+        ],
+        "frame_width": 384,
+        "context_frames": 0,
+        "context_width": 0,
+        "transcript_words": 41
+      },
+      {
+        "kind": "closeup",
+        "start_ms": 9000,
+        "end_ms": 13900,
+        "frame_timestamps_ms": [
+          9100,
+          9300,
+          9500,
+          9700,
+          9900,
+          10100,
+          10300,
+          10500,
+          10700,
+          10900,
+          11100,
+          11300,
+          11500,
+          11700,
+          11900,
+          12100
+        ],
+        "frame_width": 512,
+        "context_frames": 0,
+        "context_width": 0,
+        "transcript_words": 0
+      }
+    ],
+    "total_frames_sent": 128,
+    "transcript_source": "whisper.cpp:ggml-large-v3-turbo-q5_0.bin",
+    "audio_inspection": "whisper.cpp transcript with word timings plus software loudness and silence measurements; the reviewer did not listen to music, sound effects, voice tone or audio-visual sync",
+    "provider": "openai",
+    "model": "gpt-5.6-terra",
+    "limitations": [
+      "frames are samples (3 per second in reviewed windows, 2 per second for diagnosis, 5 per second in close-ups); events between samples can be missed",
+      "not a frame-by-frame audiovisual review; the provider receives still images, not the video file",
+      "native video input unavailable with the configured provider (the Gemini native-video path is out of credit)"
+    ]
+  },
+  "window_reactions": [
+    {
+      "start_ms": 0,
+      "end_ms": 2000,
+      "understanding": "A spinning top is being set on a black surface, and the video says it is about to stand itself up.",
+      "expectation": "I expect the top to spin and rise upright on its own.",
+      "open_question": "Will it actually stand upright?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The on-screen text promises that the top will stand itself up, creating a clear demonstration to watch.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2075,
+      "error": null
+    },
+    {
+      "start_ms": 2000,
+      "end_ms": 4000,
+      "understanding": "It is demonstrating a spinning top that is expected to slow down and fall over.",
+      "expectation": "I expect the top to behave unexpectedly and stand itself back up.",
+      "open_question": "How will it stand itself up after it starts falling?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The on-screen text says tops slow down and fall over while the green top visibly wobbles on the black surface.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2117,
+      "error": null
+    },
+    {
+      "start_ms": 4000,
+      "end_ms": 6000,
+      "understanding": "The video is demonstrating a spinning top that rises upright as it slows rather than simply falling over.",
+      "expectation": "I expect to see the top continue climbing into a stable upright position and possibly an explanation of why.",
+      "open_question": "Why does this top climb upright as it spins?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The narrator says, “This one climbs instead,” while the green top visibly rises on the black surface.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2169,
+      "error": null
+    },
+    {
+      "start_ms": 6000,
+      "end_ms": 8000,
+      "understanding": "The video is explaining why a green spinning top climbs upright rather than simply slowing and falling over, apparently involving friction.",
+      "expectation": "I expect it to finish explaining how friction makes the top rise or stand up.",
+      "open_question": "How does the friction cause the top to climb upright?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The top visibly stays upright while the narration says that the friction that should be stopping it...",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2117,
+      "error": null
+    },
+    {
+      "start_ms": 8000,
+      "end_ms": 10000,
+      "understanding": "It is demonstrating a spinning top that rises upright as it slows, with friction said to lift it up.",
+      "expectation": "I expect an explanation of the stem and why its motion makes the top climb.",
+      "open_question": "How does the stem make friction lift the top upward?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The close-up showed the green-topped spinner standing higher while the narration said friction lifts it up.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2210,
+      "error": null
+    },
+    {
+      "start_ms": 10000,
+      "end_ms": 12000,
+      "understanding": "It is demonstrating a spinning top that rises upright as it slows, with friction causing the lift.",
+      "expectation": "I expect the explanation to finish describing why the stem ends up pointing straight up.",
+      "open_question": "Why does friction make this particular top climb upright?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The top is visibly upright while the narration says its stem is now standing.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2424,
+      "error": null
+    },
+    {
+      "start_ms": 12000,
+      "end_ms": 13900,
+      "understanding": "A spinning top is demonstrating an unusual effect: friction makes it rise so its stem points upward.",
+      "expectation": "I expect an explanation of why friction causes the top to stand up.",
+      "open_question": "Why does friction lift the top instead of slowing it down?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The narrator finishes explaining that the stem was pointing straight up the whole time while the top remains upright.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2077,
+      "error": null
+    }
+  ],
+  "findings": [
+    {
+      "id": "audit_1a097723ab1_644b891d_f1",
+      "version_id": "v1-ed861c36",
+      "start_ms": 9400,
+      "end_ms": 12800,
+      "evidence_frames": [
+        {
+          "t_ms": 9750,
+          "url": "/media/audit/audit_1a097723ab1_644b891d/009750.jpg"
+        },
+        {
+          "t_ms": 10250,
+          "url": "/media/audit/audit_1a097723ab1_644b891d/010250.jpg"
+        },
+        {
+          "t_ms": 11250,
+          "url": "/media/audit/audit_1a097723ab1_644b891d/011250.jpg"
+        },
+        {
+          "t_ms": 12750,
+          "url": "/media/audit/audit_1a097723ab1_644b891d/012750.jpg"
+        }
+      ],
+      "observed": [
+        {
+          "kind": "visual",
+          "text": "The green-topped spinner remains upright on the dark black surface; its lower stem/contact area is difficult to distinguish against the surface.",
+          "t_ms": 10250
+        },
+        {
+          "kind": "caption",
+          "text": "On-screen captions appear in fragments: “The stem it” / “is now standing” / “on was pointing” / “straight up the” / “whole time.”",
+          "t_ms": 9750
+        },
+        {
+          "kind": "audio",
+          "text": "The narration says, “The stem it is now standing on was pointing straight up the whole time.”",
+          "t_ms": 9400
+        },
+        {
+          "kind": "mechanical",
+          "text": "There is little visible motion from 9.5s to 13.6s and no shot cut until 13.6s.",
+          "t_ms": 9500
+        }
+      ],
+      "viewer_understanding": "The viewer can see that the top is upright, but may not fully understand how the stated friction caused the rise or what the final sentence means about the stem.",
+      "predicted_reaction": "The model remains engaged, but a viewer seeking the promised explanation may finish with an incomplete causal takeaway.",
+      "weakness": "The final explanation uses an awkward, visually hard-to-verify reference to the stem instead of clearly connecting the visible contact point, friction, and the upward motion.",
+      "issue_type": "missing_context_or_ambiguous_reference",
+      "alternatives": [
+        "The intended point may be that the stem’s orientation stays fixed relative to the top while the body rises around it.",
+        "The dark lighting may deliberately emphasize the green top rather than show the stem clearly."
+      ],
+      "objective": "comprehension",
+      "severity": "low",
+      "uncertainty": "medium",
+      "proposed_repair": "Keep the same upright payoff shot, but revise the final line into one short, direct explanation that identifies the stem/contact point and explicitly links its orientation to the top climbing; add a brief visual highlight or brighter close-up of the stem if that part is essential to the explanation.",
+      "repair_kind": "narration_rewrite",
+      "keep_unchanged": [
+        "The visible rise into an upright position.",
+        "The concise progression from setup, to unexpected behavior, to explanation.",
+        "The clean final shot of the top standing upright."
+      ],
+      "repair": null,
+      "verified_closeup": true,
+      "closeup_note": "The visible spinner stays upright while the captions and spoken explanation describe its stem pointing straight up."
+    }
+  ],
+  "strengths": [
+    {
+      "id": "audit_1a097723ab1_644b891d_s1",
+      "start_ms": 0,
+      "end_ms": 2500,
+      "what": "The opening immediately presents the object and a clear visual promise.",
+      "why": "A hand sets a small spinner on a black surface while large text says, “THIS TOP IS ABOUT TO STAND ITSELF UP,” giving an unfamiliar viewer a specific surprising result to wait for.",
+      "evidence_frames": [
+        {
+          "t_ms": 250,
+          "url": "/media/audit/audit_1a097723ab1_644b891d/000250.jpg"
+        },
+        {
+          "t_ms": 1250,
+          "url": "/media/audit/audit_1a097723ab1_644b891d/001250.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a097723ab1_644b891d_s2",
+      "start_ms": 2600,
+      "end_ms": 5750,
+      "what": "The video efficiently contrasts normal expectation with the unusual result.",
+      "why": "Captions/narration establish that tops “slow down and fall over,” then state, “This one climbs instead,” while the green top visibly moves into a more upright position.",
+      "evidence_frames": [
+        {
+          "t_ms": 2750,
+          "url": "/media/audit/audit_1a097723ab1_644b891d/002750.jpg"
+        },
+        {
+          "t_ms": 3750,
+          "url": "/media/audit/audit_1a097723ab1_644b891d/003750.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a097723ab1_644b891d_s3",
+      "start_ms": 6400,
+      "end_ms": 10750,
+      "what": "The central visual payoff is sustained long enough to be seen.",
+      "why": "The top visibly remains and becomes upright as the narration says friction “lifts it up,” followed by the caption/narration that it “is now standing.”",
+      "evidence_frames": [
+        {
+          "t_ms": 6750,
+          "url": "/media/audit/audit_1a097723ab1_644b891d/006750.jpg"
+        },
+        {
+          "t_ms": 8750,
+          "url": "/media/audit/audit_1a097723ab1_644b891d/008750.jpg"
+        }
+      ]
+    }
+  ],
+  "audience": {
+    "label": "MODEL JUDGMENT (predicted), not measured audience behavior",
+    "stop": {
+      "verdict": "YES",
+      "reason": "The opening text makes a concrete, surprising promise while the hand visibly sets up the spinning top.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "continue_watching": {
+      "verdict": "YES",
+      "reason": "The visual behavior quickly changes from wobbling to climbing, and the captions create a clear explanation thread.",
+      "at_ms": 9400,
+      "to_whom": null
+    },
+    "finish": {
+      "verdict": "YES",
+      "reason": "The video is short and delivers the promised upright-top result before its final explanation.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "like": {
+      "verdict": "MAYBE",
+      "reason": "The unusual physical demonstration provides a satisfying visual payoff, though no audience reaction is shown.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "send": {
+      "verdict": "MAYBE",
+      "reason": "It could be sent to someone interested in a surprising spinner or physics-style demonstration.",
+      "at_ms": null,
+      "to_whom": "A friend interested in unusual physical demonstrations or spinning objects."
+    },
+    "comment": {
+      "verdict": "MAYBE",
+      "reason": "The unexpected rise may prompt questions about how friction produces the effect.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "save_or_replay": {
+      "verdict": "MAYBE",
+      "reason": "A viewer may replay the rise to inspect the motion, though the clip does not provide a practical reference use.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "visit_creator": {
+      "verdict": "INSUFFICIENT_EVIDENCE",
+      "reason": "No creator identity, series cue, or invitation to see related videos is visible in the supplied frames.",
+      "at_ms": null,
+      "to_whom": null
+    }
+  },
+  "overall_summary": "The video has a strong immediate hook and clearly shows the unusual result: the spinning top climbs upright. Its main opportunity is to make the final causal explanation clearer, especially the reference to the stem, while preserving the concise visual demonstration.",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09772-3ab1-7f61-9593-73704910b1b9",
+  "weave_call_id": "01a09772-3ab1-7f61-9593-73704910b1b9",
+  "timings_ms": {
+    "signals_asr_ms": 1810,
+    "cold_review_ms": 4698,
+    "diagnose_ms": 15113,
+    "closeup_ms": 3951,
+    "total_ms": 26025
+  },
+  "model_calls": 9,
+  "notes": [],
+  "incomplete_reasons": [],
+  "primed_with": [],
+  "media_url": "/media/renders/ed861c36e1e6d5551a91e31e347fc119c7ea5a951dd8ed3754867b01848dfb70.mp4"
+}

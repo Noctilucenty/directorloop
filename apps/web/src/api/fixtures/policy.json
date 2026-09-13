@@ -1,0 +1,299 @@
+{
+  "version": 8,
+  "strategies": [
+    {
+      "id": "strat_context_compression__category_educational_short",
+      "mutation": "CONTEXT_COMPRESSION",
+      "scope": "category:educational_short",
+      "status": "CONTRADICTED",
+      "wins": 0,
+      "losses": 1,
+      "neutral": 1,
+      "rejected": 0,
+      "human": null,
+      "reference_prior": null,
+      "confidence": 0.375,
+      "evidence": [
+        {
+          "experiment_id": "cexp_1a097415c48_7bf9dc2b",
+          "video_id": "aptip",
+          "outcome": "neutral",
+          "note": "Remove the context beat 'Tops slow down and fall over.' (2.3s) before the proof.",
+          "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09741-5c48-7404-9c6c-09d72832d0a9"
+        },
+        {
+          "experiment_id": "cexp_1a09744b816_2009893a",
+          "video_id": "aplaze",
+          "outcome": "loss",
+          "note": "Remove the setup beat 'Lava hitting the ocean creates laze.' (2.5s) before the proof.",
+          "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09744-b816-7707-a3ca-176e3cd99df1"
+        }
+      ]
+    },
+    {
+      "id": "strat_pattern_interrupt__category_educational_short",
+      "mutation": "PATTERN_INTERRUPT",
+      "scope": "category:educational_short",
+      "status": "CONTRADICTED",
+      "wins": 0,
+      "losses": 1,
+      "neutral": 2,
+      "rejected": 0,
+      "human": null,
+      "reference_prior": null,
+      "confidence": 0.4,
+      "evidence": [
+        {
+          "experiment_id": "cexp_1a097415c48_7bf9dc2b",
+          "video_id": "aptip",
+          "outcome": "neutral",
+          "note": "Punch in 1.25x at 11.6s inside the 7.5s static span (same footage and audio, new framing).",
+          "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09741-5c48-7404-9c6c-09d72832d0a9"
+        },
+        {
+          "experiment_id": "cexp_1a09744b816_2009893a",
+          "video_id": "aplaze",
+          "outcome": "neutral",
+          "note": "Punch in 1.25x at 13.7s inside the 4.3s static span (same footage and audio, new framing).",
+          "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09744-b816-7707-a3ca-176e3cd99df1"
+        },
+        {
+          "experiment_id": "repair_1a0977235a9_aba54f84",
+          "video_id": "aptip",
+          "outcome": "loss",
+          "note": "audit repair (PUNCH_IN) for framing_hides_important_action: Punch in 1.3x toward the lower left of the frame, where the most movement is during 9.4-13.6s (same footage, sound and timing; tighter frami",
+          "weave_url": null
+        }
+      ]
+    },
+    {
+      "id": "strat_result_first__category_educational_short",
+      "mutation": "RESULT_FIRST",
+      "scope": "category:educational_short",
+      "status": "CONTRADICTED",
+      "wins": 0,
+      "losses": 1,
+      "neutral": 0,
+      "rejected": 0,
+      "human": null,
+      "reference_prior": null,
+      "confidence": 0.333,
+      "evidence": [
+        {
+          "experiment_id": "cexp_1a09744b816_2009893a",
+          "video_id": "aplaze",
+          "outcome": "loss",
+          "note": "Open with the result beat 'If you ever see this, the white cloud is your wa...' (was at 11.7s).",
+          "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09744-b816-7707-a3ca-176e3cd99df1"
+        }
+      ]
+    },
+    {
+      "id": "strat_payoff_earlier__category_educational_short",
+      "mutation": "PAYOFF_EARLIER",
+      "scope": "category:educational_short",
+      "status": "REJECTED",
+      "wins": 0,
+      "losses": 2,
+      "neutral": 0,
+      "rejected": 0,
+      "human": null,
+      "reference_prior": null,
+      "confidence": 0.25,
+      "evidence": [
+        {
+          "experiment_id": "cexp_1a097415c48_7bf9dc2b",
+          "video_id": "aptip",
+          "outcome": "loss",
+          "note": "Move the payoff beat 'The stem it is now standing on was pointing stra...' from 9.4s to right after the opening.",
+          "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09741-5c48-7404-9c6c-09d72832d0a9"
+        },
+        {
+          "experiment_id": "cexp_1a09744b816_2009893a",
+          "video_id": "aplaze",
+          "outcome": "loss",
+          "note": "Move the payoff beat 'If you ever see this, the white cloud is your wa...' from 11.7s to right after the opening.",
+          "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09744-b816-7707-a3ca-176e3cd99df1"
+        }
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "version": 1,
+      "experiment_id": "cexp_1a097415c48_7bf9dc2b",
+      "strategy_id": "strat_pattern_interrupt__category_educational_short",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 1,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "created_at": "2026-09-12T20:14:12.853+00:00"
+    },
+    {
+      "version": 2,
+      "experiment_id": "cexp_1a097415c48_7bf9dc2b",
+      "strategy_id": "strat_payoff_earlier__category_educational_short",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "CONTRADICTED",
+        "wins": 0,
+        "losses": 1,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.333
+      },
+      "created_at": "2026-09-12T20:14:12.853+00:00"
+    },
+    {
+      "version": 3,
+      "experiment_id": "cexp_1a097415c48_7bf9dc2b",
+      "strategy_id": "strat_context_compression__category_educational_short",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 1,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "created_at": "2026-09-12T20:14:12.853+00:00"
+    },
+    {
+      "version": 4,
+      "experiment_id": "cexp_1a09744b816_2009893a",
+      "strategy_id": "strat_result_first__category_educational_short",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "CONTRADICTED",
+        "wins": 0,
+        "losses": 1,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.333
+      },
+      "created_at": "2026-09-12T20:19:52.077+00:00"
+    },
+    {
+      "version": 5,
+      "experiment_id": "cexp_1a09744b816_2009893a",
+      "strategy_id": "strat_pattern_interrupt__category_educational_short",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 1,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 2,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "created_at": "2026-09-12T20:19:52.077+00:00"
+    },
+    {
+      "version": 6,
+      "experiment_id": "cexp_1a09744b816_2009893a",
+      "strategy_id": "strat_payoff_earlier__category_educational_short",
+      "before": {
+        "status": "CONTRADICTED",
+        "wins": 0,
+        "losses": 1,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.333
+      },
+      "after": {
+        "status": "REJECTED",
+        "wins": 0,
+        "losses": 2,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.25
+      },
+      "created_at": "2026-09-12T20:19:52.077+00:00"
+    },
+    {
+      "version": 7,
+      "experiment_id": "cexp_1a09744b816_2009893a",
+      "strategy_id": "strat_context_compression__category_educational_short",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 1,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "CONTRADICTED",
+        "wins": 0,
+        "losses": 1,
+        "neutral": 1,
+        "rejected": 0,
+        "confidence": 0.375
+      },
+      "created_at": "2026-09-12T20:19:52.077+00:00"
+    },
+    {
+      "version": 8,
+      "experiment_id": "repair_1a0977235a9_aba54f84",
+      "strategy_id": "strat_pattern_interrupt__category_educational_short",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 2,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "CONTRADICTED",
+        "wins": 0,
+        "losses": 1,
+        "neutral": 2,
+        "rejected": 0,
+        "confidence": 0.4
+      },
+      "created_at": "2026-09-12T21:08:03.600+00:00"
+    }
+  ]
+}

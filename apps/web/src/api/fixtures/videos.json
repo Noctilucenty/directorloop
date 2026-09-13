@@ -1,0 +1,58 @@
+[
+  {
+    "video_id": "aptip",
+    "title": "Tippe top climbs instead of falling",
+    "duration_ms": null,
+    "category": "educational_short",
+    "source": "owned_curio",
+    "media_url": "/media/source/aptip.mp4",
+    "role": "demo_a",
+    "has_genome": true,
+    "retention_class": null,
+    "latest_experiment_id": "cexp_1a097415c48_7bf9dc2b",
+    "edit_permission": "owned",
+    "platform": null
+  },
+  {
+    "video_id": "aplaze",
+    "title": "Laze: the white cloud that contains glass",
+    "duration_ms": null,
+    "category": "educational_short",
+    "source": "owned_curio",
+    "media_url": "/media/source/aplaze.mp4",
+    "role": "demo_b",
+    "has_genome": true,
+    "retention_class": null,
+    "latest_experiment_id": "cexp_1a09744b816_2009893a",
+    "edit_permission": "owned",
+    "platform": null
+  },
+  {
+    "video_id": "ocean-v7-before-quiet-repair",
+    "title": "ocean-v7-before-quiet-repair",
+    "duration_ms": null,
+    "category": "educational_short",
+    "source": "owned_curio",
+    "media_url": "/media/source/ocean-v7-before-quiet-repair.mp4",
+    "role": "reference",
+    "has_genome": true,
+    "retention_class": null,
+    "latest_experiment_id": null,
+    "edit_permission": "owned",
+    "platform": null
+  },
+  {
+    "video_id": "beavers-v7",
+    "title": "beavers-v7",
+    "duration_ms": null,
+    "category": "educational_short",
+    "source": "owned_curio",
+    "media_url": "/media/source/beavers-v7.mp4",
+    "role": "reference",
+    "has_genome": true,
+    "retention_class": null,
+    "latest_experiment_id": null,
+    "edit_permission": "owned",
+    "platform": null
+  }
+]

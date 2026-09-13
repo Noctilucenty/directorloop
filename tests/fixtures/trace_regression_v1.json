@@ -1,0 +1,4186 @@
+{
+  "schema": "directorloop-failed-trace-regression-v1",
+  "aria_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+  "scope": "Frozen development regression cases, including actual failures; not a held-out quality benchmark. Labels are mechanical rules only.",
+  "new_model_calls": 0,
+  "rows": [
+    {
+      "case_id": "aria:original_39_cases:00",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Log in because this is how you're going to have the best summer",
+          "timestamps": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "duration_ms": 1833,
+          "evidence_frames": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "observation_text": "A young woman is speaking directly to the camera in the center of the frame.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "70f5319e79226fa1558ef6557bdb5197d0a77aa8a609b9332ac91964211cbdb0",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_1_prefix_1:o1",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "5b265634aba05c3dd441618e77e7720dfbd12e3c4ced9d121669aa2b831b72f1"
+    },
+    {
+      "case_id": "aria:original_39_cases:01",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Log in because this is how you're going to have the best summer",
+          "timestamps": [
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "duration_ms": 1833,
+          "evidence_frames": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "observation_text": "A pink note-style graphic appears with the text '10/10 side quests to do with your friends this summer (niche)'.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "a21bc88ab77524a5f23ded488b12088083020a68fb46c35b2d400cf51fafa597",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_1_prefix_1:o2",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "ebf76815e0189063a80bc090fa3b9e2619408ec565f411dcfdd401d0fdac033b"
+    },
+    {
+      "case_id": "aria:original_39_cases:02",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Log in because this is how you're going to have the best summer",
+          "timestamps": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "duration_ms": 1833,
+          "evidence_frames": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "observation_text": "The background is a collage of six different video clips, including people eating watermelon, a person drawing with chalk, and a basket of water balloons.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "70982effb5e1b09415e9ea032a6f278ca0d3d784cb60245db3fb9ec1543ecb8a",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_1_prefix_1:o3",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "843c16c7c75fd5fbafeddc7ac267969036859d06cbe1f2dcf0350db624e78c77"
+    },
+    {
+      "case_id": "aria:original_39_cases:03",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": "Log in because this is how you're going to have the best summer",
+          "transcript": "Log in because this is how you're going to have the best summer",
+          "timestamps": [],
+          "duration_ms": 1833,
+          "evidence_frames": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "observation_text": "The speaker is saying 'Log in because this is how you're going to have the best summer'.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "9aa561cbbb3705fde5799e655416408e83dac45532ab80b799c6d407a9803dd7",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_1_prefix_1:o4",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "5e64d66d0e9cc32dfa8cfc98dc07d009a1606a83dd81897c8142c73a6a5d5f6f"
+    },
+    {
+      "case_id": "aria:original_39_cases:04",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Log in because this is how you're going to have the best summer with your friends. Make quache with your friends",
+          "timestamps": [
+            500,
+            1500,
+            2166,
+            2500
+          ],
+          "duration_ms": 3833,
+          "evidence_frames": [
+            500,
+            1500,
+            2166,
+            2500,
+            2833,
+            3166,
+            3500,
+            3833
+          ],
+          "observation_text": "The video starts with a collage of summer activities and a text overlay that reads '10/10 side quests to do with your friends this summer (niche)'.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "d7054e43ed2efbcd7c088492763c5c6a7870850a435e5984d73f2c0a3433c28d",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_1_prefix_2:o1",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "7283becc2d09792fdb36894b7a735cdaa51e7d71dfa1d85149acb7c77817a654"
+    },
+    {
+      "case_id": "aria:original_39_cases:05",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": "this is how you're going to have the best summer with your friends",
+          "transcript": "Log in because this is how you're going to have the best summer with your friends. Make quache with your friends",
+          "timestamps": [
+            500,
+            1500,
+            2166,
+            2500
+          ],
+          "duration_ms": 3833,
+          "evidence_frames": [
+            500,
+            1500,
+            2166,
+            2500,
+            2833,
+            3166,
+            3500,
+            3833
+          ],
+          "observation_text": "The creator says, 'this is how you're going to have the best summer with your friends.'",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "3f844e5c165b4dedb67d91be89a14d6113126785795bdc68cadb9e663b010c2d",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_1_prefix_2:o2",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "971953e6b7ecff9d64ce95770c13cb4c0b6e954df983b013be64a1294f7d50c9"
+    },
+    {
+      "case_id": "aria:original_39_cases:06",
+      "expected": false,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": "Make hwachae with your friends",
+          "transcript": "Log in because this is how you're going to have the best summer with your friends. Make quache with your friends",
+          "timestamps": [
+            3166,
+            3500,
+            3833
+          ],
+          "duration_ms": 3833,
+          "evidence_frames": [
+            500,
+            1500,
+            2166,
+            2500,
+            2833,
+            3166,
+            3500,
+            3833
+          ],
+          "observation_text": "The creator transitions to the first item, saying 'Make hwachae with your friends' while a photo of a bowl of fruit punch appears on screen.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "4a603d4b77eab1c518192d8865e86ff1a0bc0743757af2d8a1770ae621d2ea9c",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_1_prefix_2:o3",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "994fa9ba14ee895a4152677d294be3c56cccaea04b96cf87a941804a52b8a678"
+    },
+    {
+      "case_id": "aria:original_39_cases:07",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Log in because this is how you're going to have the best summer with your friends. Make quache with your friends",
+          "timestamps": [
+            500,
+            3833
+          ],
+          "duration_ms": 3833,
+          "evidence_frames": [
+            500,
+            1500,
+            2166,
+            2500,
+            2833,
+            3166,
+            3500,
+            3833
+          ],
+          "observation_text": "The video format is a standard 'listicle' or 'tips' video, where the creator speaks to the camera and uses text overlays and inset images to illustrate each point.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "e9da4002ccc28e48cd197f627205451a6d1ea0c811dbc440d387d17d95f206d0",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_1_prefix_2:o4",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "f72f5e9dc2b81e4d5f30f599c86451014208411a43ba1fad5df595568bb86759"
+    },
+    {
+      "case_id": "aria:original_39_cases:08",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": "Tag your friends in the comments and I'll send you the link.",
+          "transcript": "up in person. And then once you're in your side quest, you can take a bunch of pics, post it, and then all your friends who didn't accept will die of BOMO. I've been doing this for around three weeks and I couldn't imagine my summer without it. Tag your friends in the comments and I'll send you the link.",
+          "timestamps": [
+            33933,
+            34266,
+            34599
+          ],
+          "duration_ms": 35266,
+          "evidence_frames": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11500,
+            12500,
+            13500,
+            14500,
+            15500,
+            16500,
+            17500,
+            18500,
+            19500,
+            20500,
+            21500,
+            22500,
+            23500,
+            24500,
+            25500,
+            26500,
+            27500,
+            28500,
+            29500,
+            30500,
+            31500,
+            32500,
+            33599,
+            33933,
+            34266,
+            34599,
+            34933,
+            35266
+          ],
+          "observation_text": "The video concludes with a call to action to 'Tag your friends in the comments' and a promise to 'send you the link,' accompanied by an App Store card for 'thirdspace: IRL sidequests'.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "5fda44acc9ffe23c75b8ec722ca239513d4e587a855e9d827cdfd64f96c4c493",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_1_prefix_3:o1",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "81c7efc41cbd5b5b746fc8d3cc6771cb8d5632055dd27bfe3cfea93338b88c3b"
+    },
+    {
+      "case_id": "aria:original_39_cases:09",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": "I've been doing this for around three weeks and I couldn't imagine my summer without it.",
+          "transcript": "up in person. And then once you're in your side quest, you can take a bunch of pics, post it, and then all your friends who didn't accept will die of BOMO. I've been doing this for around three weeks and I couldn't imagine my summer without it. Tag your friends in the comments and I'll send you the link.",
+          "timestamps": [
+            31500,
+            32500
+          ],
+          "duration_ms": 35266,
+          "evidence_frames": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11500,
+            12500,
+            13500,
+            14500,
+            15500,
+            16500,
+            17500,
+            18500,
+            19500,
+            20500,
+            21500,
+            22500,
+            23500,
+            24500,
+            25500,
+            26500,
+            27500,
+            28500,
+            29500,
+            30500,
+            31500,
+            32500,
+            33599,
+            33933,
+            34266,
+            34599,
+            34933,
+            35266
+          ],
+          "observation_text": "The creator states she has been using the app for 'around three weeks' and 'couldn't imagine my summer without it,' serving as a personal testimonial before the final CTA.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "894a43b13742aa026889b009b8260d3b496babf7de32220b4fc30ee8fd9d3ec0",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_1_prefix_3:o2",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "1bd994f773366e89cdc6ef47b72e7f1b0f8524d0062897b0a6b03932acfeb5d4"
+    },
+    {
+      "case_id": "aria:original_39_cases:10",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "up in person. And then once you're in your side quest, you can take a bunch of pics, post it, and then all your friends who didn't accept will die of BOMO. I've been doing this for around three weeks and I couldn't imagine my summer without it. Tag your friends in the comments and I'll send you the link.",
+          "timestamps": [
+            5500,
+            22500,
+            23500
+          ],
+          "duration_ms": 35266,
+          "evidence_frames": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11500,
+            12500,
+            13500,
+            14500,
+            15500,
+            16500,
+            17500,
+            18500,
+            19500,
+            20500,
+            21500,
+            22500,
+            23500,
+            24500,
+            25500,
+            26500,
+            27500,
+            28500,
+            29500,
+            30500,
+            31500,
+            32500,
+            33599,
+            33933,
+            34266,
+            34599,
+            34933,
+            35266
+          ],
+          "observation_text": "The video transitions from a list of activities (water balloons, chalk art) to a specific app demonstration, showing how the app sends prompts and reveals friend locations on a map.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "5beede5d8506cca451bc7f01b64a8c5ef3c23f985f5cc0e20d062903cf767659",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_1_prefix_3:o3",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "9c89d153cc3ab456eb681adb681eee30b301db5080a6e133c834c34575a8e7bc"
+    },
+    {
+      "case_id": "aria:original_39_cases:11",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Rice",
+          "timestamps": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "duration_ms": 1833,
+          "evidence_frames": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "observation_text": "A woman with glasses is lying down, with a green cube filter featuring a fried egg covering her mouth and nose.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "6efda97b0de29b46a233542fc7ab45af9a1f78bc4002b0326b1722348deff35a",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_2_prefix_1:o1",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "c66c063ec60b50c160aa72d0cf216a448e43c706d79d40fb086f79b0eb93406f"
+    },
+    {
+      "case_id": "aria:original_39_cases:12",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Rice",
+          "timestamps": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "duration_ms": 1833,
+          "evidence_frames": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "observation_text": "A brick wall filter with the word 'Rice' written on it is positioned to the right of the woman's face.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "91f513c57a05ee58e0447e75b2a695919d16bb9bdfb3062f3e01eb849bdbc4df",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_2_prefix_1:o2",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "22aa3388a4215f254310b303517b5088e40107a77c8c6b940d06b6c28b820e29"
+    },
+    {
+      "case_id": "aria:original_39_cases:13",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": "Rice",
+          "transcript": "Rice",
+          "timestamps": [
+            166
+          ],
+          "duration_ms": 1833,
+          "evidence_frames": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "observation_text": "The audio transcript indicates the word 'Rice' was spoken at the very beginning of the clip.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "61c0e0ac058fbf73a73b819f61af1ffd32c3cc8159b09ccaade67b871126038d",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_2_prefix_1:o3",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "8e35e92cb1c86b2e13532b02ad3e696977afe0fc92babcc94fb671f832cbdf5f"
+    },
+    {
+      "case_id": "aria:original_39_cases:14",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Rice",
+          "timestamps": [
+            166,
+            1833
+          ],
+          "duration_ms": 1833,
+          "evidence_frames": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "observation_text": "The woman's expression and the static nature of the filters suggest a lack of immediate action or narrative progression.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "8733343ac00385b2c3861ec06cb6b87c3c333741931beb030060b99c3fad5065",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_2_prefix_1:o4",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "f7b84865dea070ebbd76ccda21e3b85d84f0798c4203a630cdf58b7d9f9e43b3"
+    },
+    {
+      "case_id": "aria:original_39_cases:15",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Rice Rice",
+          "timestamps": [
+            500,
+            2166,
+            3833
+          ],
+          "duration_ms": 3833,
+          "evidence_frames": [
+            500,
+            1500,
+            2166,
+            2500,
+            2833,
+            3166,
+            3500,
+            3833
+          ],
+          "observation_text": "A woman with glasses is lying down and looking at the camera. AR stickers, including a green box with a fried egg and a brick wall, are overlaid on the video.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "cfbeae051838b53f2454bf3f1d918a7f47f51d647c2fafea0fea459e06883682",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_2_prefix_2:o1",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "708aff6279b4f0ffe5772c3c6e5ca60b5e4eccaadc4d3046b487f897e5883d02"
+    },
+    {
+      "case_id": "aria:original_39_cases:16",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Rice Rice",
+          "timestamps": [
+            500,
+            2833,
+            3833
+          ],
+          "duration_ms": 3833,
+          "evidence_frames": [
+            500,
+            1500,
+            2166,
+            2500,
+            2833,
+            3166,
+            3500,
+            3833
+          ],
+          "observation_text": "The word 'Rice' is displayed on a brick wall sticker. A smaller sticker labeled 'Bread' is partially visible to the right.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "fdd0c7728b83e70233a273a2c0b13eebb53b65fd2f9a5c8b87f040e2e7761421",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_2_prefix_2:o2",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "3f871636c9634d8e76086198b48c4039af33881361e292c7f3be6edd26838288"
+    },
+    {
+      "case_id": "aria:original_39_cases:17",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": "Rice",
+          "transcript": "Rice Rice",
+          "timestamps": [],
+          "duration_ms": 3833,
+          "evidence_frames": [
+            500,
+            1500,
+            2166,
+            2500,
+            2833,
+            3166,
+            3500,
+            3833
+          ],
+          "observation_text": "The word 'Rice' is spoken at the beginning of the clip and again around the 2-second mark.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "c5e0338512ae0afcf7fd515790a408e8d7efa808e577e1371ffbc301b1cdc118",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_2_prefix_2:o3",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "de3231b52c13a4ae8c70aa6accf6423abdc3c6d97bdc3cfd2b78b40a0f4f8876"
+    },
+    {
+      "case_id": "aria:original_39_cases:18",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Rice Rice Rice Rice Rice Rice Rice Rice Oh Bread Bean Egg Pasta Pasta Pasta Salad Salad Salad Salad Salad Potato Potato Potato Ooi",
+          "timestamps": [
+            500,
+            18500,
+            44500
+          ],
+          "duration_ms": 52101,
+          "evidence_frames": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11500,
+            12500,
+            13500,
+            14500,
+            15500,
+            16500,
+            17500,
+            18500,
+            19500,
+            20500,
+            21500,
+            22500,
+            23500,
+            24500,
+            25500,
+            26500,
+            27500,
+            28500,
+            29500,
+            30500,
+            31500,
+            32500,
+            33500,
+            34500,
+            35500,
+            36500,
+            37500,
+            38500,
+            39500,
+            40500,
+            41500,
+            42500,
+            43500,
+            44500,
+            45500,
+            46500,
+            47500,
+            48500,
+            49500,
+            50434,
+            50768,
+            51101,
+            51434,
+            51768,
+            52101
+          ],
+          "observation_text": "The video shows a sequence of food icons on a green die and corresponding words in a brick frame (e.g., 'Rice' at 0.5s, 'Bread' at 18.5s, 'Potato' at 44.5s).",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "cddbec0267f89280feee19d85feaef9639817321a3fd77552b19ac6cccb4df77",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_2_prefix_3:o1",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "33e0d101d4df373e6578b3901f686d11f42e3a2961537b306db3bcf230281105"
+    },
+    {
+      "case_id": "aria:original_39_cases:19",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Rice Rice Rice Rice Rice Rice Rice Rice Oh Bread Bean Egg Pasta Pasta Pasta Salad Salad Salad Salad Salad Potato Potato Potato Ooi",
+          "timestamps": [
+            51434,
+            51768,
+            52101
+          ],
+          "duration_ms": 52101,
+          "evidence_frames": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11500,
+            12500,
+            13500,
+            14500,
+            15500,
+            16500,
+            17500,
+            18500,
+            19500,
+            20500,
+            21500,
+            22500,
+            23500,
+            24500,
+            25500,
+            26500,
+            27500,
+            28500,
+            29500,
+            30500,
+            31500,
+            32500,
+            33500,
+            34500,
+            35500,
+            36500,
+            37500,
+            38500,
+            39500,
+            40500,
+            41500,
+            42500,
+            43500,
+            44500,
+            45500,
+            46500,
+            47500,
+            48500,
+            49500,
+            50434,
+            50768,
+            51101,
+            51434,
+            51768,
+            52101
+          ],
+          "observation_text": "The on-screen text 'Great!!!' appears in green at the top of the screen, accompanied by a confetti animation, indicating a successful match.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "c325da9e9ee4f14deb45c74e394660e3233c26e47174644832bc79b92aaf7996",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_2_prefix_3:o2",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "714c5421e6f2eac28479ed0b74de755e75e24351265df8795af5b19e30ae5021"
+    },
+    {
+      "case_id": "aria:original_39_cases:20",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "Rice Rice Rice Rice Rice Rice Rice Rice Oh Bread Bean Egg Pasta Pasta Pasta Salad Salad Salad Salad Salad Potato Potato Potato Ooi",
+          "timestamps": [
+            51434,
+            52101
+          ],
+          "duration_ms": 52101,
+          "evidence_frames": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11500,
+            12500,
+            13500,
+            14500,
+            15500,
+            16500,
+            17500,
+            18500,
+            19500,
+            20500,
+            21500,
+            22500,
+            23500,
+            24500,
+            25500,
+            26500,
+            27500,
+            28500,
+            29500,
+            30500,
+            31500,
+            32500,
+            33500,
+            34500,
+            35500,
+            36500,
+            37500,
+            38500,
+            39500,
+            40500,
+            41500,
+            42500,
+            43500,
+            44500,
+            45500,
+            46500,
+            47500,
+            48500,
+            49500,
+            50434,
+            50768,
+            51101,
+            51434,
+            51768,
+            52101
+          ],
+          "observation_text": "The woman is seen smiling and laughing in the final frames, reacting to the 'Great!!!' message and the confetti.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "9a0170338538679182e1c22c6f6b9e94dc05e5bbc61d7edccbf6e6ea08de8a54",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_2_prefix_3:o3",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "7f3d2a75eeb722441e0528f0ac86b8e039f5bdf13d08761692de5048a435e487"
+    },
+    {
+      "case_id": "aria:original_39_cases:21",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": "Potato",
+          "transcript": "Rice Rice Rice Rice Rice Rice Rice Rice Oh Bread Bean Egg Pasta Pasta Pasta Salad Salad Salad Salad Salad Potato Potato Potato Ooi",
+          "timestamps": [],
+          "duration_ms": 52101,
+          "evidence_frames": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11500,
+            12500,
+            13500,
+            14500,
+            15500,
+            16500,
+            17500,
+            18500,
+            19500,
+            20500,
+            21500,
+            22500,
+            23500,
+            24500,
+            25500,
+            26500,
+            27500,
+            28500,
+            29500,
+            30500,
+            31500,
+            32500,
+            33500,
+            34500,
+            35500,
+            36500,
+            37500,
+            38500,
+            39500,
+            40500,
+            41500,
+            42500,
+            43500,
+            44500,
+            45500,
+            46500,
+            47500,
+            48500,
+            49500,
+            50434,
+            50768,
+            51101,
+            51434,
+            51768,
+            52101
+          ],
+          "observation_text": "The audio transcript indicates the woman is saying the food names as they appear, such as 'Potato' at 48.9s.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "9b52cccd19c3cada35d1c39e8b6243dbff94077304fd6a919dd4287b07897427",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_2_prefix_3:o4",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "8732dc100691e9e79e4e3b6cb9492e0c4a45c96c44219463e412c5d0991b9906"
+    },
+    {
+      "case_id": "aria:original_39_cases:22",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "I will be your father,",
+          "timestamps": [
+            166,
+            500
+          ],
+          "duration_ms": 1833,
+          "evidence_frames": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "observation_text": "Two empty white plates are visible on a wooden table, each with the text '360 cal' overlaid.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "ff9ef7c1f1862032a688a2179013b0589cea57ac7ced6fd29ee6da6a92195976",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_3_prefix_1:o1",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "574ecd87f5d31f264f9f53b8e56d4a34007964b0190f86e3e8c398d490ef93ed"
+    },
+    {
+      "case_id": "aria:original_39_cases:23",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "I will be your father,",
+          "timestamps": [
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "duration_ms": 1833,
+          "evidence_frames": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "observation_text": "A hand brings a plate of sliced hard-boiled eggs into the frame and pours them onto the bottom plate.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "c2070dce1e10cba355da74c0ba257c9e005d57f91744ce5a9136b21053b08e1a",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_3_prefix_1:o2",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "43a67189f6263bf810ed382aa38be10924613d8bbcd0a51e1fb85f5af083334e"
+    },
+    {
+      "case_id": "aria:original_39_cases:24",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": "I will be your father,",
+          "transcript": "I will be your father,",
+          "timestamps": [],
+          "duration_ms": 1833,
+          "evidence_frames": [
+            166,
+            500,
+            833,
+            1166,
+            1499,
+            1833
+          ],
+          "observation_text": "The audio transcript claims the speaker says, 'I will be your father.'",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "82c21ea1f10f4f1200c02756db093bf1ea57c46eb63f54ecbffceb220e547069",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_3_prefix_1:o3",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "a04fdc471f9c80a4a8613e48f02f263ff79a1965d465eecbaee264a8bfee652b"
+    },
+    {
+      "case_id": "aria:original_39_cases:25",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "I will be your father, baby, with your tiny hand in",
+          "timestamps": [
+            500,
+            1500
+          ],
+          "duration_ms": 3833,
+          "evidence_frames": [
+            500,
+            1500,
+            2166,
+            2500,
+            2833,
+            3166,
+            3500,
+            3833
+          ],
+          "observation_text": "Two white plates are shown on a wooden table, both with the text '360 cal' overlaid on them.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "6cb6de242ebefa3af4140ba6dd889056982eb6882f66b1a5e47e0f1368b1324e",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_3_prefix_2:o1",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "0c0e9502bd2782a0f2e97729870dbfb10f73ecb546b31a597d37bda92e719266"
+    },
+    {
+      "case_id": "aria:original_39_cases:26",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "I will be your father, baby, with your tiny hand in",
+          "timestamps": [
+            1500,
+            2166
+          ],
+          "duration_ms": 3833,
+          "evidence_frames": [
+            500,
+            1500,
+            2166,
+            2500,
+            2833,
+            3166,
+            3500,
+            3833
+          ],
+          "observation_text": "The bottom plate is filled with sliced hard-boiled eggs, while the top plate remains empty.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "93d9dcc67af1bbefc03201ab2ab27101c0b082537052b30f80a6afb90f052cd4",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_3_prefix_2:o2",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "559581dec9d59694b24412bd19c42042f75af4be55c1963ba00ad19287320d71"
+    },
+    {
+      "case_id": "aria:original_39_cases:27",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "I will be your father, baby, with your tiny hand in",
+          "timestamps": [
+            2833,
+            3166
+          ],
+          "duration_ms": 3833,
+          "evidence_frames": [
+            500,
+            1500,
+            2166,
+            2500,
+            2833,
+            3166,
+            3500,
+            3833
+          ],
+          "observation_text": "A smartphone is held over the plate of eggs, displaying a camera interface that is scanning the food.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "abcc49673fb0dbb5189e78ce40c5194a0ee0c5bf7a20c144ee5dde037a9d95ba",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_3_prefix_2:o3",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "655d3b1127fd09d23b34aeb2772aa4fa757670fbce5e44a7b991da04750da2ec"
+    },
+    {
+      "case_id": "aria:original_39_cases:28",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "I will be your father, baby, with your tiny hand in",
+          "timestamps": [
+            2500,
+            3833
+          ],
+          "duration_ms": 3833,
+          "evidence_frames": [
+            500,
+            1500,
+            2166,
+            2500,
+            2833,
+            3166,
+            3500,
+            3833
+          ],
+          "observation_text": "The phone screen shows a calorie tracking app with a cartoon bird character and a daily goal of 1712 calories.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "0769c4f1cde01f3b7e6f2b65dc6dd30472d72e796bbb05a5a0638900694592a2",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_3_prefix_2:o4",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "fd878c99fffa039b4b8f24ee3a30d0d470f01a84cf184406ab038affb7657866"
+    },
+    {
+      "case_id": "aria:original_39_cases:29",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "I will be your father, baby, with your tiny hand in time. I will be your preacher, teacher, anything you have in mind. I will be your- Huh?",
+          "timestamps": [
+            500,
+            1500
+          ],
+          "duration_ms": 12720,
+          "evidence_frames": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11053,
+            11387,
+            11720,
+            12053,
+            12387,
+            12720
+          ],
+          "observation_text": "Two plates of boiled eggs are shown, both labeled '360 cal'.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "8344f60243edb072d6e0bf4d4530c753bbab5e6450eea7ec8ebc783218308c0c",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_3_prefix_3:o1",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "6a2d4903b127c03d9b8d0423898c9cfea148cd842f0bb0b950f335abf69708ed"
+    },
+    {
+      "case_id": "aria:original_39_cases:30",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "I will be your father, baby, with your tiny hand in time. I will be your preacher, teacher, anything you have in mind. I will be your- Huh?",
+          "timestamps": [
+            5500,
+            6500
+          ],
+          "duration_ms": 12720,
+          "evidence_frames": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11053,
+            11387,
+            11720,
+            12053,
+            12387,
+            12720
+          ],
+          "observation_text": "A phone app scans the eggs and identifies them as 'Boiled Egg' with 360 calories.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "f83a545a4f2e8ca0e044d3505ddc8ba81d8d09b91d7270b77c9165dfc9fee932",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_3_prefix_3:o2",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "a17e8078532ec4c3d3920742430a483fa7c770f362f58450ce2d769e0f728c7e"
+    },
+    {
+      "case_id": "aria:original_39_cases:31",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "I will be your father, baby, with your tiny hand in time. I will be your preacher, teacher, anything you have in mind. I will be your- Huh?",
+          "timestamps": [
+            11053,
+            11387
+          ],
+          "duration_ms": 12720,
+          "evidence_frames": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11053,
+            11387,
+            11720,
+            12053,
+            12387,
+            12720
+          ],
+          "observation_text": "The app then identifies the other plate as 'Boiled Egg Whites' with 85 calories.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "728b6b866f46a61a281ef6852fc0483afb8181ea669203f6638ea91924d6afa4",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_3_prefix_3:o3",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "98c951743a2ce63a6004739056e31e1b61a10afe97e9b900121fa98ef2e9b1fe"
+    },
+    {
+      "case_id": "aria:original_39_cases:32",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "I will be your father, baby, with your tiny hand in time. I will be your preacher, teacher, anything you have in mind. I will be your- Huh?",
+          "timestamps": [
+            11387,
+            12720
+          ],
+          "duration_ms": 12720,
+          "evidence_frames": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11053,
+            11387,
+            11720,
+            12053,
+            12387,
+            12720
+          ],
+          "observation_text": "A fat cat is superimposed next to the plate of egg whites.",
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "a04fabff68c8533ef1f2bb635fc57e18d18ce5e82a423454eb1e0d56d6678a2e",
+      "source_kind": "aria_artifact",
+      "source_case_name": "saved:clip_3_prefix_3:o4",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "5460e7a13656fe79db3211fc5b922b91cedb32d0a22e5582554805f0f5367605"
+    },
+    {
+      "case_id": "aria:original_39_cases:33",
+      "expected": false,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "timestamps": [],
+          "duration_ms": 2000,
+          "evidence_frames": [
+            166,
+            500
+          ],
+          "semantic_grounding_verified": false,
+          "quote": "Rice",
+          "transcript": "Price"
+        }
+      },
+      "case_sha256": "117dd4d4723c226ad54d502e207a5113b8e1a8071e180070ebffe607c73c2dbe",
+      "source_kind": "aria_artifact",
+      "source_case_name": "invalid:rice-in-price",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "ab179a453dd71e7356e10a94d763f74ce26b909d29d9ac117c6aa21c0e4765a5"
+    },
+    {
+      "case_id": "aria:original_39_cases:34",
+      "expected": false,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "timestamps": [],
+          "duration_ms": 2000,
+          "evidence_frames": [
+            166,
+            500
+          ],
+          "semantic_grounding_verified": false,
+          "quote": "Egg",
+          "transcript": "Eggplant"
+        }
+      },
+      "case_sha256": "98bfa47cb73cf4b69a434f48a0e4e1b782c2d96f4310dbe1596ed5574fa5c96d",
+      "source_kind": "aria_artifact",
+      "source_case_name": "invalid:egg-in-eggplant",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "07e8e3a60527c43809ff951391d4a8b13e2b39fb23a5038f936dcc99b26e533b"
+    },
+    {
+      "case_id": "aria:original_39_cases:35",
+      "expected": false,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "timestamps": [],
+          "duration_ms": 2000,
+          "evidence_frames": [
+            166,
+            500
+          ],
+          "semantic_grounding_verified": false,
+          "quote": "link",
+          "transcript": "blink"
+        }
+      },
+      "case_sha256": "2a6ba2fa16331b08e81edccf657af9648457bf7f98847e6735370b511d7f3a5f",
+      "source_kind": "aria_artifact",
+      "source_case_name": "invalid:link-in-blink",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "c1ed6ab1f71c9dfbaea6f72c812f03d1d6a2a2190cae0ba1523cfda7603bd1fa"
+    },
+    {
+      "case_id": "aria:original_39_cases:36",
+      "expected": false,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "timestamps": [
+            -1
+          ],
+          "duration_ms": 2000,
+          "evidence_frames": [
+            166,
+            500
+          ],
+          "semantic_grounding_verified": false,
+          "quote": null,
+          "transcript": ""
+        }
+      },
+      "case_sha256": "d2851f291af0e4cfadd0ea441a599c89a39b5d1152b52866947a5e4068cfc054",
+      "source_kind": "aria_artifact",
+      "source_case_name": "invalid:negative-time",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "5973297571b3036b355bcfa27b17383db89e6ca3b8c01ef24d51ec23b4ed6604"
+    },
+    {
+      "case_id": "aria:original_39_cases:37",
+      "expected": false,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "timestamps": [
+            2001
+          ],
+          "duration_ms": 2000,
+          "evidence_frames": [
+            166,
+            500
+          ],
+          "semantic_grounding_verified": false,
+          "quote": null,
+          "transcript": ""
+        }
+      },
+      "case_sha256": "975efc8d2d2d520099ee91408d334a90f7dcfdd8396f50d61efff4cfa76e1f78",
+      "source_kind": "aria_artifact",
+      "source_case_name": "invalid:past-duration",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "cb88542309c3f22d1128cc941c5d6b75bb1c64130c0875b49e9ab0046334e325"
+    },
+    {
+      "case_id": "aria:original_39_cases:38",
+      "expected": false,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "timestamps": [
+            167
+          ],
+          "duration_ms": 2000,
+          "evidence_frames": [
+            166,
+            500
+          ],
+          "semantic_grounding_verified": false,
+          "quote": null,
+          "transcript": ""
+        }
+      },
+      "case_sha256": "c70702812217fceca3e63539c8081b20580e0253452c6c598c81da2e662148c2",
+      "source_kind": "aria_artifact",
+      "source_case_name": "invalid:not-an-evidence-frame",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "316f7caaee14e8063b4d90b21eede1829678d23c4c4b56af7abcc1568e2081ee"
+    },
+    {
+      "case_id": "aria:targeted_adversarial_cases:00",
+      "expected": false,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": "???",
+          "transcript": "ordinary English ASR",
+          "timestamps": [],
+          "duration_ms": 2000,
+          "evidence_frames": [
+            1
+          ],
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "629f1deab339732bd99fac9801b070f71111017614e7315cfc91d7f66a2f986c",
+      "source_kind": "aria_artifact",
+      "source_case_name": "adversarial:punctuation-only-quote",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "baa924da9182f31e3f8d6459f6ba1fb6fa201ea54599f90eef28a4ba5a2b1dec"
+    },
+    {
+      "case_id": "aria:targeted_adversarial_cases:01",
+      "expected": false,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": "猫",
+          "transcript": "ordinary English ASR",
+          "timestamps": [],
+          "duration_ms": 2000,
+          "evidence_frames": [
+            1
+          ],
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "f58770c7fcf13bd91b278554cd3713990269af61b03ebeedec9029ae024af43a",
+      "source_kind": "aria_artifact",
+      "source_case_name": "adversarial:unrelated-chinese-quote",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "f588d27013a8d305cf3a4a863c601168dcc519aad90c89cbad95ec21ac288a97"
+    },
+    {
+      "case_id": "aria:targeted_adversarial_cases:02",
+      "expected": false,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": null,
+          "transcript": "",
+          "timestamps": [
+            true
+          ],
+          "duration_ms": 2000,
+          "evidence_frames": [
+            1
+          ],
+          "semantic_grounding_verified": false
+        }
+      },
+      "case_sha256": "0c5e045c85f319e50e5b8fb0f215872b22364b83950c9b3a8a8d8f94ea2278a2",
+      "source_kind": "aria_artifact",
+      "source_case_name": "adversarial:boolean-timestamp",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "152c066ffab581a04a501129fb4beea8caba133728a3e6dc8325b21a3cb155da"
+    },
+    {
+      "case_id": "aria:targeted_adversarial_cases:03",
+      "expected": true,
+      "case": {
+        "rule": "aria_citation_after",
+        "input": {
+          "quote": "Rice",
+          "transcript": "Rice",
+          "timestamps": [
+            166
+          ],
+          "duration_ms": 2000,
+          "evidence_frames": [
+            166
+          ],
+          "observation_text": "Invented unsupported claim.",
+          "semantic_grounding_verified": false,
+          "automatic_promotion_allowed": false
+        }
+      },
+      "case_sha256": "ad76b926d58f7ce6539a56bb64dc19198d739feb2b54006fc76ae412ea3902e4",
+      "source_kind": "aria_artifact",
+      "source_case_name": "adversarial:invented-observation-text",
+      "source_artifact": "leondragon3798-curio/directorloop/directorloop-aria-guardrail-regression:v0",
+      "source_fixture_sha256": "6edf1c8e9edcd99ac8eff82f8e3d6e101433ef03c62040b0fd4cb439beed0cd3",
+      "label_scope": "Historical mechanical quote/frame membership only; not semantic accuracy",
+      "row_sha256": "faa451118c69ab360cd0ddabe1b64b7345226e6c542cc535dbe057bd16bf2bdd"
+    },
+    {
+      "case_id": "trace:original:00:attention_supported",
+      "expected": true,
+      "case": {
+        "rule": "attention_supported",
+        "window": {
+          "start_ms": 0,
+          "end_ms": 2000,
+          "is_last_prefix": false,
+          "status": "complete",
+          "judgment": {
+            "observations": [
+              {
+                "text": "A person in a white tank top and red shorts is shown mid-air performing a flip over a diving board, with another person visible in the pool water.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  166,
+                  500
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The person in red shorts is seen falling into the pool, followed by a large splash of water obscuring the area.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  833,
+                  1166,
+                  1500
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text 'He landed on him' followed by a laughing emoji is displayed at the bottom of the screen.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  166,
+                  500,
+                  833,
+                  1166,
+                  1500,
+                  1833
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The audio transcript contains the words 'If you have'.",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "If you have"
+              }
+            ],
+            "understanding": "A person attempts a flip off a diving board and falls into the pool, with on-screen text suggesting they landed on someone else.",
+            "attention_risk": "low",
+            "cause_observation_indices": [
+              0,
+              1,
+              2
+            ],
+            "suggestion": "The video effectively captures a comedic pool accident with clear visual progression and a descriptive caption.",
+            "moment_kind": "reveal",
+            "uncertainties": [
+              "It is unclear if the person actually landed on the other person in the pool.",
+              "The relationship between the two people in the pool is unknown."
+            ],
+            "review_checks": [
+              {
+                "aspect": "pacing",
+                "status": "clear",
+                "reason": "The action progresses quickly from the jump to the splash within the 2-second window.",
+                "observation_indices": [
+                  0,
+                  1
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "visual_clarity",
+                "status": "clear",
+                "reason": "The main subject and the action of falling into the pool are clearly visible in the frames.",
+                "observation_indices": [
+                  0,
+                  1
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_readability",
+                "status": "clear",
+                "reason": "The on-screen text is large, white with a black outline, and easy to read against the background.",
+                "observation_indices": [
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_alignment",
+                "status": "unknown",
+                "reason": "The on-screen text and the ASR transcript do not appear to be synchronized or related in content.",
+                "observation_indices": [
+                  2,
+                  3
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "hook_and_payoff",
+                "status": "clear",
+                "reason": "The video sets up a jump and delivers the payoff of a failed landing and splash.",
+                "observation_indices": [
+                  0,
+                  1
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "tone_from_words",
+                "status": "clear",
+                "reason": "The caption 'He landed on him' with a laughing emoji suggests a humorous or lighthearted tone.",
+                "observation_indices": [
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "voice_delivery",
+                "status": "unknown",
+                "reason": "No audio is provided to evaluate voice delivery.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "share_motivation",
+                "status": "clear",
+                "reason": "The content is a funny, relatable pool accident that viewers might share for its humor.",
+                "observation_indices": [
+                  1,
+                  2
+                ],
+                "suggested_change": null
+              }
+            ],
+            "potential_scores": [
+              {
+                "dimension": "creative",
+                "rating": 3,
+                "reason": "The video clearly captures a funny moment with good visual clarity and a relevant caption.",
+                "observation_indices": [
+                  0,
+                  1,
+                  2
+                ]
+              },
+              {
+                "dimension": "retention",
+                "rating": 3,
+                "reason": "The quick progression from jump to splash provides a clear and engaging payoff for the viewer.",
+                "observation_indices": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "dimension": "virality",
+                "rating": 2,
+                "reason": "The content is a standard funny clip that has a plausible reason for sharing but lacks unique elements.",
+                "observation_indices": [
+                  1,
+                  2
+                ]
+              }
+            ]
+          },
+          "validation_issues": [],
+          "frame_timestamps_ms": [
+            166,
+            500,
+            833,
+            1166,
+            1500,
+            1833
+          ],
+          "prefix_asr_text": "If you have",
+          "attention_context": "content"
+        }
+      },
+      "case_sha256": "78c765373169e385a9aa678fab9f9c9e81bafea87f184c2e69278fb8099c7a09",
+      "source_kind": "recorded_trace",
+      "source_report_id": "screen_1a09c292474_b0a7b1dd",
+      "source_window_index": 0,
+      "source_call_id": "01a09c29-4040-71c4-b73c-f09851fc7054",
+      "source_trace_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09c29-4040-71c4-b73c-f09851fc7054",
+      "source_record_sha256": "b96db0f98e331aa1631bc783f257a828f695964fcdad88b864c63c4f54089d9f",
+      "source_window_sha256": "ddf99c70d53d37ccb10290b4d0b86cf1fd734ac9d7b59c9fcb4b51ae603119be",
+      "label_scope": "Deterministic mechanical admission/copy guard; not semantic or audience accuracy",
+      "label_reason": "Valid concrete attention citations stay admitted",
+      "row_sha256": "266a66cae4979f4b71fcc6b160183b2a4c5d48ae2fec7bdca9d1d359dc6f2cec"
+    },
+    {
+      "case_id": "trace:original:02:pending_payoff_detected",
+      "expected": true,
+      "case": {
+        "rule": "pending_payoff_detected",
+        "window": {
+          "start_ms": 4000,
+          "end_ms": 8189,
+          "is_last_prefix": false,
+          "status": "needs_review",
+          "judgment": {
+            "observations": [
+              {
+                "text": "The video cuts from a pool scene to a man holding a book, with the on-screen text changing from 'He landed on him' to 'you have'.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  3500,
+                  4174
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text displays the phrase 'do you have time to read this Bible verse with me as well?' across the frames from 5.9s to 8.0s.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  5919,
+                  6269,
+                  6618,
+                  6967,
+                  7316,
+                  7665
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The transcript records the speaker saying 'If you have time for that video, do you have time to read this Bible verse with me as'.",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "If you have time for that video, do you have time to read this Bible verse with me as"
+              },
+              {
+                "text": "The man is holding a book with a gold-leafed cover, which is visually consistent with the 'Bible' mentioned in the captions.",
+                "kind": "inference",
+                "frame_timestamps_ms": [
+                  4174,
+                  8014
+                ],
+                "asr_quote": null
+              }
+            ],
+            "understanding": "The video transitions from a pool clip to a man holding a gold book, asking viewers to read a Bible verse with him.",
+            "attention_risk": "medium",
+            "cause_observation_indices": [
+              0,
+              1
+            ],
+            "suggestion": "The transition from the pool clip to the Bible reading is a clear topic shift that may cause some viewers to scroll away.",
+            "moment_kind": "setup",
+            "uncertainties": [
+              "The specific Bible verse to be read is not yet shown.",
+              "The connection between the pool clip and the Bible verse is unknown."
+            ],
+            "review_checks": [
+              {
+                "aspect": "pacing",
+                "status": "clear",
+                "reason": "The transition from the pool scene to the speaker is a distinct change in content and pace.",
+                "observation_indices": [
+                  0
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "visual_clarity",
+                "status": "clear",
+                "reason": "The speaker and the gold book are clearly visible and well-lit in the frames.",
+                "observation_indices": [
+                  3
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_readability",
+                "status": "clear",
+                "reason": "The white text is legible against the dark background of the speaker's shirt.",
+                "observation_indices": [
+                  1
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_alignment",
+                "status": "clear",
+                "reason": "The on-screen text matches the words in the provided transcript for this interval.",
+                "observation_indices": [
+                  1,
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "hook_and_payoff",
+                "status": "concern",
+                "reason": "The video sets up a promise to read a Bible verse but has not yet shown the verse itself.",
+                "observation_indices": [
+                  1,
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "tone_from_words",
+                "status": "clear",
+                "reason": "The phrasing 'do you have time to read this Bible verse with me' is a direct and personal invitation.",
+                "observation_indices": [
+                  1,
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "voice_delivery",
+                "status": "unknown",
+                "reason": "No audio is provided to evaluate the speaker's voice or tone.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "share_motivation",
+                "status": "unknown",
+                "reason": "It is unclear if the content is shareable without seeing the actual Bible verse.",
+                "observation_indices": [],
+                "suggested_change": null
+              }
+            ],
+            "potential_scores": [
+              {
+                "dimension": "creative",
+                "rating": 2,
+                "reason": "The video uses a standard format of a hook followed by a direct address to the camera.",
+                "observation_indices": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "dimension": "retention",
+                "rating": 2,
+                "reason": "The direct question to the viewer creates a reason to stay, but the payoff is still pending.",
+                "observation_indices": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "dimension": "virality",
+                "rating": null,
+                "reason": "It is difficult to assess the viral potential without seeing the specific Bible verse being shared.",
+                "observation_indices": []
+              }
+            ]
+          },
+          "validation_issues": [
+            "Review check hook_and_payoff: pending future payoff is not by itself an observed defect at an intermediate checkpoint"
+          ],
+          "frame_timestamps_ms": [
+            500,
+            1500,
+            2500,
+            3500,
+            4174,
+            4523,
+            4872,
+            5221,
+            5570,
+            5919,
+            6269,
+            6618,
+            6967,
+            7316,
+            7665,
+            8014
+          ],
+          "prefix_asr_text": "If you have time for that video, do you have time to read this Bible verse with me as",
+          "attention_context": "content"
+        }
+      },
+      "case_sha256": "33b579d3f9a390ff0e5e5ad7bcbaa3242ea0668dd0cfd26c0116ce52fc8ae97e",
+      "source_kind": "recorded_trace",
+      "source_report_id": "screen_1a09c292474_b0a7b1dd",
+      "source_window_index": 2,
+      "source_call_id": "01a09c29-404d-7650-8710-9256bf7be80d",
+      "source_trace_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09c29-404d-7650-8710-9256bf7be80d",
+      "source_record_sha256": "b96db0f98e331aa1631bc783f257a828f695964fcdad88b864c63c4f54089d9f",
+      "source_window_sha256": "d4931d1a279d234c6c93cd77a0878868eb745b21d3c98018829f5fd8e84ea301",
+      "label_scope": "Deterministic mechanical admission/copy guard; not semantic or audience accuracy",
+      "label_reason": "Intermediate unrevealed payoff is not an observed defect",
+      "row_sha256": "a1002781882f1ae2957bd8b46795fc7bb98c4368e6b97f94ec93c601fdc4cfea"
+    },
+    {
+      "case_id": "trace:original:03:score_sources_admitted",
+      "expected": false,
+      "case": {
+        "rule": "score_sources_admitted",
+        "window": {
+          "start_ms": 8189,
+          "end_ms": 12378,
+          "is_last_prefix": false,
+          "status": "complete",
+          "judgment": {
+            "observations": [
+              {
+                "text": "The video cuts from a pool scene to a man holding a book, with on-screen text changing from 'He landed on him' to 'time for' at 4500ms.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  3500,
+                  4500
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The speaker identifies the scripture as '1 Corinthians 10 verse 24' through a sequence of on-screen text captions.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  8712,
+                  9759,
+                  10108,
+                  10458
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The transcript records the speaker saying 'This is 1 Corinthians 10 verse 24. Let no one seek his'.",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "If you have time for that video, do you have time to read this Bible verse with me as well? This is 1 Corinthians 10 verse 24. Let no one seek his"
+              },
+              {
+                "text": "The video uses a 'hook' structure where a viral clip is used to transition into a religious reading.",
+                "kind": "inference",
+                "frame_timestamps_ms": [
+                  4500,
+                  5500
+                ],
+                "asr_quote": null
+              }
+            ],
+            "understanding": "The video transitions from a viral pool clip to a man reading 1 Corinthians 10:24. The speaker uses the initial clip as a hook to invite viewers to read a Bible verse with him.",
+            "attention_risk": "low",
+            "cause_observation_indices": [
+              0,
+              2
+            ],
+            "suggestion": "The transition from the viral clip to the scripture reading is a clear and effective hook for the target audience.",
+            "moment_kind": "setup",
+            "uncertainties": [
+              "The specific content of the pool incident is not fully explained.",
+              "The full text of the verse being read is not yet visible."
+            ],
+            "review_checks": [
+              {
+                "aspect": "pacing",
+                "status": "clear",
+                "reason": "The transition from the viral clip to the scripture reading is quick and establishes the video's purpose.",
+                "observation_indices": [
+                  0,
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "visual_clarity",
+                "status": "clear",
+                "reason": "The speaker and the book are clearly visible, and the on-screen text is legible.",
+                "observation_indices": [
+                  1,
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_readability",
+                "status": "clear",
+                "reason": "The on-screen text is large, white, and centered, making it easy to read against the dark background.",
+                "observation_indices": [
+                  1
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_alignment",
+                "status": "clear",
+                "reason": "The on-screen text matches the words spoken in the transcript for the scripture reference.",
+                "observation_indices": [
+                  1,
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "hook_and_payoff",
+                "status": "clear",
+                "reason": "The video sets up a promise to read a Bible verse, which is currently being fulfilled.",
+                "observation_indices": [
+                  2,
+                  3
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "tone_from_words",
+                "status": "clear",
+                "reason": "The tone is direct and inviting, using a rhetorical question to engage the viewer.",
+                "observation_indices": [
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "voice_delivery",
+                "status": "unknown",
+                "reason": "No audio is provided to evaluate the speaker's voice or delivery.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "share_motivation",
+                "status": "clear",
+                "reason": "The combination of a viral clip and a religious message provides a clear reason for sharing within a specific community.",
+                "observation_indices": [
+                  3
+                ],
+                "suggested_change": null
+              }
+            ],
+            "potential_scores": [
+              {
+                "dimension": "creative",
+                "rating": 3,
+                "reason": "The video effectively uses a viral clip as a hook to transition into a religious message.",
+                "observation_indices": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "dimension": "retention",
+                "rating": 3,
+                "reason": "The clear transition and direct address to the viewer create a strong reason to continue watching.",
+                "observation_indices": [
+                  2,
+                  3
+                ]
+              },
+              {
+                "dimension": "virality",
+                "rating": 2,
+                "reason": "The content is likely to be shared within a religious community due to its direct message.",
+                "observation_indices": [
+                  3
+                ]
+              }
+            ]
+          },
+          "validation_issues": [],
+          "frame_timestamps_ms": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8363,
+            8712,
+            9061,
+            9410,
+            9759,
+            10108,
+            10458,
+            10807,
+            11156,
+            11505,
+            11854,
+            12203
+          ],
+          "prefix_asr_text": "If you have time for that video, do you have time to read this Bible verse with me as well? This is 1 Corinthians 10 verse 24. Let no one seek his",
+          "attention_context": "content"
+        },
+        "dimension": "retention"
+      },
+      "case_sha256": "3f72d38658e66a847065f802b7bd4fc4c9615e50b0c99b9a2b260e90592c4466",
+      "source_kind": "recorded_trace",
+      "source_report_id": "screen_1a09c292474_b0a7b1dd",
+      "source_window_index": 3,
+      "source_call_id": "01a09c29-863f-7e07-88d1-0e503c429533",
+      "source_trace_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09c29-863f-7e07-88d1-0e503c429533",
+      "source_record_sha256": "b96db0f98e331aa1631bc783f257a828f695964fcdad88b864c63c4f54089d9f",
+      "source_window_sha256": "a9313759dc8d7fa2f6d5cf6b3b9d81078f32db9486116e61962e04be30f946d2",
+      "label_scope": "Deterministic mechanical admission/copy guard; not semantic or audience accuracy",
+      "label_reason": "Inference-only score citations cannot supply concrete evidence",
+      "row_sha256": "ae887de1d3378bae58b9fc48ae9ba60acabfeab8350d5cfbb89f5172d97cd8e0"
+    },
+    {
+      "case_id": "trace:original:04:attention_supported",
+      "expected": false,
+      "case": {
+        "rule": "attention_supported",
+        "window": {
+          "start_ms": 12378,
+          "end_ms": 16567,
+          "is_last_prefix": false,
+          "status": "complete",
+          "judgment": {
+            "observations": [
+              {
+                "text": "The video transitions from a pool scene to a man reading a book, with on-screen text changing from 'He landed on him' to 'time for' and 'video,'.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  500,
+                  4500,
+                  5500
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text displays the words '1 Corinthians' and '24.' as the man reads from the book.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  9500,
+                  10500
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The transcript claims the speaker is reading a specific verse: 'This is 1 Corinthians 10 verse 24. Let no one seek his own, but each one the other's well-being.'",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "one the other's well-being. Thanks for taking the"
+              },
+              {
+                "text": "The video appears to be a religious or spiritual message that uses a viral clip as a hook to introduce a Bible verse.",
+                "kind": "inference",
+                "frame_timestamps_ms": [
+                  500,
+                  4500
+                ],
+                "asr_quote": null
+              }
+            ],
+            "understanding": "The video uses a pool accident clip as a hook to transition into a man reading a Bible verse (1 Corinthians 10:24) about seeking others' well-being.",
+            "attention_risk": "medium",
+            "cause_observation_indices": [
+              0,
+              3
+            ],
+            "suggestion": "The transition from the pool clip to the Bible reading is a clear pivot that may cause some viewers to scroll away if they are not interested in the religious content.",
+            "moment_kind": "development",
+            "uncertainties": [
+              "It is unclear if the pool clip is directly related to the Bible verse or just a random hook.",
+              "The man's identity and the specific context of the reading are unknown."
+            ],
+            "review_checks": [
+              {
+                "aspect": "pacing",
+                "status": "clear",
+                "reason": "The video moves quickly from the hook to the main content, which is a standard pacing for short-form video.",
+                "observation_indices": [
+                  0
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "visual_clarity",
+                "status": "clear",
+                "reason": "The man and the book are clearly visible, and the on-screen text is legible.",
+                "observation_indices": [
+                  1
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_readability",
+                "status": "clear",
+                "reason": "The text is large, white, and centered, making it easy to read against the dark background.",
+                "observation_indices": [
+                  1
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_alignment",
+                "status": "clear",
+                "reason": "The on-screen text matches the words spoken in the transcript.",
+                "observation_indices": [
+                  1,
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "hook_and_payoff",
+                "status": "concern",
+                "reason": "The hook (pool clip) is unrelated to the payoff (Bible verse), which might feel like a bait-and-switch to some viewers.",
+                "observation_indices": [
+                  0,
+                  3
+                ],
+                "suggested_change": "Consider a more direct transition or a hook that is thematically related to the Bible verse."
+              },
+              {
+                "aspect": "tone_from_words",
+                "status": "clear",
+                "reason": "The tone is calm and instructional, appropriate for reading a Bible verse.",
+                "observation_indices": [
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "voice_delivery",
+                "status": "unknown",
+                "reason": "No audio is provided to evaluate the voice delivery.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "share_motivation",
+                "status": "clear",
+                "reason": "The content might be shared by people who find the Bible verse meaningful or want to share a positive message.",
+                "observation_indices": [
+                  2
+                ],
+                "suggested_change": null
+              }
+            ],
+            "potential_scores": [
+              {
+                "dimension": "creative",
+                "rating": 2,
+                "reason": "The use of a viral clip as a hook is a common creative technique, but the transition to the Bible verse is a bit jarring.",
+                "observation_indices": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "dimension": "retention",
+                "rating": 2,
+                "reason": "The video is short and to the point, which helps with retention, but the unrelated hook might cause some viewers to leave.",
+                "observation_indices": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "dimension": "virality",
+                "rating": 1,
+                "reason": "The content is niche (religious) and the hook is unrelated, which limits its potential for broad viral spread.",
+                "observation_indices": [
+                  0,
+                  3
+                ]
+              }
+            ]
+          },
+          "validation_issues": [],
+          "frame_timestamps_ms": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11500,
+            12552,
+            12901,
+            13250,
+            13599,
+            13948,
+            14297,
+            14647,
+            14996,
+            15345,
+            15694,
+            16043,
+            16392
+          ],
+          "prefix_asr_text": "If you have time for that video, do you have time to read this Bible verse with me as well? This is 1 Corinthians 10 verse 24. Let no one seek his own, but each one the other's well-being. Thanks for taking the",
+          "attention_context": "content"
+        }
+      },
+      "case_sha256": "dcf4f047ff9a5317bdac592d706263c2948338ccd84b4bd7a21252fa08ea2070",
+      "source_kind": "recorded_trace",
+      "source_report_id": "screen_1a09c292474_b0a7b1dd",
+      "source_window_index": 4,
+      "source_call_id": "01a09c29-8862-72d6-8886-4ed1d49eff04",
+      "source_trace_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09c29-8862-72d6-8886-4ed1d49eff04",
+      "source_record_sha256": "b96db0f98e331aa1631bc783f257a828f695964fcdad88b864c63c4f54089d9f",
+      "source_window_sha256": "69a52c308b0f0ee1e93eb9374e669d6827f4ba2080cd94abbe5ef42063d88713",
+      "label_scope": "Deterministic mechanical admission/copy guard; not semantic or audience accuracy",
+      "label_reason": "Inference in the cause chain cannot supply attention support",
+      "row_sha256": "b32efe1d18fcfd0df6728d86cf67ad2f6c132e28057546fc3e1916476e533a69"
+    },
+    {
+      "case_id": "trace:original:05:validation_issue_detected",
+      "expected": true,
+      "case": {
+        "rule": "validation_issue_detected",
+        "window": {
+          "start_ms": 16567,
+          "end_ms": 20756,
+          "is_last_prefix": false,
+          "status": "needs_review",
+          "judgment": {
+            "observations": [
+              {
+                "text": "The video opens with a clip of a man falling into a pool, captioned 'He landed on him 😂'.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  500,
+                  1500,
+                  3500
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The speaker asks, 'If you have time for that video, do you have time to read this Bible verse with me as well?'",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "If you have time for that video, do you have time to read this Bible verse with me as well? This is 1 Corinthians 10 verse 24. Let no one seek his own, but each"
+              },
+              {
+                "text": "The speaker reads the verse: 'Let no one seek his own, but each one the other's well-being.'",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "one the other's well-being. Thanks for taking the time. And if you're a Christian struggling with lust, you should try the Unchained"
+              },
+              {
+                "text": "The speaker pivots to a specific audience: 'And if you're a Christian struggling with lust, you should try the Unchained app'.",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "one the other's well-being. Thanks for taking the time. And if you're a Christian struggling with lust, you should try the Unchained"
+              }
+            ],
+            "understanding": "The video uses a viral pool clip as a hook to transition into a Bible verse reading, then pivots to a specific recommendation for a Christian app called 'Unchained' for those struggling with lust.",
+            "attention_risk": "medium",
+            "cause_observation_indices": [
+              3
+            ],
+            "suggestion": "The transition from a general Bible verse to a specific app recommendation for 'lust' is a significant tonal shift that may alienate viewers who came for the pool clip or the verse.",
+            "moment_kind": "development",
+            "uncertainties": [
+              "The specific features or content of the 'Unchained' app are not shown or explained.",
+              "The connection between the pool clip and the Bible verse is not explicitly stated."
+            ],
+            "review_checks": [
+              {
+                "aspect": "pacing",
+                "status": "clear",
+                "reason": "The video moves quickly from a hook to a verse to a specific call to action, maintaining a fast pace.",
+                "observation_indices": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "visual_clarity",
+                "status": "clear",
+                "reason": "The speaker is clearly visible and the text overlays are legible, though the transition from the pool clip to the speaker is abrupt.",
+                "observation_indices": [
+                  0,
+                  1
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_readability",
+                "status": "clear",
+                "reason": "The on-screen text is large, white, and centered, making it easy to read against the dark background.",
+                "observation_indices": [
+                  1,
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_alignment",
+                "status": "clear",
+                "reason": "The on-screen text matches the spoken words in the transcript, such as 'struggling' and 'lust'.",
+                "observation_indices": [
+                  2,
+                  3
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "hook_and_payoff",
+                "status": "concern",
+                "reason": "The hook is a viral pool clip, but the payoff is a specific app recommendation, which may not align with viewer expectations set by the hook.",
+                "observation_indices": [
+                  0,
+                  3
+                ],
+                "suggested_change": "Consider a smoother transition or a clearer link between the pool clip and the subsequent message to better align viewer expectations."
+              },
+              {
+                "aspect": "tone_from_words",
+                "status": "concern",
+                "reason": "The tone shifts from casual (pool clip) to serious (Bible verse) to specific and potentially sensitive (lust/app recommendation).",
+                "observation_indices": [
+                  0,
+                  2,
+                  3
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "voice_delivery",
+                "status": "unknown",
+                "reason": "No audio is provided to assess the speaker's tone, pace, or delivery style.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "share_motivation",
+                "status": "clear",
+                "reason": "The video offers a specific, actionable recommendation (the Unchained app) for a niche audience (Christians struggling with lust), which could be a strong motiv",
+                "observation_indices": [
+                  3
+                ],
+                "suggested_change": null
+              }
+            ],
+            "potential_scores": [
+              {
+                "dimension": "creative",
+                "rating": 2,
+                "reason": "The video uses a common hook-to-CTA structure, but the transition from a viral clip to a specific app recommendation is a bit jarring.",
+                "observation_indices": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "dimension": "retention",
+                "rating": 2,
+                "reason": "The fast pace and clear text help retention, but the specific call to action for 'lust' might cause some viewers to drop off.",
+                "observation_indices": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "dimension": "virality",
+                "rating": 2,
+                "reason": "The niche appeal of the app recommendation limits broad virality, but it could be highly shareable within the target audience.",
+                "observation_indices": [
+                  3
+                ]
+              }
+            ]
+          },
+          "validation_issues": [
+            "Review check caption_readability: readable caption evidence missing",
+            "Review check caption_alignment: readable caption evidence missing"
+          ],
+          "frame_timestamps_ms": [
+            500,
+            1500,
+            3500,
+            4500,
+            6500,
+            7500,
+            9500,
+            10500,
+            12500,
+            13500,
+            15500,
+            16500,
+            16741,
+            17090,
+            17439,
+            17788,
+            18137,
+            18486,
+            18836,
+            19185,
+            19534,
+            19883,
+            20232,
+            20581
+          ],
+          "prefix_asr_text": "If you have time for that video, do you have time to read this Bible verse with me as well? This is 1 Corinthians 10 verse 24. Let no one seek his own, but each one the other's well-being. Thanks for taking the time. And if you're a Christian struggling with lust, you should try the Unchained",
+          "attention_context": "content"
+        },
+        "issue_prefix": "Review check caption_readability: readable caption evidence missing"
+      },
+      "case_sha256": "4b00044ae91fd2da1f2dabd1ba7e4f70b833c35d30a9f493da8c7824166fb039",
+      "source_kind": "recorded_trace",
+      "source_report_id": "screen_1a09c292474_b0a7b1dd",
+      "source_window_index": 5,
+      "source_call_id": "01a09c29-90c0-7ec0-8d2b-dc62445aee22",
+      "source_trace_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09c29-90c0-7ec0-8d2b-dc62445aee22",
+      "source_record_sha256": "b96db0f98e331aa1631bc783f257a828f695964fcdad88b864c63c4f54089d9f",
+      "source_window_sha256": "9f090700116e545efa1dd3177b19a3f6b2416f1363c0a4f9bc6eae693a184d97",
+      "label_scope": "Deterministic mechanical admission/copy guard; not semantic or audience accuracy",
+      "label_reason": "ASR alone cannot prove caption readability",
+      "row_sha256": "3453c71035ffa945316212a51e1acd45b9ec7de5f3ef400882c701499a4ef640"
+    },
+    {
+      "case_id": "trace:original:05:attention_supported",
+      "expected": true,
+      "case": {
+        "rule": "attention_supported",
+        "window": {
+          "start_ms": 16567,
+          "end_ms": 20756,
+          "is_last_prefix": false,
+          "status": "needs_review",
+          "judgment": {
+            "observations": [
+              {
+                "text": "The video opens with a clip of a man falling into a pool, captioned 'He landed on him 😂'.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  500,
+                  1500,
+                  3500
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The speaker asks, 'If you have time for that video, do you have time to read this Bible verse with me as well?'",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "If you have time for that video, do you have time to read this Bible verse with me as well? This is 1 Corinthians 10 verse 24. Let no one seek his own, but each"
+              },
+              {
+                "text": "The speaker reads the verse: 'Let no one seek his own, but each one the other's well-being.'",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "one the other's well-being. Thanks for taking the time. And if you're a Christian struggling with lust, you should try the Unchained"
+              },
+              {
+                "text": "The speaker pivots to a specific audience: 'And if you're a Christian struggling with lust, you should try the Unchained app'.",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "one the other's well-being. Thanks for taking the time. And if you're a Christian struggling with lust, you should try the Unchained"
+              }
+            ],
+            "understanding": "The video uses a viral pool clip as a hook to transition into a Bible verse reading, then pivots to a specific recommendation for a Christian app called 'Unchained' for those struggling with lust.",
+            "attention_risk": "medium",
+            "cause_observation_indices": [
+              3
+            ],
+            "suggestion": "The transition from a general Bible verse to a specific app recommendation for 'lust' is a significant tonal shift that may alienate viewers who came for the pool clip or the verse.",
+            "moment_kind": "development",
+            "uncertainties": [
+              "The specific features or content of the 'Unchained' app are not shown or explained.",
+              "The connection between the pool clip and the Bible verse is not explicitly stated."
+            ],
+            "review_checks": [
+              {
+                "aspect": "pacing",
+                "status": "clear",
+                "reason": "The video moves quickly from a hook to a verse to a specific call to action, maintaining a fast pace.",
+                "observation_indices": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "visual_clarity",
+                "status": "clear",
+                "reason": "The speaker is clearly visible and the text overlays are legible, though the transition from the pool clip to the speaker is abrupt.",
+                "observation_indices": [
+                  0,
+                  1
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_readability",
+                "status": "clear",
+                "reason": "The on-screen text is large, white, and centered, making it easy to read against the dark background.",
+                "observation_indices": [
+                  1,
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_alignment",
+                "status": "clear",
+                "reason": "The on-screen text matches the spoken words in the transcript, such as 'struggling' and 'lust'.",
+                "observation_indices": [
+                  2,
+                  3
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "hook_and_payoff",
+                "status": "concern",
+                "reason": "The hook is a viral pool clip, but the payoff is a specific app recommendation, which may not align with viewer expectations set by the hook.",
+                "observation_indices": [
+                  0,
+                  3
+                ],
+                "suggested_change": "Consider a smoother transition or a clearer link between the pool clip and the subsequent message to better align viewer expectations."
+              },
+              {
+                "aspect": "tone_from_words",
+                "status": "concern",
+                "reason": "The tone shifts from casual (pool clip) to serious (Bible verse) to specific and potentially sensitive (lust/app recommendation).",
+                "observation_indices": [
+                  0,
+                  2,
+                  3
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "voice_delivery",
+                "status": "unknown",
+                "reason": "No audio is provided to assess the speaker's tone, pace, or delivery style.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "share_motivation",
+                "status": "clear",
+                "reason": "The video offers a specific, actionable recommendation (the Unchained app) for a niche audience (Christians struggling with lust), which could be a strong motiv",
+                "observation_indices": [
+                  3
+                ],
+                "suggested_change": null
+              }
+            ],
+            "potential_scores": [
+              {
+                "dimension": "creative",
+                "rating": 2,
+                "reason": "The video uses a common hook-to-CTA structure, but the transition from a viral clip to a specific app recommendation is a bit jarring.",
+                "observation_indices": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "dimension": "retention",
+                "rating": 2,
+                "reason": "The fast pace and clear text help retention, but the specific call to action for 'lust' might cause some viewers to drop off.",
+                "observation_indices": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "dimension": "virality",
+                "rating": 2,
+                "reason": "The niche appeal of the app recommendation limits broad virality, but it could be highly shareable within the target audience.",
+                "observation_indices": [
+                  3
+                ]
+              }
+            ]
+          },
+          "validation_issues": [
+            "Review check caption_readability: readable caption evidence missing",
+            "Review check caption_alignment: readable caption evidence missing"
+          ],
+          "frame_timestamps_ms": [
+            500,
+            1500,
+            3500,
+            4500,
+            6500,
+            7500,
+            9500,
+            10500,
+            12500,
+            13500,
+            15500,
+            16500,
+            16741,
+            17090,
+            17439,
+            17788,
+            18137,
+            18486,
+            18836,
+            19185,
+            19534,
+            19883,
+            20232,
+            20581
+          ],
+          "prefix_asr_text": "If you have time for that video, do you have time to read this Bible verse with me as well? This is 1 Corinthians 10 verse 24. Let no one seek his own, but each one the other's well-being. Thanks for taking the time. And if you're a Christian struggling with lust, you should try the Unchained",
+          "attention_context": "content"
+        }
+      },
+      "case_sha256": "04eb9fc3b8c203da48f26672f337575940465380cbd12e121171d57a23d36e53",
+      "source_kind": "recorded_trace",
+      "source_report_id": "screen_1a09c292474_b0a7b1dd",
+      "source_window_index": 5,
+      "source_call_id": "01a09c29-90c0-7ec0-8d2b-dc62445aee22",
+      "source_trace_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09c29-90c0-7ec0-8d2b-dc62445aee22",
+      "source_record_sha256": "b96db0f98e331aa1631bc783f257a828f695964fcdad88b864c63c4f54089d9f",
+      "source_window_sha256": "9f090700116e545efa1dd3177b19a3f6b2416f1363c0a4f9bc6eae693a184d97",
+      "label_scope": "Deterministic mechanical admission/copy guard; not semantic or audience accuracy",
+      "label_reason": "Unrelated caption issue does not invalidate independent attention support",
+      "row_sha256": "f9e37dc9e154754539f4f5eb132b80be86933ca7b8f34ea7d2f3718bb63543ba"
+    },
+    {
+      "case_id": "trace:original:07:validation_issue_detected",
+      "expected": true,
+      "case": {
+        "rule": "validation_issue_detected",
+        "window": {
+          "start_ms": 24945,
+          "end_ms": 29133,
+          "is_last_prefix": true,
+          "status": "needs_review",
+          "judgment": {
+            "observations": [
+              {
+                "text": "The video concludes with the speaker saying 'God bless' and the screen fading to black.",
+                "kind": "inference",
+                "frame_timestamps_ms": [
+                  27911,
+                  28958
+                ],
+                "asr_quote": "one the other's well-being. Thanks for taking the time. And if you're a Christian struggling with lust, you should try the Unchained app, which is the number"
+              },
+              {
+                "text": "The on-screen text 'Unchained.' is displayed repeatedly as the speaker makes his final call to action.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  26515,
+                  26864,
+                  27213
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The speaker's face is clearly visible and centered in the frame throughout the final segment of the video.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  25119,
+                  27562
+                ],
+                "asr_quote": null
+              }
+            ],
+            "understanding": "The video is a short religious message that transitions into a direct advertisement for the 'Unchained' app, ending with a call to action and a sign-off.",
+            "attention_risk": "low",
+            "cause_observation_indices": [
+              0,
+              1
+            ],
+            "suggestion": "The video provides a clear and direct call to action for the advertised app, effectively concluding the content.",
+            "moment_kind": "signoff",
+            "uncertainties": [],
+            "review_checks": [
+              {
+                "aspect": "pacing",
+                "status": "clear",
+                "reason": "The video moves efficiently from the main message to the advertisement and concludes with a clear sign-off.",
+                "observation_indices": [
+                  0,
+                  1
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "visual_clarity",
+                "status": "clear",
+                "reason": "The speaker is well-lit and the on-screen text is legible, making the message easy to follow.",
+                "observation_indices": [
+                  1,
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_readability",
+                "status": "clear",
+                "reason": "The captions are large, white, and centered, providing high contrast against the dark background.",
+                "observation_indices": [
+                  1
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_alignment",
+                "status": "clear",
+                "reason": "The on-screen text 'Unchained' matches the spoken word in the transcript.",
+                "observation_indices": [
+                  1
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "hook_and_payoff",
+                "status": "clear",
+                "reason": "The video's promise to provide a Bible verse and a resource is fulfilled by the end of the clip.",
+                "observation_indices": [
+                  0
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "tone_from_words",
+                "status": "clear",
+                "reason": "The language is direct and encouraging, shifting from a spiritual message to a practical recommendation.",
+                "observation_indices": [
+                  0
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "voice_delivery",
+                "status": "unknown",
+                "reason": "No audio is available to assess the speaker's tone or delivery.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "share_motivation",
+                "status": "clear",
+                "reason": "The content offers a specific resource for a common struggle, which could motivate sharing within a niche community.",
+                "observation_indices": [
+                  0
+                ],
+                "suggested_change": null
+              }
+            ],
+            "potential_scores": [
+              {
+                "dimension": "creative",
+                "rating": 3,
+                "reason": "The video is a clear and purposeful piece of content that effectively combines a message with a call to action.",
+                "observation_indices": [
+                  0,
+                  1,
+                  2
+                ]
+              },
+              {
+                "dimension": "retention",
+                "rating": 2,
+                "reason": "The video is short and direct, which is suitable for its purpose but offers little to keep a viewer engaged beyond the core message.",
+                "observation_indices": [
+                  0
+                ]
+              },
+              {
+                "dimension": "virality",
+                "rating": 2,
+                "reason": "The content is likely to be shared by people who identify with the specific struggle mentioned in the video.",
+                "observation_indices": [
+                  0
+                ]
+              }
+            ]
+          },
+          "validation_issues": [
+            "Review check caption_alignment: matching transcript evidence missing",
+            "Review check tone_from_words: quoted or readable wording missing"
+          ],
+          "frame_timestamps_ms": [
+            500,
+            2500,
+            4500,
+            7500,
+            9500,
+            11500,
+            13500,
+            15500,
+            17500,
+            20500,
+            22500,
+            24500,
+            25119,
+            25468,
+            25817,
+            26166,
+            26515,
+            26864,
+            27213,
+            27562,
+            27911,
+            28260,
+            28609,
+            28958
+          ],
+          "prefix_asr_text": "If you have time for that video, do you have time to read this Bible verse with me as well? This is 1 Corinthians 10 verse 24. Let no one seek his own, but each one the other's well-being. Thanks for taking the time. And if you're a Christian struggling with lust, you should try the Unchained app, which is the number one app that helps Christians stop falling into lust. So if that is you, download Unchained. God bless.",
+          "attention_context": "last_signoff"
+        },
+        "issue_prefix": "Review check tone_from_words: quoted or readable wording missing"
+      },
+      "case_sha256": "f36f52c885c5a457b6aca69c988a3b6e64d1ade689462b05b3ff8ceab3ea4427",
+      "source_kind": "recorded_trace",
+      "source_report_id": "screen_1a09c292474_b0a7b1dd",
+      "source_window_index": 7,
+      "source_call_id": "01a09c29-dba4-7db4-a37a-0b1b898279a3",
+      "source_trace_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09c29-dba4-7db4-a37a-0b1b898279a3",
+      "source_record_sha256": "b96db0f98e331aa1631bc783f257a828f695964fcdad88b864c63c4f54089d9f",
+      "source_window_sha256": "0c4a8bfcc4a8e7d5cc3cf515002a5b89ebeb94cce0e69e882fd5f0121face5be",
+      "label_scope": "Deterministic mechanical admission/copy guard; not semantic or audience accuracy",
+      "label_reason": "Tone-from-word check needs quoted or visible wording",
+      "row_sha256": "37f2594a50934b2ced4eebbe28ede6ee61454db637b498e3347fc5cbefdc69bc"
+    },
+    {
+      "case_id": "trace:landscape:01:public_score_reason_admitted",
+      "expected": true,
+      "case": {
+        "rule": "public_score_reason_admitted",
+        "window": {
+          "start_ms": 2000,
+          "end_ms": 4000,
+          "is_last_prefix": false,
+          "status": "complete",
+          "judgment": {
+            "observations": [
+              {
+                "text": "Aerial view of a dry, cracked landscape with a winding dark line cutting through the terrain.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  500,
+                  1500
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "Close-up shots of reddish-brown rocky ground with dry grass in the background.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  2166,
+                  2500,
+                  2833
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "A man wearing sunglasses and a dark jacket stands in a field with a large tree behind him.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  3166,
+                  3500,
+                  3833
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text reads 'The crust that we're standing on is one of the oldest on the planet.'",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  500,
+                  1500,
+                  2166,
+                  2500,
+                  2833,
+                  3166
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The transcript states: 'The crust that we're standing on is one of the oldest on the planet.'",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "The crust that we're standing on is one of the oldest on the planet."
+              },
+              {
+                "text": "The video uses a cinematic, warm color grade to emphasize the age and ruggedness of the landscape.",
+                "kind": "inference",
+                "frame_timestamps_ms": [
+                  500,
+                  3166
+                ],
+                "asr_quote": null
+              }
+            ],
+            "understanding": "The video introduces a location with ancient geological features, specifically the oldest crust on the planet, using scenic aerial and ground-level shots.",
+            "attention_risk": "low",
+            "cause_observation_indices": [
+              0,
+              2,
+              4
+            ],
+            "suggestion": "The visual progression from wide aerial shots to a human subject effectively grounds the geological claim in a specific location.",
+            "moment_kind": "setup",
+            "uncertainties": [
+              "The specific location is not named in the text or audio.",
+              "The identity of the man is unknown."
+            ],
+            "review_checks": [
+              {
+                "aspect": "pacing",
+                "status": "clear",
+                "reason": "The video moves logically from wide context to specific details and finally to a human presence.",
+                "observation_indices": [
+                  0,
+                  1,
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "visual_clarity",
+                "status": "clear",
+                "reason": "The landscape and the subject are clearly visible and well-lit in the sampled frames.",
+                "observation_indices": [
+                  0,
+                  2
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_readability",
+                "status": "clear",
+                "reason": "The white text is legible against the darker background of the landscape and the subject's jacket.",
+                "observation_indices": [
+                  3
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_alignment",
+                "status": "clear",
+                "reason": "The on-screen text matches the provided transcript exactly.",
+                "observation_indices": [
+                  3,
+                  4
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "hook_and_payoff",
+                "status": "concern",
+                "reason": "The video sets up a claim about the oldest crust but has not yet revealed the specific location or significance.",
+                "observation_indices": [
+                  4
+                ],
+                "suggested_change": "Consider adding a location name or a more specific visual cue to the ancient crust to satisfy the viewer's curiosity."
+              },
+              {
+                "aspect": "tone_from_words",
+                "status": "clear",
+                "reason": "The language is factual and descriptive, fitting a documentary or travel style.",
+                "observation_indices": [
+                  4
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "voice_delivery",
+                "status": "unknown",
+                "reason": "No audio is available to assess the voice delivery.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "share_motivation",
+                "status": "clear",
+                "reason": "The combination of scenic beauty and a 'oldest on the planet' fact provides a shareable hook.",
+                "observation_indices": [
+                  0,
+                  4
+                ],
+                "suggested_change": null
+              }
+            ],
+            "potential_scores": [
+              {
+                "dimension": "creative",
+                "rating": 3,
+                "reason": "The video uses a clear visual progression and a strong factual hook to engage the viewer.",
+                "observation_indices": [
+                  0,
+                  2,
+                  4
+                ]
+              },
+              {
+                "dimension": "retention",
+                "rating": 3,
+                "reason": "The 'oldest on the planet' claim creates a strong reason to keep watching for the location reveal.",
+                "observation_indices": [
+                  4
+                ]
+              },
+              {
+                "dimension": "virality",
+                "rating": 2,
+                "reason": "The content is visually appealing and fact-based, which is a common but standard format for sharing.",
+                "observation_indices": [
+                  0,
+                  4
+                ]
+              }
+            ]
+          },
+          "validation_issues": [],
+          "frame_timestamps_ms": [
+            500,
+            1500,
+            2166,
+            2500,
+            2833,
+            3166,
+            3500,
+            3833
+          ],
+          "prefix_asr_text": "The crust that we're standing on is one of the oldest on the planet.",
+          "attention_context": "content"
+        },
+        "dimension": "virality"
+      },
+      "case_sha256": "bf29251705628b42e1f66094420ab06fbb0a48ec5879f7891d534e25be1ccd68",
+      "source_kind": "recorded_trace",
+      "source_report_id": "screen_1a09c392078_1cfd2b8e",
+      "source_window_index": 1,
+      "source_call_id": "01a09c39-358f-7798-9476-8c4166682461",
+      "source_trace_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09c39-358f-7798-9476-8c4166682461",
+      "source_record_sha256": "237a997a41a46c5fd85dd745fe07fd4da27102eb69098c674a62a8956586b7dd",
+      "source_window_sha256": "fd82b0ac3f6f031d3b0bae462d94225c5fdf393679a18ec702526e495172e8ab",
+      "label_scope": "Deterministic mechanical admission/copy guard; not semantic or audience accuracy",
+      "label_reason": "Ordinary sharing-format explanation remains eligible",
+      "row_sha256": "64372f948deab60674ad36cba8313ff5e8303b8316328d9855e0cb689d8cb035"
+    },
+    {
+      "case_id": "trace:landscape:02:score_sources_admitted",
+      "expected": true,
+      "case": {
+        "rule": "score_sources_admitted",
+        "window": {
+          "start_ms": 4000,
+          "end_ms": 7556,
+          "is_last_prefix": false,
+          "status": "complete",
+          "judgment": {
+            "observations": [
+              {
+                "text": "Aerial view of a vast, arid landscape with a winding dry riverbed cutting through red and brown terrain under a clear blue sky.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  500,
+                  1500
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "Close-up shot of reddish-brown rocky ground with dry grass in the background.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  2500
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "A man wearing sunglasses and a dark jacket stands in a field of dry grass next to a large, sparse tree.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  3500,
+                  4161,
+                  4484
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "A wide shot of a rocky cliff edge with a small white moon visible in the pale sky above the horizon.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  4808,
+                  5131,
+                  5454,
+                  5778,
+                  6101,
+                  6424
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "Close-up of a vertical rock face showing distinct horizontal layers and cracks in the stone.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  6747,
+                  7071,
+                  7394
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text reads 'The crust that we're standing on is one of the oldest on the planet.'",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  500,
+                  1500,
+                  2500,
+                  3500,
+                  4161,
+                  4484
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text reads 'An amazing thing about Karijini is the piece of the'.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  4808,
+                  5131,
+                  5454,
+                  5778,
+                  6101,
+                  6424
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The transcript states: 'The crust that we're standing on is one of the oldest on the planet. An amazing thing about Karagini is the piece of'",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "The crust that we're standing on is one of the oldest on the planet. An amazing thing about Karagini is the piece of"
+              },
+              {
+                "text": "The video is a travel or educational piece about a specific geological location, likely in Australia, focusing on the age of the earth's crust.",
+                "kind": "inference",
+                "frame_timestamps_ms": [
+                  500,
+                  3500,
+                  4808
+                ],
+                "asr_quote": null
+              }
+            ],
+            "understanding": "The video introduces a location called Karijini, highlighting its ancient geological crust. It uses scenic shots of the landscape and a presenter to set the stage for a deeper explanation.",
+            "attention_risk": "low",
+            "cause_observation_indices": [
+              0,
+              2,
+              4,
+              7
+            ],
+            "suggestion": "The video effectively uses scenic visuals and a clear narrative hook to introduce the geological significance of the location.",
+            "moment_kind": "setup",
+            "uncertainties": [
+              "The specific geological feature being described as 'the piece of' is not yet revealed.",
+              "The exact location of the presenter relative to the landscape shots is unknown."
+            ],
+            "review_checks": [
+              {
+                "aspect": "pacing",
+                "status": "clear",
+                "reason": "The video moves through different shots (aerial, ground, presenter, landscape) at a steady pace that matches the narration.",
+                "observation_indices": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "visual_clarity",
+                "status": "clear",
+                "reason": "The landscape, the presenter, and the rock formations are all clearly visible and well-lit in the sampled frames.",
+                "observation_indices": [
+                  0,
+                  2,
+                  4
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_readability",
+                "status": "clear",
+                "reason": "The white text is centered and legible against the darker background elements in the frames where it appears.",
+                "observation_indices": [
+                  5,
+                  6
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_alignment",
+                "status": "clear",
+                "reason": "The on-screen text matches the provided transcript segments for the corresponding time intervals.",
+                "observation_indices": [
+                  5,
+                  6,
+                  7
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "hook_and_payoff",
+                "status": "concern",
+                "reason": "The video sets up a promise about an 'amazing thing' regarding the crust but cuts off before delivering the specific detail.",
+                "observation_indices": [
+                  6,
+                  7
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "tone_from_words",
+                "status": "clear",
+                "reason": "The language is descriptive and educational, using phrases like 'one of the oldest' and 'amazing thing'.",
+                "observation_indices": [
+                  7
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "voice_delivery",
+                "status": "unknown",
+                "reason": "No audio is provided to assess the voice delivery.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "share_motivation",
+                "status": "clear",
+                "reason": "The content offers a visually appealing and educational look at a unique geological site, which is a common reason for sharing.",
+                "observation_indices": [
+                  0,
+                  3,
+                  4
+                ],
+                "suggested_change": null
+              }
+            ],
+            "potential_scores": [
+              {
+                "dimension": "creative",
+                "rating": 3,
+                "reason": "The video uses a variety of high-quality shots (aerial, close-up, presenter) to effectively convey the scale and nature of the location.",
+                "observation_indices": [
+                  0,
+                  2,
+                  4
+                ]
+              },
+              {
+                "dimension": "retention",
+                "rating": 3,
+                "reason": "The narrative hook about the 'oldest crust' and the scenic visuals provide a strong reason to continue watching to learn more.",
+                "observation_indices": [
+                  5,
+                  6
+                ]
+              },
+              {
+                "dimension": "virality",
+                "rating": 2,
+                "reason": "The content is visually striking and educational, offering a plausible reason for sharing within travel or geology communities.",
+                "observation_indices": [
+                  0,
+                  3
+                ]
+              }
+            ]
+          },
+          "validation_issues": [],
+          "frame_timestamps_ms": [
+            500,
+            1500,
+            2500,
+            3500,
+            4161,
+            4484,
+            4808,
+            5131,
+            5454,
+            5778,
+            6101,
+            6424,
+            6747,
+            7071,
+            7394
+          ],
+          "prefix_asr_text": "The crust that we're standing on is one of the oldest on the planet. An amazing thing about Karagini is the piece of",
+          "attention_context": "content"
+        },
+        "dimension": "retention"
+      },
+      "case_sha256": "16fdae5bb2ed73af791278349b66b437d6ca6ee0c3ded7ddba1b6e5fe89b514f",
+      "source_kind": "recorded_trace",
+      "source_report_id": "screen_1a09c392078_1cfd2b8e",
+      "source_window_index": 2,
+      "source_call_id": "01a09c39-3593-70b9-a086-bc271fed3569",
+      "source_trace_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09c39-3593-70b9-a086-bc271fed3569",
+      "source_record_sha256": "237a997a41a46c5fd85dd745fe07fd4da27102eb69098c674a62a8956586b7dd",
+      "source_window_sha256": "241383e6acb17ae5d3638aecbe03f673ca29ce586139fcefcb773e46bc5febf2",
+      "label_scope": "Deterministic mechanical admission/copy guard; not semantic or audience accuracy",
+      "label_reason": "Complete learn-more idiom remains eligible",
+      "row_sha256": "1f291dd059fbe1980360723207f56a6b4c55ed223bc733cec645d2ddb6fece50"
+    },
+    {
+      "case_id": "trace:landscape:03:public_score_reason_admitted",
+      "expected": false,
+      "case": {
+        "rule": "public_score_reason_admitted",
+        "window": {
+          "start_ms": 7556,
+          "end_ms": 11112,
+          "is_last_prefix": false,
+          "status": "complete",
+          "judgment": {
+            "observations": [
+              {
+                "text": "A person in a yellow vest and blue sleeves walks away from the camera on a dirt path.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  8040,
+                  8364,
+                  8687,
+                  9010,
+                  9334
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The ground is covered in reddish-brown dirt and scattered dry, leafless branches.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  8040,
+                  8364,
+                  8687,
+                  9010,
+                  9334
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The scene cuts to a close-up of a layered, reddish rock face.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  9657,
+                  9980,
+                  10303,
+                  10627,
+                  10950
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "A dark silhouette of a person is visible in the foreground against the rock face.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  10303,
+                  10627,
+                  10950
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text reads 'standing on.'",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  8687,
+                  9010,
+                  9334
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text reads 'It was formed about'.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  10303,
+                  10627,
+                  10950
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "A person in a yellow vest and blue sleeves is walking away from the camera through dry, reddish scrubland.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  8040,
+                  8364,
+                  8687,
+                  9010,
+                  9334
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The video cuts from a wide shot of a person walking to a dark, close-up view of a rock face with a silhouette in the foreground.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  9334,
+                  9657,
+                  9980,
+                  10303,
+                  10627,
+                  10950
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text reads 'planet that we're' and 'standing on.' in the frames showing the person walking.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  8040,
+                  8364,
+                  8687,
+                  9010,
+                  9334
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The narration states 'It was formed about' while the camera shows a close-up of a layered rock face.",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "The crust that we're standing on is one of the oldest on the planet. An amazing thing about Karagini is the piece of the planet that we're standing on. It was"
+              }
+            ],
+            "understanding": "The video shows a person walking through a dry, rocky landscape before cutting to a close-up of a rock face, accompanied by narration about the age of the crust.",
+            "attention_risk": "low",
+            "cause_observation_indices": [
+              0,
+              2
+            ],
+            "suggestion": "The visual transition from the walking shot to the rock close-up is smooth and maintains the documentary tone.",
+            "moment_kind": "development",
+            "uncertainties": [
+              "The specific location is not named in the visual frames, only in the audio transcript."
+            ],
+            "review_checks": [
+              {
+                "aspect": "pacing",
+                "status": "unknown",
+                "reason": "The earlier review did not establish valid evidence for this aspect.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "visual_clarity",
+                "status": "clear",
+                "reason": "The transition from the wide landscape to the close-up rock face is distinct and the subject is identifiable.",
+                "observation_indices": [
+                  6,
+                  7
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_readability",
+                "status": "clear",
+                "reason": "The on-screen text is white, centered, and legible against the darker background of the landscape and rock face.",
+                "observation_indices": [
+                  8
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_alignment",
+                "status": "clear",
+                "reason": "The on-screen captions match the provided ASR transcript for the interval.",
+                "observation_indices": [
+                  8,
+                  9
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "hook_and_payoff",
+                "status": "unknown",
+                "reason": "This focused pass did not reassess the earlier concern for this aspect.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "tone_from_words",
+                "status": "unknown",
+                "reason": "The earlier review did not establish valid evidence for this aspect.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "voice_delivery",
+                "status": "unknown",
+                "reason": "Native audio was not supplied.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "share_motivation",
+                "status": "unknown",
+                "reason": "The earlier review did not establish valid evidence for this aspect.",
+                "observation_indices": [],
+                "suggested_change": null
+              }
+            ],
+            "potential_scores": [
+              {
+                "dimension": "creative",
+                "rating": 3,
+                "reason": "The combination of walking shots and close-up rock textures creates a clear, purposeful visual narrative about the landscape.",
+                "observation_indices": [
+                  0,
+                  2
+                ]
+              },
+              {
+                "dimension": "retention",
+                "rating": 2,
+                "reason": "The content is steady and informative, but the walking shot is somewhat static, which might not hold all viewers' attention.",
+                "observation_indices": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "dimension": "virality",
+                "rating": 2,
+                "reason": "The subject matter of ancient geological crust is interesting but niche, offering a moderate share motive for nature or science enthusiasts.",
+                "observation_indices": [
+                  2,
+                  5
+                ]
+              }
+            ]
+          },
+          "validation_issues": [],
+          "frame_timestamps_ms": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            7717,
+            8040,
+            8364,
+            8687,
+            9010,
+            9334,
+            9657,
+            9980,
+            10303,
+            10627,
+            10950
+          ],
+          "prefix_asr_text": "The crust that we're standing on is one of the oldest on the planet. An amazing thing about Karagini is the piece of the planet that we're standing on. It was formed",
+          "attention_context": "content"
+        },
+        "dimension": "virality"
+      },
+      "case_sha256": "1270c104e63de68b142a1e6cb908b1591b62415c18396fb015596c535321c4df",
+      "source_kind": "recorded_trace",
+      "source_report_id": "screen_1a09c392078_1cfd2b8e",
+      "source_window_index": 3,
+      "source_call_id": "01a09c3a-3179-7b12-a3fa-e521703aa2fb",
+      "source_trace_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09c3a-3179-7b12-a3fa-e521703aa2fb",
+      "source_record_sha256": "237a997a41a46c5fd85dd745fe07fd4da27102eb69098c674a62a8956586b7dd",
+      "source_window_sha256": "eb39ab36c52102584b892f9820be6fea36b966e128bb0369df9df88810dd550e",
+      "label_scope": "Deterministic mechanical admission/copy guard; not semantic or audience accuracy",
+      "label_reason": "Niche subject alone is not grounded distribution evidence",
+      "row_sha256": "c02b4815374e8cc2bd17061af5c1ed6066087e63f8e540a6d8f2b10f36643ed9"
+    },
+    {
+      "case_id": "trace:landscape:04:public_score_reason_admitted",
+      "expected": false,
+      "case": {
+        "rule": "public_score_reason_admitted",
+        "window": {
+          "start_ms": 11112,
+          "end_ms": 14667,
+          "is_last_prefix": false,
+          "status": "complete",
+          "judgment": {
+            "observations": [
+              {
+                "text": "A person in a yellow and blue jacket walks across a landscape of red rock debris.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  11919,
+                  12243,
+                  12566,
+                  12889,
+                  13212,
+                  13535
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text displays the phrase '3.5 billion' in white letters.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  11919,
+                  12243,
+                  12566,
+                  12889
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text displays the phrase 'years ago.' in white letters.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  13212,
+                  13535,
+                  13859,
+                  14182
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "A person in a black hooded jacket and shorts walks across the red rock debris.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  14505
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text displays the phrase 'It's 1 of 12' in white letters.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  14505
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The audio narration states the crust was formed about 3.5 billion years ago.",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "formed about 3.5 billion years ago. It's one of"
+              },
+              {
+                "text": "A person wearing a yellow and blue jacket walks across a landscape of red rocks and dirt.",
+                "kind": "visible_fact",
+                "frame_timestamps_ms": [
+                  11919,
+                  12243,
+                  12566,
+                  12889,
+                  13212,
+                  13535
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text displays the phrase '3.5 billion' across multiple frames.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  11919,
+                  12243,
+                  12566,
+                  12889
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The on-screen text displays the phrase 'years ago.' in the later frames.",
+                "kind": "caption_claim",
+                "frame_timestamps_ms": [
+                  13212,
+                  13535,
+                  13859,
+                  14182
+                ],
+                "asr_quote": null
+              },
+              {
+                "text": "The transcript states 'It was formed about 3.5 billion years ago. It's one of'.",
+                "kind": "asr_claim",
+                "frame_timestamps_ms": [],
+                "asr_quote": "formed about 3.5 billion years ago. It's one of"
+              }
+            ],
+            "understanding": "The video shows a person walking through a rocky landscape while the narration and on-screen text explain that the crust was formed 3.5 billion years ago.",
+            "attention_risk": "low",
+            "cause_observation_indices": [
+              0,
+              1,
+              2
+            ],
+            "suggestion": "The visual of the person walking through the unique red rock landscape combined with the specific age information maintains viewer interest.",
+            "moment_kind": "development",
+            "uncertainties": [
+              "The specific location is not explicitly named in the current section frames.",
+              "The context for '1 of 12' is not yet provided."
+            ],
+            "review_checks": [
+              {
+                "aspect": "pacing",
+                "status": "unknown",
+                "reason": "The earlier review did not establish valid evidence for this aspect.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "visual_clarity",
+                "status": "clear",
+                "reason": "The subject in the yellow jacket is clearly visible against the red rock background, making the focus of the shot easy to identify.",
+                "observation_indices": [
+                  6
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_readability",
+                "status": "clear",
+                "reason": "The on-screen text is white with a black outline, providing high contrast and legibility against the dark and textured backgrounds.",
+                "observation_indices": [
+                  7,
+                  8
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "caption_alignment",
+                "status": "clear",
+                "reason": "The on-screen captions '3.5 billion' and 'years ago' match the corresponding words in the provided transcript exactly.",
+                "observation_indices": [
+                  7,
+                  8,
+                  9
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "hook_and_payoff",
+                "status": "unknown",
+                "reason": "This focused pass did not reassess the earlier concern for this aspect.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "tone_from_words",
+                "status": "clear",
+                "reason": "The language used is factual and educational, focusing on geological age and planetary significance.",
+                "observation_indices": [
+                  9
+                ],
+                "suggested_change": null
+              },
+              {
+                "aspect": "voice_delivery",
+                "status": "unknown",
+                "reason": "Native audio was not supplied.",
+                "observation_indices": [],
+                "suggested_change": null
+              },
+              {
+                "aspect": "share_motivation",
+                "status": "clear",
+                "reason": "The specific fact of a 3.5-billion-year-old crust provides a concrete piece of knowledge that viewers might find interesting enough to share.",
+                "observation_indices": [
+                  9
+                ],
+                "suggested_change": null
+              }
+            ],
+            "potential_scores": [
+              {
+                "dimension": "creative",
+                "rating": 3,
+                "reason": "The video effectively combines scenic visuals of the landscape with specific geological facts to create an informative narrative.",
+                "observation_indices": [
+                  0,
+                  1,
+                  2
+                ]
+              },
+              {
+                "dimension": "retention",
+                "rating": 3,
+                "reason": "The clear progression of the person walking and the specific age reveal provide a reason for the viewer to continue watching.",
+                "observation_indices": [
+                  0,
+                  1,
+                  2
+                ]
+              },
+              {
+                "dimension": "virality",
+                "rating": 2,
+                "reason": "The content is interesting but the specific geological fact may not have a broad enough appeal for high virality without more context.",
+                "observation_indices": [
+                  1,
+                  2
+                ]
+              }
+            ]
+          },
+          "validation_issues": [],
+          "frame_timestamps_ms": [
+            500,
+            1500,
+            2500,
+            3500,
+            4500,
+            5500,
+            6500,
+            7500,
+            8500,
+            9500,
+            10500,
+            11273,
+            11596,
+            11919,
+            12243,
+            12566,
+            12889,
+            13212,
+            13535,
+            13859,
+            14182,
+            14505
+          ],
+          "prefix_asr_text": "The crust that we're standing on is one of the oldest on the planet. An amazing thing about Karagini is the piece of the planet that we're standing on. It was formed about 3.5 billion years ago. It's one of",
+          "attention_context": "content"
+        },
+        "dimension": "virality"
+      },
+      "case_sha256": "8afad9c64cea79aa387a75d046e56e9d7b5d8736f087c9528cd96d110e6d96a8",
+      "source_kind": "recorded_trace",
+      "source_report_id": "screen_1a09c392078_1cfd2b8e",
+      "source_window_index": 4,
+      "source_call_id": "01a09c3a-3184-788d-81b6-70906523fc47",
+      "source_trace_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09c3a-3184-788d-81b6-70906523fc47",
+      "source_record_sha256": "237a997a41a46c5fd85dd745fe07fd4da27102eb69098c674a62a8956586b7dd",
+      "source_window_sha256": "8bcfef7bfa2a7c117207cd5a34d396df8fb1d5fc5aae47651dc501f23d97692a",
+      "label_scope": "Deterministic mechanical admission/copy guard; not semantic or audience accuracy",
+      "label_reason": "Broad-enough-appeal claim is not grounded distribution evidence",
+      "row_sha256": "43489551bf0f5e8c71e6bf8f2e03c2adb61c7881f3c8672a1a6a4cac53fc16ed"
+    }
+  ]
+}

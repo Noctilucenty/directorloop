@@ -1,61 +1,81 @@
+import type { CausalRequest, CausalRun, CausalStart, CausalSummary } from "./causal";
+import type { ScreeningReport, ScreeningStart, ScreeningSummary } from "./screening";
 import type {
-  BenchmarkRun,
-  Comparison,
-  HealthReady,
+  ABCRequest,
+  ABCRun,
+  ABCStart,
+  ABCSummary,
+  Audit,
+  AuditSummary,
+  Corpus,
+  DesignPreview,
+  ExperimentDetail,
+  ExperimentRequest,
+  ExperimentSummary,
+  Health,
+  IngestStart,
+  Job,
   JobEvent,
-  JobView,
+  PolicyMode,
   PolicyStore,
-  ProjectDetail,
-  ProjectSummary,
-  ProviderEntry,
-  ReviewAssignment,
+  Repair,
+  ReviewQr,
   ReviewSummary,
-  VersionDetail,
-  VersionView,
+  RunDetail,
+  RunRequest,
+  RunStart,
+  RunSummary,
+  TransferReport,
+  UploadResult,
+  VideoDetail,
+  VideoSummary,
 } from "./types";
-
-export interface ReviewAnswers {
-  participant_id: string;
-  answers: Record<string, string>;
-  confusion_ms: number | null;
-  consented: true;
-}
 
 export interface ApiClient {
   readonly mode: "mock" | "live";
-  healthReady(): Promise<HealthReady>;
-  listProjects(): Promise<ProjectSummary[]>;
-  importProject(packDir: string): Promise<ProjectDetail>;
-  getProject(id: string): Promise<ProjectDetail>;
-  listVersions(projectId: string): Promise<VersionView[]>;
-  getVersion(id: string): Promise<VersionDetail>;
-  getComparison(versionId: string, against: string): Promise<Comparison>;
-  approveVersion(versionId: string, note: string): Promise<VersionView>;
-  rejectVersion(versionId: string, note: string): Promise<VersionView>;
-  startBaselineJob(projectId: string, idempotencyKey: string): Promise<JobView>;
-  startImprovementJob(
-    projectId: string,
-    baseVersionId: string | null,
-    idempotencyKey: string,
-    policy: "learned" | "baseline",
-  ): Promise<JobView>;
-  getJob(id: string): Promise<JobView>;
-  listJobs(projectId: string): Promise<JobView[]>;
-  cancelJob(id: string): Promise<JobView>;
+  getHealth(): Promise<Health>;
+  listVideos(): Promise<VideoSummary[]>;
+  /** Uploads one video file. onProgress receives real bytes sent over the wire. */
+  uploadVideo(file: File, onProgress: (sent: number, total: number) => void, signal?: AbortSignal): Promise<UploadResult>;
+
+  startCausal(body: CausalRequest): Promise<CausalStart>;
+  listCausal(videoId?: string): Promise<CausalSummary[]>;
+  getCausal(causalId: string): Promise<CausalRun>;
+
+  startRun(body: RunRequest): Promise<RunStart>;
+  listRuns(): Promise<RunSummary[]>;
+  getRun(runId: string): Promise<RunDetail>;
+  getAudit(auditId: string): Promise<Audit>;
+  listAudits(videoId: string): Promise<AuditSummary[]>;
+  /** Judge only: a cold-audience audit job for one video. */
+  startAudit(videoId: string, idempotencyKey: string): Promise<{ job_id: string }>;
+  startScreening(videoId: string, idempotencyKey: string): Promise<ScreeningStart>;
+  getScreening(screenId: string): Promise<ScreeningReport>;
+  listScreenings(videoId?: string): Promise<ScreeningSummary[]>;
+  ingestUrl(url: string, idempotencyKey: string): Promise<IngestStart>;
+  startAbc(body: ABCRequest): Promise<ABCStart>;
+  listAbc(): Promise<ABCSummary[]>;
+  getAbc(abcId: string): Promise<ABCRun>;
+  getRepair(repairId: string): Promise<Repair>;
+
+  getJob(jobId: string): Promise<Job>;
   /** Streams events with seq > afterSeq. Resolves when the server closes the stream; rejects on transport error. */
-  streamJobEvents(
-    jobId: string,
-    afterSeq: number,
-    onEvent: (event: JobEvent) => void,
-    signal: AbortSignal,
-  ): Promise<void>;
-  getPolicies(): Promise<PolicyStore>;
-  getBenchmarks(): Promise<BenchmarkRun[]>;
-  getProviders(): Promise<ProviderEntry[]>;
-  createReviewSession(projectId: string): Promise<{ token: string; url: string }>;
-  getReview(token: string): Promise<ReviewAssignment>;
-  submitReview(token: string, body: ReviewAnswers): Promise<{ recorded: boolean }>;
-  getReviewSummary(projectId: string): Promise<ReviewSummary>;
+  streamJobEvents(jobId: string, afterSeq: number, onEvent: (event: JobEvent) => void, signal: AbortSignal): Promise<void>;
+  /** Polling fallback: the same events as a JSON array. */
+  getJobEvents(jobId: string, afterSeq: number): Promise<JobEvent[]>;
+  cancelJob(jobId: string): Promise<Job>;
+
+  // Research views (experiments, policy memory, transfer, corpus, human test)
+  getVideo(videoId: string): Promise<VideoDetail>;
+  getDesign(videoId: string, mode: PolicyMode): Promise<DesignPreview>;
+  startExperiment(body: ExperimentRequest): Promise<{ job_id: string }>;
+  listExperiments(): Promise<ExperimentSummary[]>;
+  getExperiment(experimentId: string): Promise<ExperimentDetail>;
+  getPolicy(): Promise<PolicyStore>;
+  getCorpus(): Promise<Corpus>;
+  listTransfers(): Promise<TransferReport[]>;
+  getReviewSummary(): Promise<ReviewSummary>;
+  getReviewQr(): Promise<ReviewQr>;
 }
 
 export class ApiError extends Error {
@@ -66,12 +86,17 @@ export class ApiError extends Error {
   }
 }
 
+export function isNotFound(err: unknown): boolean {
+  return err instanceof ApiError && err.status === 404;
+}
+
 let cached: ApiClient | null = null;
 
 export async function getClient(): Promise<ApiClient> {
   if (cached) return cached;
-  const mode = (import.meta.env.VITE_API_MODE as string | undefined) === "live" ? "live" : "mock";
-  if (mode === "live") {
+  // The comparison against a define-replaced literal lets the build drop the branch it does not use,
+  // so a live build never ships the mock fixtures.
+  if (import.meta.env.VITE_API_MODE === "live") {
     const mod = await import("./http");
     cached = mod.createHttpClient();
   } else {
@@ -82,5 +107,5 @@ export async function getClient(): Promise<ApiClient> {
 }
 
 export function apiMode(): "mock" | "live" {
-  return (import.meta.env.VITE_API_MODE as string | undefined) === "live" ? "live" : "mock";
+  return import.meta.env.VITE_API_MODE === "live" ? "live" : "mock";
 }

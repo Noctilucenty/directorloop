@@ -38,8 +38,10 @@ from ..creative.mutate import identity_plan, source_manifest
 from ..creative.policy import StrategyEvidence, load_policy, save_policy
 from ..domain.creative import MutationType
 from ..domain.ids import new_id, sha256_file, utc_now_iso
+from ..jobs.worker import safe_failure
 from ..media.probe import inspect_media
 from ..observability.weave_ops import current_call_ref, git_commit, set_display_name, traced
+from ..observability.workflow import WorkflowStage, attach_workflow, workflow_session, workflow_stage
 from ..providers.registry import ProviderBundle
 
 EDIT_TYPES = ("REMOVE_BEAT", "MOVE_BEAT_EARLIER", "MOVE_BEAT_LATER", "TRIM_PAUSE", "PUNCH_IN")
@@ -154,6 +156,7 @@ class DirectorRun(BaseModel):
     weave_call_id: str | None = None
     timings_ms: dict[str, int] = Field(default_factory=dict)
     error: str | None = None
+    workflow_stages: list[WorkflowStage] = Field(default_factory=list)
 
 
 # ----------------------------------------------------------------------------- pure decision logic
@@ -320,7 +323,7 @@ def validate_video_path(p: Path) -> str | None:
     try:
         info = inspect_media(p)
     except Exception as exc:  # noqa: BLE001
-        return f"not a readable media file: {str(exc)[:160]}"
+        return f"not a readable media file: {safe_failure(exc)}"
     if not info.width or not info.height:
         return "the file has no video stream; a cold-audience audit needs pictures (audio-only or transcript-only input is refused)"
     if not info.duration_ms or info.duration_ms < 1500:
@@ -331,53 +334,70 @@ def validate_video_path(p: Path) -> str | None:
 
 
 @traced("directorloop.run", kind="agent")
+@workflow_session(persist=save_run)
 def run_director(config: RunConfig, providers: ProviderBundle, data_dir: Path, on_stage: Any = None, run_id: str | None = None, launched_via: str = "python") -> DirectorRun:
     def emit(stage: str, msg: str, data: dict | None = None) -> None:
         if on_stage:
             on_stage(stage, msg, data)
 
-    set_display_name(f"run_{config.video_id}_budget{config.iteration_budget}")
+    set_display_name(f"DirectorLoop | {config.video_id} | up to {config.iteration_budget} repairs")
     started = time.monotonic()
     run = DirectorRun(id=run_id or new_id("run"), config=config, created_at=utc_now_iso(), original_path=config.video_path, launched_via=launched_via,
                       runtime=runtime_record(providers), mocked_stages=mocked_stages(providers), manual_interventions=[])
+    attach_workflow(run)
     run.weave_call_id, run.weave_url = current_call_ref()
     save_run(run, data_dir)
     emit("STARTED", f"run {run.id}: {config.video_id}, budget {config.iteration_budget}, objective: {config.objective[:160]}",
          {"run_id": run.id, "weave_url": run.weave_url})
 
     def finish(status: str, stop_reason: str, error: str | None = None) -> DirectorRun:
-        run.status, run.stop_reason, run.error = status, stop_reason, error  # type: ignore[assignment]
-        run.ended_at = utc_now_iso()
-        run.timings_ms["total_ms"] = int((time.monotonic() - started) * 1000)
-        changed = bool(run.final_artifact_hash) and run.final_artifact_hash != run.original_artifact_hash
-        attempted = [i for i in run.iterations if i.finding_id]
-        if changed:
-            run.final_decision = f"keep {run.final_version_id}: {sum(1 for i in attempted if i.decision == 'accept')} accepted repair(s) are in {Path(run.final_path).name}"
-        elif attempted:
-            run.final_decision = f"retain the original: none of {len(attempted)} rendered repair attempt(s) demonstrated an improvement"
-        else:
-            run.final_decision = "retain the original: no repair was attempted (see the stop reason)"
+        with workflow_stage("final_selection", "Final selection and stop reason") as stage:
+            run.status, run.stop_reason, run.error = status, stop_reason, error  # type: ignore[assignment]
+            run.ended_at = utc_now_iso()
+            run.timings_ms["total_ms"] = int((time.monotonic() - started) * 1000)
+            changed = bool(run.final_artifact_hash) and run.final_artifact_hash != run.original_artifact_hash
+            attempted = [i for i in run.iterations if i.finding_id]
+            if changed:
+                run.final_decision = f"keep {run.final_version_id}: {sum(1 for i in attempted if i.decision == 'accept')} accepted repair(s) are in {Path(run.final_path).name}"
+            elif attempted:
+                run.final_decision = f"retain the original: none of {len(attempted)} rendered repair attempt(s) demonstrated an improvement"
+            else:
+                run.final_decision = "retain the original: no repair was attempted (see the stop reason)"
+            save_run(run, data_dir)
+            emit("DONE" if status == "completed" else "FAILED", f"run {run.id}: {run.final_decision}. Stop reason: {stop_reason}",
+                 {"run_id": run.id, "weave_url": run.weave_url, "final_version_id": run.final_version_id})
+            stage.update(status=status, final_decision=run.final_decision, stop_reason=stop_reason, final_version_id=run.final_version_id)
+            if status == "failed":
+                stage.status = "failed"
+            return run
+
+    with workflow_stage("ingest", "Ingest and validate video", inputs={"video_id": config.video_id}) as stage:
+        problem = validate_input(config)
+        if problem:
+            stage.status = "failed"
+            stage.update(reason=problem)
+            return finish("failed", f"input refused: {problem}", error=problem)
+        if providers.probe is None or providers.planner is None:
+            stage.status = "failed"
+            stage.update(reason="providers missing")
+            return finish("failed", "no vision reviewer or no text selector is configured", error="providers missing")
+
+        video_path = Path(config.video_path)
+        run.original_artifact_hash = run.final_artifact_hash = sha256_file(video_path)
+        run.final_path = str(video_path)
+        project_id = f"proj_{config.video_id}"
+        current_path, current_version, current_hash = video_path, "v0", run.original_artifact_hash
+        stage.update(artifact_hash=current_hash, version_id=current_version)
+
+    with workflow_stage("original", "Iteration 0 - Original audit", kind="agent", iteration=0) as stage:
+        emit("AUDITING", "cold-audience audit of the original (unprimed: no objective, notes or labels)")
+        audit = run_audit(video_id=config.video_id, video_path=current_path, version_id=current_version, provider=providers.probe, data_dir=data_dir, on_stage=on_stage)
+        run.audit_ids.append(audit.id)
         save_run(run, data_dir)
-        emit("DONE" if status == "completed" else "FAILED", f"run {run.id}: {run.final_decision}. Stop reason: {stop_reason}",
-             {"run_id": run.id, "weave_url": run.weave_url, "final_version_id": run.final_version_id})
-        return run
+        stage.update(audit_id=audit.id, findings=len(audit.findings), strengths=len(audit.strengths), audit_status=audit.status)
+        if audit.status != "complete":
+            stage.status = "incomplete"
 
-    problem = validate_input(config)
-    if problem:
-        return finish("failed", f"input refused: {problem}", error=problem)
-    if providers.probe is None or providers.planner is None:
-        return finish("failed", "no vision reviewer or no text selector is configured", error="providers missing")
-
-    video_path = Path(config.video_path)
-    run.original_artifact_hash = run.final_artifact_hash = sha256_file(video_path)
-    run.final_path = str(video_path)
-    project_id = f"proj_{config.video_id}"
-    current_path, current_version, current_hash = video_path, "v0", run.original_artifact_hash
-
-    emit("AUDITING", "cold-audience audit of the original (unprimed: no objective, notes or labels)")
-    audit = run_audit(video_id=config.video_id, video_path=current_path, version_id=current_version, provider=providers.probe, data_dir=data_dir, on_stage=on_stage)
-    run.audit_ids.append(audit.id)
-    save_run(run, data_dir)
     if audit.status != "complete":
         return finish("completed", "the audit of the original was incomplete (" + "; ".join(audit.incomplete_reasons) + "); no repair is attempted on partial evidence")
 
@@ -390,137 +410,173 @@ def run_director(config: RunConfig, providers: ProviderBundle, data_dir: Path, o
         budget_left = config.iteration_budget - iteration
         if budget_left <= 0:
             return finish("completed", f"iteration budget of {config.iteration_budget} used")
-        t_it = time.monotonic()
-        genome = extract_genome(current_path, providers.probe, data_dir / "creative" / "genomes", category=config.category)
-        policy = load_policy(data_dir / "creative" / "policy.json")
-        emit("SELECTING", f"iteration {iteration + 1}: mapping {len(audit.findings)} finding(s) of {current_version} to repairs that can be executed")
-        considered: list[ConsideredFinding] = []
-        options: list[tuple[AuditFinding, RepairCandidate, float]] = []
-        open_findings = [f for f in audit.findings if attempts.get(f.id, 0) < config.max_attempts_per_finding]
+        with workflow_stage("iteration", f"Iteration {iteration + 1} - Repair attempt", kind="agent", iteration=iteration + 1) as iteration_stage:
+            t_it = time.monotonic()
+            with workflow_stage("prepare_current", "Prepare current version", iteration=iteration + 1) as stage:
+                genome = extract_genome(current_path, providers.probe, data_dir / "creative" / "genomes", category=config.category)
+                policy = load_policy(data_dir / "creative" / "policy.json")
+                stage.update(version_id=current_version, artifact_hash=current_hash, duration_ms=genome.duration_ms)
 
-        def select(f: AuditFinding, _genome: Any = genome, _path: Path = current_path, _hash: str = current_hash) -> tuple[Any, RepairCandidate | None]:
-            return map_repair(f, _genome, _path, project_id, providers.planner, source_project,
-                              exclude_keys=tuple(sorted(tried.get(_hash, set()))), prior_attempts=tuple(attempts_log[-6:]),
-                              constraints=tuple(config.constraints), objective=config.objective,
-                              allowed_types=tuple(config.allowed_edits) if config.allowed_edits is not None else None)
+            with workflow_stage("plan_repair", "Plan the smallest supported repair", kind="agent", iteration=iteration + 1) as stage:
+                emit("SELECTING", f"iteration {iteration + 1}: mapping {len(audit.findings)} finding(s) of {current_version} to repairs that can be executed")
+                considered: list[ConsideredFinding] = []
+                options: list[tuple[AuditFinding, RepairCandidate, float]] = []
+                open_findings = [f for f in audit.findings if attempts.get(f.id, 0) < config.max_attempts_per_finding]
 
-        with weave.ThreadPoolExecutor(max_workers=max(1, min(4, len(open_findings)))) as ex:
-            mapped = dict(zip([f.id for f in open_findings], ex.map(select, open_findings), strict=True))
-        for f in audit.findings:
-            cf_ = ConsideredFinding(finding_id=f.id, interval_ms=(f.start_ms, f.end_ms), issue_type=f.issue_type, objective=f.objective, severity=f.severity,
-                                    uncertainty=f.uncertainty, weakness=f.weakness[:240])
-            if f.id not in mapped:
-                cf_.skipped = f"{attempts[f.id]} attempts on this finding already failed (limit {config.max_attempts_per_finding})"
-                considered.append(cf_)
-                continue
-            repair, cand = mapped[f.id]
-            f.repair = repair
-            cf_.route, cf_.runnable, cf_.edit, cf_.selection_reason, cf_.why_not_runnable = repair.route, repair.runnable, repair.edit_description, repair.selection_reason, repair.why_not_runnable
-            considered.append(cf_)
-            if cand is not None:
-                strat = policy.lookup(POLICY_TYPE[cand.mutation_type], config.category)
-                options.append((f, cand, strat.evidence_mean() if strat else 0.5))
-        _save_audit(audit, data_dir)
-        if not options:
-            if not audit.findings:
-                reason = f"the audit of {current_version} found no weaknesses to repair"
-            else:
-                needs = [f"{c.interval_ms[0] / 1000:.1f}-{c.interval_ms[1] / 1000:.1f}s " + (c.skipped or f"route {c.route}: {c.why_not_runnable}") for c in considered]
-                reason = "no runnable existing-video repair remains: " + " | ".join(needs[:4])
-            run.iterations.append(IterationRecord(index=iteration + 1, current_version_id=current_version, current_artifact_hash=current_hash, audit_id=audit.id,
-                                                  considered=considered, decision="stop", reason=reason, next_action="stop", next_action_reason=reason))
-            save_run(run, data_dir)
-            return finish("completed", reason)
+                def select(f: AuditFinding, _genome: Any = genome, _path: Path = current_path, _hash: str = current_hash) -> tuple[Any, RepairCandidate | None]:
+                    return map_repair(f, _genome, _path, project_id, providers.planner, source_project,
+                                      exclude_keys=tuple(sorted(tried.get(_hash, set()))), prior_attempts=tuple(attempts_log[-6:]),
+                                      constraints=tuple(config.constraints), objective=config.objective,
+                                      allowed_types=tuple(config.allowed_edits) if config.allowed_edits is not None else None)
 
-        ranked = rank_options(options, config.focus, attempts)
-        finding, cand, ranking_reason = ranked[0]
-        iteration += 1
-        tried.setdefault(current_hash, set()).add(cand.key)
-        attempts[finding.id] = attempts.get(finding.id, 0) + 1
-        rec = IterationRecord(index=iteration, current_version_id=current_version, current_artifact_hash=current_hash, audit_id=audit.id, considered=considered,
-                              finding_id=finding.id, finding=finding.weakness[:300], ranking_reason=ranking_reason, selection_reason=finding.repair.selection_reason if finding.repair else "",
-                              edit=cand.description, mutation_type=cand.mutation_type, decision="incomplete_keep_current", reason="", next_action="stop")
-        emit("REPAIRING", f"iteration {iteration}: {cand.description} | for {finding.start_ms / 1000:.1f}-{finding.end_ms / 1000:.1f}s: {finding.weakness[:140]}")
-        base_plan = identity_plan(genome)
-        manifest = source_manifest(project_id, current_path, genome.artifact_hash)
-        beat = next((b for b in genome.beats if cand.ops and getattr(cand.ops[0], "segment_id", None) == b.id), None)
-        rr = RepairRun(id=new_id("repair"), audit_id=audit.id, finding_id=finding.id, video_id=config.video_id, status="proposed",
-                       hypothesis=f"{cand.description} should address: {finding.weakness}", repair=finding.repair, original_artifact_hash=current_hash,  # type: ignore[arg-type]
-                       original_path=str(current_path), created_at=utc_now_iso())
-        _save_repair(rr, data_dir)
-        rec.repair_run_id = rr.id
-        t = time.monotonic()
-        rend: dict[str, Any] | None = None
-        try:
-            rend = render_candidate(cand.plan, manifest, current_path, data_dir)
-        except Exception as exc:  # noqa: BLE001 - a failed render is a recorded outcome, not a crash
-            rr.status, rr.incomplete_reasons = "incomplete", [f"render failed: {str(exc)[:200]}"]
-        render_ms = int((time.monotonic() - t) * 1000)
-        verified: bool | None = None
-        labels_match: bool | None = None
-        cand_audit: AuditReport | None = None
-        if rend is not None:
-            rr.candidate_path, rr.candidate_artifact_hash, rr.status = rend["path"], rend["artifact_hash"], "rendered"
-            rr.candidate_version_id = f"v{iteration}-{rend['artifact_hash'][:8]}"
-            rr.interval_map = interval_mappings(cand.plan, audit.findings)
-            rec.candidate_version_id, rec.candidate_artifact_hash, rec.candidate_path = rr.candidate_version_id, rr.candidate_artifact_hash, rr.candidate_path
-            rr.change_verification = verify_change(cand.mutation_type, cand.description, current_path, Path(rend["path"]), base_plan, cand.plan,
-                                                   beat.text if beat else None, (finding.start_ms, finding.end_ms), (beat.start_ms, beat.end_ms) if beat else None)
-            verified = rr.change_verification.verified
-            rec.change_verified, rec.verification_checks = verified, rr.change_verification.checks
-            emit("VERIFYING", "intended change " + ("verified" if verified else "NOT verified") + ": " + "; ".join(rr.change_verification.checks))
-            if not verified:
-                rr.status, rr.incomplete_reasons = "incomplete", ["the rendered file does not show the intended change"]
-        fresh_ms = compare_ms = 0
-        if verified:
+                with weave.ThreadPoolExecutor(max_workers=max(1, min(4, len(open_findings)))) as ex:
+                    mapped = dict(zip([f.id for f in open_findings], ex.map(select, open_findings), strict=True))
+                for f in audit.findings:
+                    cf_ = ConsideredFinding(finding_id=f.id, interval_ms=(f.start_ms, f.end_ms), issue_type=f.issue_type, objective=f.objective, severity=f.severity,
+                                            uncertainty=f.uncertainty, weakness=f.weakness[:240])
+                    if f.id not in mapped:
+                        cf_.skipped = f"{attempts[f.id]} attempts on this finding already failed (limit {config.max_attempts_per_finding})"
+                        considered.append(cf_)
+                        continue
+                    repair, cand = mapped[f.id]
+                    f.repair = repair
+                    cf_.route, cf_.runnable, cf_.edit, cf_.selection_reason, cf_.why_not_runnable = repair.route, repair.runnable, repair.edit_description, repair.selection_reason, repair.why_not_runnable
+                    considered.append(cf_)
+                    if cand is not None:
+                        strat = policy.lookup(POLICY_TYPE[cand.mutation_type], config.category)
+                        options.append((f, cand, strat.evidence_mean() if strat else 0.5))
+                _save_audit(audit, data_dir)
+                if not options:
+                    if not audit.findings:
+                        reason = f"the audit of {current_version} found no weaknesses to repair"
+                    else:
+                        needs = [f"{c.interval_ms[0] / 1000:.1f}-{c.interval_ms[1] / 1000:.1f}s " + (c.skipped or f"route {c.route}: {c.why_not_runnable}") for c in considered]
+                        reason = "no runnable existing-video repair remains: " + " | ".join(needs[:4])
+                    run.iterations.append(IterationRecord(index=iteration + 1, current_version_id=current_version, current_artifact_hash=current_hash, audit_id=audit.id,
+                                                          considered=considered, decision="stop", reason=reason, next_action="stop", next_action_reason=reason))
+                    save_run(run, data_dir)
+                    stage.update(decision="stop", reason=reason, considered_findings=len(considered))
+                    iteration_stage.update(decision="stop", reason=reason, next_action="stop")
+                    return finish("completed", reason)
+
+                ranked = rank_options(options, config.focus, attempts)
+                finding, cand, ranking_reason = ranked[0]
+                iteration += 1
+                tried.setdefault(current_hash, set()).add(cand.key)
+                attempts[finding.id] = attempts.get(finding.id, 0) + 1
+                rec = IterationRecord(index=iteration, current_version_id=current_version, current_artifact_hash=current_hash, audit_id=audit.id, considered=considered,
+                                      finding_id=finding.id, finding=finding.weakness[:300], ranking_reason=ranking_reason, selection_reason=finding.repair.selection_reason if finding.repair else "",
+                                      edit=cand.description, mutation_type=cand.mutation_type, decision="incomplete_keep_current", reason="", next_action="stop")
+                stage.update(finding_id=finding.id, edit=cand.description, selection_reason=rec.selection_reason, ranking_reason=ranking_reason)
+
+            emit("REPAIRING", f"iteration {iteration}: {cand.description} | for {finding.start_ms / 1000:.1f}-{finding.end_ms / 1000:.1f}s: {finding.weakness[:140]}")
+            base_plan = identity_plan(genome)
+            manifest = source_manifest(project_id, current_path, genome.artifact_hash)
+            beat = next((b for b in genome.beats if cand.ops and getattr(cand.ops[0], "segment_id", None) == b.id), None)
+            rr = RepairRun(id=new_id("repair"), audit_id=audit.id, finding_id=finding.id, video_id=config.video_id, status="proposed",
+                           hypothesis=f"{cand.description} should address: {finding.weakness}", repair=finding.repair, original_artifact_hash=current_hash,  # type: ignore[arg-type]
+                           original_path=str(current_path), created_at=utc_now_iso())
+            _save_repair(rr, data_dir)
+            rec.repair_run_id = rr.id
             t = time.monotonic()
-            emit("FRESH_REVIEW", "fresh cold-audience audit of the candidate (no access to the finding, the repair, the objective or the earlier verdict)")
-            cand_audit = run_audit(video_id=config.video_id, video_path=Path(rend["path"]), version_id=rr.candidate_version_id or "candidate",  # type: ignore[index]
-                                   provider=providers.probe, data_dir=data_dir, on_stage=on_stage)
-            fresh_ms = int((time.monotonic() - t) * 1000)
-            run.audit_ids.append(cand_audit.id)
-            rr.candidate_audit_id, rr.status = cand_audit.id, "reviewed"
-            rec.candidate_audit_id = cand_audit.id
-            labels_match = cand_audit.artifact_hash == rend["artifact_hash"] and audit.artifact_hash == current_hash  # type: ignore[index]
-            if not labels_match:
-                rr.status, rr.incomplete_reasons = "incomplete", ["audited file hashes do not match the version labels"]
-            elif cand_audit.status != "complete":
-                rr.status, rr.incomplete_reasons = "incomplete", ["fresh audit incomplete: " + "; ".join(cand_audit.incomplete_reasons)]
-            else:
+            rend: dict[str, Any] | None = None
+            with workflow_stage("render", "Render the candidate", iteration=iteration) as stage:
+                try:
+                    rend = render_candidate(cand.plan, manifest, current_path, data_dir)
+                except Exception as exc:  # noqa: BLE001 - a failed render is a recorded outcome, not a crash
+                    rr.status, rr.incomplete_reasons = "incomplete", [f"render failed: {safe_failure(exc)}"]
+                if rend is not None:
+                    stage.update(artifact_hash=rend["artifact_hash"], duration_ms=rend["duration_ms"])
+                else:
+                    stage.status = "failed"
+                    stage.update(reason=rr.incomplete_reasons)
+
+            render_ms = int((time.monotonic() - t) * 1000)
+            verified: bool | None = None
+            labels_match: bool | None = None
+            cand_audit: AuditReport | None = None
+            if rend is not None:
+                rr.candidate_path, rr.candidate_artifact_hash, rr.status = rend["path"], rend["artifact_hash"], "rendered"
+                rr.candidate_version_id = f"v{iteration}-{rend['artifact_hash'][:8]}"
+                rr.interval_map = interval_mappings(cand.plan, audit.findings)
+                rec.candidate_version_id, rec.candidate_artifact_hash, rec.candidate_path = rr.candidate_version_id, rr.candidate_artifact_hash, rr.candidate_path
+                with workflow_stage("verify", "Verify the rendered change", iteration=iteration) as stage:
+                    rr.change_verification = verify_change(cand.mutation_type, cand.description, current_path, Path(rend["path"]), base_plan, cand.plan,
+                                                           beat.text if beat else None, (finding.start_ms, finding.end_ms), (beat.start_ms, beat.end_ms) if beat else None)
+                    verified = rr.change_verification.verified
+                    rec.change_verified, rec.verification_checks = verified, rr.change_verification.checks
+                    emit("VERIFYING", "intended change " + ("verified" if verified else "NOT verified") + ": " + "; ".join(rr.change_verification.checks))
+                    if not verified:
+                        rr.status, rr.incomplete_reasons = "incomplete", ["the rendered file does not show the intended change"]
+                    stage.update(verified=verified, checks=rec.verification_checks)
+                    if not verified:
+                        stage.status = "incomplete"
+
+            fresh_ms = compare_ms = 0
+            if verified:
                 t = time.monotonic()
-                emit("COMPARING", "target moment, whole video (both presentation orders), persistence of the weakness, new weaknesses, audience predictions, protected content")
-                protected = list(dict.fromkeys(finding.keep_unchanged + config.constraints))[:8]
-                rr.comparison = compare_versions(provider=providers.probe, original=audit, candidate=cand_audit, finding=finding, candidate_plan=cand.plan, protected_items=protected)
-                compare_ms = int((time.monotonic() - t) * 1000)
-                rec.outcome, rec.target_resolved = rr.comparison.outcome, rr.comparison.target_resolved
-                rec.improved, rec.regressed = rr.comparison.improved[:8], rr.comparison.regressed[:8]
-        d = decide_next_action(rendered=rend is not None, verified=verified, labels_match=labels_match,
-                               candidate_audit_complete=None if cand_audit is None else cand_audit.status == "complete",
-                               outcome=rr.comparison.outcome if rr.comparison else None, target_resolved=rr.comparison.target_resolved if rr.comparison else None,
-                               regressed=rr.comparison.regressed if rr.comparison else [], budget_left=config.iteration_budget - iteration)
-        rec.decision, rec.reason, rec.next_action, rec.next_action_reason = d["decision"], d["reason"], d["next_action"], d["next_action_reason"]  # type: ignore[assignment]
-        if d["decision"] == "accept":
-            rr.status = "accepted"
-        elif d["decision"] == "reject_keep_current":
-            rr.status = "rejected"
-        elif not rr.incomplete_reasons:
-            rr.status, rr.incomplete_reasons = "incomplete", [d["reason"]]
-        rr.timings_ms = {"render_ms": render_ms, "fresh_review_ms": fresh_ms, "compare_ms": compare_ms}
-        features = {"duration_ms": genome.duration_ms, "hook_type": genome.hook.hook_type.value, "beats": len(genome.beats), "shots": len(genome.shots),
-                    "longest_static_span_ms": genome.longest_static_span_ms.value, "first_payoff_ms": genome.first_payoff_ms.value}
-        lesson = update_memory(data_dir, run.id, config, finding, rr, features)
-        rr.lesson_id = rec.lesson_id = lesson["lesson_id"]
-        _save_repair(rr, data_dir)
-        run.repair_run_ids.append(rr.id)
-        run.lessons.append(lesson)
-        result = rr.comparison.outcome if rr.comparison else rr.status
-        attempts_log.append(f"{cand.key} ({cand.description}) for the weakness '{finding.weakness[:90]}' -> {result}: {d['reason'][:200]}")
-        rec.timings_ms = {**rr.timings_ms, "iteration_ms": int((time.monotonic() - t_it) * 1000)}
-        run.iterations.append(rec)
-        emit("DECIDED", f"iteration {iteration}: {str(result).upper()} -> {d['decision']}: {d['reason'][:220]} | next: {d['next_action']}",
-             {"repair_run_id": rr.id, "decision": d["decision"]})
-        if d["decision"] == "accept" and cand_audit is not None and rend is not None:
-            current_path, current_version, current_hash = Path(rend["path"]), rr.candidate_version_id or current_version, rend["artifact_hash"]
-            audit = cand_audit
-            run.final_version_id, run.final_artifact_hash, run.final_path = current_version, current_hash, str(current_path)
-        save_run(run, data_dir)
+                with workflow_stage("rejudge", "Fresh cold-audience audit", kind="agent", iteration=iteration) as stage:
+                    emit("FRESH_REVIEW", "fresh cold-audience audit of the candidate (no access to the finding, the repair, the objective or the earlier verdict)")
+                    cand_audit = run_audit(video_id=config.video_id, video_path=Path(rend["path"]), version_id=rr.candidate_version_id or "candidate",  # type: ignore[index]
+                                           provider=providers.probe, data_dir=data_dir, on_stage=on_stage)
+                    fresh_ms = int((time.monotonic() - t) * 1000)
+                    run.audit_ids.append(cand_audit.id)
+                    rr.candidate_audit_id, rr.status = cand_audit.id, "reviewed"
+                    rec.candidate_audit_id = cand_audit.id
+                    stage.update(audit_id=cand_audit.id, findings=len(cand_audit.findings), strengths=len(cand_audit.strengths), audit_status=cand_audit.status)
+                    if cand_audit.status != "complete":
+                        stage.status = "incomplete"
+
+                labels_match = cand_audit.artifact_hash == rend["artifact_hash"] and audit.artifact_hash == current_hash  # type: ignore[index]
+                if not labels_match:
+                    rr.status, rr.incomplete_reasons = "incomplete", ["audited file hashes do not match the version labels"]
+                elif cand_audit.status != "complete":
+                    rr.status, rr.incomplete_reasons = "incomplete", ["fresh audit incomplete: " + "; ".join(cand_audit.incomplete_reasons)]
+                else:
+                    t = time.monotonic()
+                    with workflow_stage("compare", "Compare original and candidate", kind="agent", iteration=iteration) as stage:
+                        emit("COMPARING", "target moment, whole video (both presentation orders), persistence of the weakness, new weaknesses, audience predictions, protected content")
+                        protected = list(dict.fromkeys(finding.keep_unchanged + config.constraints))[:8]
+                        rr.comparison = compare_versions(provider=providers.probe, original=audit, candidate=cand_audit, finding=finding, candidate_plan=cand.plan, protected_items=protected)
+                        compare_ms = int((time.monotonic() - t) * 1000)
+                        rec.outcome, rec.target_resolved = rr.comparison.outcome, rr.comparison.target_resolved
+                        rec.improved, rec.regressed = rr.comparison.improved[:8], rr.comparison.regressed[:8]
+                        stage.update(outcome=rec.outcome, target_resolved=rec.target_resolved, improved=rec.improved, regressed=rec.regressed)
+
+            with workflow_stage("decision", "Keep, reject, or try again", iteration=iteration) as stage:
+                d = decide_next_action(rendered=rend is not None, verified=verified, labels_match=labels_match,
+                                       candidate_audit_complete=None if cand_audit is None else cand_audit.status == "complete",
+                                       outcome=rr.comparison.outcome if rr.comparison else None, target_resolved=rr.comparison.target_resolved if rr.comparison else None,
+                                       regressed=rr.comparison.regressed if rr.comparison else [], budget_left=config.iteration_budget - iteration)
+                rec.decision, rec.reason, rec.next_action, rec.next_action_reason = d["decision"], d["reason"], d["next_action"], d["next_action_reason"]  # type: ignore[assignment]
+                if d["decision"] == "accept":
+                    rr.status = "accepted"
+                elif d["decision"] == "reject_keep_current":
+                    rr.status = "rejected"
+                elif not rr.incomplete_reasons:
+                    rr.status, rr.incomplete_reasons = "incomplete", [d["reason"]]
+                stage.update(**d)
+
+            rr.timings_ms = {"render_ms": render_ms, "fresh_review_ms": fresh_ms, "compare_ms": compare_ms}
+            features = {"duration_ms": genome.duration_ms, "hook_type": genome.hook.hook_type.value, "beats": len(genome.beats), "shots": len(genome.shots),
+                        "longest_static_span_ms": genome.longest_static_span_ms.value, "first_payoff_ms": genome.first_payoff_ms.value}
+            with workflow_stage("lesson", "Record the experiment lesson", iteration=iteration) as stage:
+                lesson = update_memory(data_dir, run.id, config, finding, rr, features)
+                rr.lesson_id = rec.lesson_id = lesson["lesson_id"]
+                _save_repair(rr, data_dir)
+                run.repair_run_ids.append(rr.id)
+                run.lessons.append(lesson)
+                stage.update(lesson_id=rec.lesson_id, decision=rec.decision)
+
+            result = rr.comparison.outcome if rr.comparison else rr.status
+            attempts_log.append(f"{cand.key} ({cand.description}) for the weakness '{finding.weakness[:90]}' -> {result}: {d['reason'][:200]}")
+            rec.timings_ms = {**rr.timings_ms, "iteration_ms": int((time.monotonic() - t_it) * 1000)}
+            run.iterations.append(rec)
+            emit("DECIDED", f"iteration {iteration}: {str(result).upper()} -> {d['decision']}: {d['reason'][:220]} | next: {d['next_action']}",
+                 {"repair_run_id": rr.id, "decision": d["decision"]})
+            if d["decision"] == "accept" and cand_audit is not None and rend is not None:
+                current_path, current_version, current_hash = Path(rend["path"]), rr.candidate_version_id or current_version, rend["artifact_hash"]
+                audit = cand_audit
+                run.final_version_id, run.final_artifact_hash, run.final_path = current_version, current_hash, str(current_path)
+            save_run(run, data_dir)
+            iteration_stage.update(decision=rec.decision, reason=rec.reason, next_action=rec.next_action, candidate_version_id=rec.candidate_version_id)

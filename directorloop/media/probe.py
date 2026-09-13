@@ -33,7 +33,7 @@ def _parse_rate(value: str | None) -> float | None:
         return None
 
 
-def ffprobe_json(path: str | Path, timeout: int = 30) -> dict:
+def ffprobe_json(path: str | Path, timeout: int = 30, *, untrusted: bool = False) -> dict:
     path = Path(path)
     if not path.exists():
         raise MediaError(f"missing file: {path}")
@@ -45,8 +45,11 @@ def ffprobe_json(path: str | Path, timeout: int = 30) -> dict:
         "json",
         "-show_format",
         "-show_streams",
-        str(path),
     ]
+    if untrusted:
+        # Accept self-contained upload containers, never playlists or network demuxers.
+        cmd.extend(["-protocol_whitelist", "file,pipe", "-format_whitelist", "mov,matroska,webm"])
+    cmd.append(str(path.resolve()))
     try:
         proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=False)
     except subprocess.TimeoutExpired as exc:
@@ -59,8 +62,8 @@ def ffprobe_json(path: str | Path, timeout: int = 30) -> dict:
         raise MediaError(f"ffprobe returned invalid JSON for {path.name}") from exc
 
 
-def inspect_media(path: str | Path) -> StreamInfo:
-    data = ffprobe_json(path)
+def inspect_media(path: str | Path, *, untrusted: bool = False) -> StreamInfo:
+    data = ffprobe_json(path, untrusted=untrusted)
     fmt = data.get("format", {})
     streams = data.get("streams", [])
     video = next((s for s in streams if s.get("codec_type") == "video"), None)

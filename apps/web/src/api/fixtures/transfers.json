@@ -1,0 +1,47 @@
+[
+  {
+    "video_id": "aplaze",
+    "policy_version": 3,
+    "oracle_experiment": "cexp_1a09744b816_2009893a",
+    "outcomes_on_b": {
+      "RESULT_FIRST": "loss",
+      "PATTERN_INTERRUPT": "neutral",
+      "PAYOFF_EARLIER": "loss",
+      "CONTEXT_COMPRESSION": "loss"
+    },
+    "modes": {
+      "none": {
+        "order": [
+          "PAYOFF_EARLIER",
+          "RESULT_FIRST",
+          "PATTERN_INTERRUPT",
+          "CONTEXT_COMPRESSION"
+        ],
+        "first_mutation": "PAYOFF_EARLIER",
+        "first_outcome_on_b": "loss",
+        "attempts_until_first_win": null,
+        "model_calls_until_then": 68,
+        "eval_and_render_ms_until_then": 46274,
+        "note": "no win among 4 candidates"
+      },
+      "learned": {
+        "order": [
+          "RESULT_FIRST",
+          "PATTERN_INTERRUPT",
+          "PAYOFF_EARLIER",
+          "CONTEXT_COMPRESSION"
+        ],
+        "first_mutation": "RESULT_FIRST",
+        "first_outcome_on_b": "loss",
+        "attempts_until_first_win": null,
+        "model_calls_until_then": 68,
+        "eval_and_render_ms_until_then": 46274,
+        "note": "no win among 4 candidates"
+      }
+    },
+    "first_choice_changed": true,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09744-b521-7df7-9940-ba10baee4ade",
+    "oracle_weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09744-b816-7707-a3ca-176e3cd99df1",
+    "created_at": "20260912-131738"
+  }
+]

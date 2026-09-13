@@ -1,0 +1,797 @@
+{
+  "id": "abc_1a0978f0a08_002eb452",
+  "status": "completed",
+  "created_at": "2026-09-12T21:38:48.976+00:00",
+  "ended_at": "2026-09-12T21:40:50.677+00:00",
+  "context": {
+    "creative_type": "educational short",
+    "audience": "general viewers who do not know the topic",
+    "objective": "Make a first-time viewer understand how the bridge was measured in Smoots and why the markings still matter, and keep them watching to the end.",
+    "expected_payoff": "",
+    "encounter": "a cold scrolling feed on a phone with sound on",
+    "source": "declared_by_owner"
+  },
+  "constraints": [
+    "Do not add new claims or on-screen text"
+  ],
+  "limits": {
+    "iteration_budget": 2,
+    "max_model_calls": 260,
+    "deadline_s": 1500
+  },
+  "rubric": {
+    "version": "abc-rubric-v2",
+    "whole_dimensions": {
+      "opening_interest": "In the first seconds, which version gives this viewer a clearer reason to keep watching?",
+      "comprehension": "By the end, which version leaves this viewer understanding what happened and why?",
+      "information_progression": "Which version adds new information or meaning at a better rate, without confusing jumps or needless repetition?",
+      "pacing": "Which version's pacing better fits what is shown and said at each moment (neither rushed nor dragging)?",
+      "visual_narration_alignment": "Which version's pictures better show what is being said at the same moment?",
+      "emotional_effect": "Which version creates more curiosity, anticipation, surprise or delight at the right moments?",
+      "payoff": "Which version lands its final point or payoff more clearly?",
+      "memorability": "Which version is this viewer more likely to remember or retell?"
+    },
+    "region_dimensions": {
+      "clarity": "In this stretch, which version makes what is happening easier to follow?",
+      "curiosity_or_anticipation": "In this stretch, which version builds or keeps more curiosity or anticipation?",
+      "visual_narration_alignment": "In this stretch, which version's pictures better show what is being said?",
+      "pacing": "In this stretch, which version's timing better fits what is shown and said?"
+    },
+    "sampling": {
+      "whole": {
+        "fps": 2,
+        "max_frames": 24,
+        "width": 320,
+        "words": "timed words of the rendered speech"
+      },
+      "region": {
+        "fps": 3,
+        "max_frames": 10,
+        "width": 384,
+        "words": "timed words inside the stretch"
+      }
+    },
+    "verdict_rules": "Each dimension is asked in both presentation orders (repeats=1). Same label in both orders -> that label; 'same' in both -> same; different answers -> unstable; no valid answer -> unclear. Votes are kept.",
+    "core_dimensions": [
+      "comprehension",
+      "payoff"
+    ],
+    "instruction_template": "Frames with timestamps under 100 s belong to Version 1; frames at 100 s or later belong to Version 2 (subtract 100 s).\nBoth versions present the same idea. They are {scope_text}.\nThe viewing situation for both: {encounter}. The intended viewer: {audience}. The purpose of the video: {objective}.{payoff}\nYou did not hear the audio; the words are a transcript of the rendered speech with times.\nAnswer every question with '1', '2', 'same' (no meaningful difference) or 'unclear' (these frames and words cannot tell), and one short, blunt reason tied to what you saw or read: say plainly what is worse in the losing version, not polite generalities.\nQuestions:\n{questions}\nFinally, overall: which version better serves this viewer and purpose {overall_text}?",
+    "context": {
+      "creative_type": "educational short",
+      "audience": "general viewers who do not know the topic",
+      "objective": "Make a first-time viewer understand how the bridge was measured in Smoots and why the markings still matter, and keep them watching to the end.",
+      "expected_payoff": "",
+      "encounter": "a cold scrolling feed on a phone with sound on",
+      "source": "declared_by_owner"
+    },
+    "reviewer": "openai:gpt-5.6-terra",
+    "selector": "openai:gpt-5.6-sol",
+    "sha256": "e9e6722af4254f5d959910663695821dbf474c930e4cd1897fb9e0cbe3b9bb1f"
+  },
+  "versions": {
+    "A": {
+      "label": "A",
+      "video_id": "smoot-cinematic-reedit-v1",
+      "title": "",
+      "role": "input",
+      "original_hash": "67af6c2926aced4ab54fde773df7f916e7e478b44cd554867cb0821735046452",
+      "evaluated_hash": "7a65cae132ba45cb82d007a171a5371b7b11d8b73ff0793895175920952e084c",
+      "duration_ms": 11000,
+      "audit_id": "audit_1a0978f3720_cfd5e38a",
+      "audit_status": "complete",
+      "genome_cached": true,
+      "notes": [
+        "evaluated file is the original re-rendered through the same pipeline as C (identical timeline)"
+      ],
+      "media_url": "/media/renders/7a65cae132ba45cb82d007a171a5371b7b11d8b73ff0793895175920952e084c.mp4"
+    },
+    "B": {
+      "label": "B",
+      "video_id": "smoot-earlier-action-v3",
+      "title": "",
+      "role": "input",
+      "original_hash": "df232aa1b2b025d1e15760a593553f4c9bbb9a877a3c0d00f79f499286cbf84e",
+      "evaluated_hash": "0f25d9beed2c2ee2b1311f327b676c44bda1c4d8641a8e6a283e84e3634002cc",
+      "duration_ms": 11000,
+      "audit_id": "audit_1a0978f371f_9846f386",
+      "audit_status": "complete",
+      "genome_cached": false,
+      "notes": [
+        "evaluated file is the original re-rendered through the same pipeline as C (identical timeline)"
+      ],
+      "media_url": "/media/renders/0f25d9beed2c2ee2b1311f327b676c44bda1c4d8641a8e6a283e84e3634002cc.mp4"
+    },
+    "C1": {
+      "label": "C",
+      "video_id": "c1-65ec8e0a",
+      "title": "",
+      "role": "director",
+      "original_hash": null,
+      "evaluated_hash": "65ec8e0a2a0e41a903c1ed1aef753024cb527834f13ad33c336ac1ccba9e7196",
+      "duration_ms": 10500,
+      "audit_id": "audit_1a0978ff6f5_dadfba47",
+      "audit_status": "complete",
+      "genome_cached": null,
+      "notes": [
+        "rendered from the original A and B files by plan option repair_a_trim_end_beat_01_10400"
+      ],
+      "media_url": "/media/renders/65ec8e0a2a0e41a903c1ed1aef753024cb527834f13ad33c336ac1ccba9e7196.mp4"
+    }
+  },
+  "comparison": {
+    "comparable": true,
+    "confounds": [],
+    "transcript_similarity": 1,
+    "alignment": [
+      {
+        "index": 0,
+        "kind": "shared",
+        "a_beats": [
+          "beat_00"
+        ],
+        "b_beats": [
+          "beat_00"
+        ],
+        "a_start_ms": 0,
+        "a_end_ms": 5030,
+        "b_start_ms": 0,
+        "b_end_ms": 5030,
+        "text_a": "His friends measured a bridge using his body, then moved him forward again and again.",
+        "text_b": "His friends measured a bridge using his body, then moved him forward again and again.",
+        "similarity": 1
+      },
+      {
+        "index": 1,
+        "kind": "shared",
+        "a_beats": [
+          "beat_01"
+        ],
+        "b_beats": [
+          "beat_01"
+        ],
+        "a_start_ms": 5030,
+        "a_end_ms": 11000,
+        "b_start_ms": 5030,
+        "b_end_ms": 11000,
+        "text_a": "His name was Smoot, and nearly 70 years later, that bridge is still marked in Smoot's.",
+        "text_b": "His name was Smoot, and nearly 70 years later, that bridge is still marked in Smoot's.",
+        "similarity": 1
+      }
+    ],
+    "whole": {
+      "first": "A",
+      "second": "B",
+      "scope": "whole",
+      "region": null,
+      "dimensions": [
+        {
+          "dimension": "opening_interest",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[A shown first] same: Both open with the same body-measuring-a-bridge setup and wording.",
+            "[B shown first] same: Both open with the same body-on-bridge illustration and the same line about measuring it."
+          ]
+        },
+        {
+          "dimension": "comprehension",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[A shown first] same: Both explain that friends used his body repeatedly, name him Smoot, and show the surviving markings.",
+            "[B shown first] same: Both explain that friends repeatedly moved Smoot to measure the bridge and show the resulting markings."
+          ]
+        },
+        {
+          "dimension": "information_progression",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[A shown first] same: The same information appears in the same sequence at essentially the same times.",
+            "[B shown first] same: The wording and sequence of new facts are effectively identical in both versions."
+          ]
+        },
+        {
+          "dimension": "pacing",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[A shown first] same: Both use the same short beats, pauses, zooms, and final photo timing.",
+            "[B shown first] same: Both use the same spoken timing and nearly the same sequence of zooms and cuts."
+          ]
+        },
+        {
+          "dimension": "visual_narration_alignment",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[A shown first] same: Each version shows the illustrated body and measurement marks during the explanation, then the real “SMOOTS” marking.",
+            "[B shown first] same: Each version shows the illustrated body measurement during that explanation and the painted “SMOOTS” at the end."
+          ]
+        },
+        {
+          "dimension": "emotional_effect",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[A shown first] same: Both build to the same small reveal that the bridge remains marked in Smoots.",
+            "[B shown first] same: Both build to the same reveal that the bridge remains marked in Smoots."
+          ]
+        },
+        {
+          "dimension": "payoff",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[A shown first] same: Both end on the identical close-up of “SMOOTS” with the same final statement.",
+            "[B shown first] same: Both finish on the same clear photo of “SMOOTS” and the line that the bridge is still marked."
+          ]
+        },
+        {
+          "dimension": "memorability",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[A shown first] same: The same unusual body-as-unit image and large painted “SMOOTS” text appear in both.",
+            "[B shown first] same: The distinctive repeated-body measurement and large “SMOOTS” reveal are the same in both."
+          ]
+        }
+      ],
+      "overall": {
+        "dimension": "overall",
+        "verdict": "same",
+        "votes": {
+          "same": 2
+        },
+        "reasons": [
+          "[A shown first] same: No meaningful visual, spoken, or timing difference is shown between the two versions.",
+          "[B shown first] same: No meaningful difference is visible or audible between the two complete versions."
+        ]
+      },
+      "calls": 2,
+      "failed_calls": 0,
+      "rubric_version": "abc-rubric-v2",
+      "label": "MODEL JUDGMENT: both presentation orders; disagreement kept as 'unstable'"
+    },
+    "regions": [],
+    "findings_by_unit": {
+      "A:1": [
+        "10.4-11.0s The video lingers after its final line. This dead half-second costs a clean ending and gives the viewer an exit point instead of a final bea"
+      ],
+      "B:1": [
+        "10.1-10.9s The final hold is dead time after the payoff. It costs the ending momentum and gives no added reason to stay through the last half-second."
+      ]
+    },
+    "strengths_by_unit": {
+      "A:0": [
+        "The animation directly demonstrates the unusual premise: a person lies beside measurement lines, then is shown being moved forward repeatedl"
+      ],
+      "A:1": [
+        "The name reveal and “1 Smoot” label connect the person to the unit.",
+        "The animation gives way to a real photograph of “SMOOTS” painted on pavement for the conclusion."
+      ],
+      "B:0": [
+        "The opening immediately pairs a bizarre premise with a legible animated demonstration."
+      ],
+      "B:1": [
+        "The name reveal makes the premise click into a named unit.",
+        "The ending delivers concrete visual proof rather than only asserting the result."
+      ]
+    },
+    "best_supported": "",
+    "best_supported_reason": "no reliable overall preference between A and B (same)"
+  },
+  "attempts": [
+    {
+      "index": 1,
+      "proposal": {
+        "option_key": "repair_a_trim_end_beat_01_10400",
+        "base": "A",
+        "donor": null,
+        "description": "Start from A; Shorten the 0.52s pause at the end of 'His name was Smoot, and nearly 70 years later, tha...'. (aimed at A's finding at 10.4-11.0s: The video lingers after its final line. This dead half-second costs a clean ending and gives the viewer an exit point in)",
+        "target_dimensions": [
+          "pacing",
+          "payoff"
+        ],
+        "expected_improvement": "A sharper finish after the real bridge marking lands, removing the only consistently identified attention leak and reducing the chance of viewers leaving during dead time.",
+        "protected_strengths": [
+          {
+            "source": "A",
+            "item": "The opening animation immediately explains the body-as-measuring-unit premise."
+          },
+          {
+            "source": "A",
+            "item": "The Smoot name reveal and “1 Smoot” label make the unit understandable and memorable."
+          },
+          {
+            "source": "A",
+            "item": "The real “SMOOTS” pavement image provides concrete visual proof that the markings still matter."
+          }
+        ],
+        "tradeoffs": [
+          "C loses 0.52 seconds of viewing time on the final proof image, so viewers have slightly less time to inspect it.",
+          "The improvement is predicted from audit judgments, not demonstrated by audience retention data."
+        ],
+        "why_smallest": "It removes only the identified dead pause while preserving the wording, story order, narration, captions, music, opening, and payoff footage before that pause. Swapping A and B has no evidenced benefit; reordering would disrupt the clear progression; zooming retains the dead time and risks cropping ",
+        "selector_reason": "Both independent audits identify the unchanged final hold as the sole visible defect, while the comparison finds A and B equivalent on every measured dimension. Trimming A’s final 0.52-second pause directly addresses that shared low-severity weakness without altering what already works.",
+        "options_offered": [
+          "swap_a_u0",
+          "repair_a_earlier_beat_01",
+          "repair_a_trim_end_beat_01_10400",
+          "repair_a_zoom_center_beat_01",
+          "repair_a_zoom_motion_beat_01",
+          "swap_b_u0",
+          "repair_b_earlier_beat_01",
+          "repair_b_trim_end_beat_01_10400",
+          "repair_b_zoom_center_beat_01",
+          "repair_b_zoom_motion_beat_01"
+        ]
+      },
+      "render_hash": "65ec8e0a2a0e41a903c1ed1aef753024cb527834f13ad33c336ac1ccba9e7196",
+      "version_id": "C1-65ec8e0a",
+      "evaluation": {
+        "candidate_audit_id": "audit_1a0978ff6f5_dadfba47",
+        "candidate_audit_status": "complete",
+        "change_verification": {
+          "intended": "Start from A; Shorten the 0.52s pause at the end of 'His name was Smoot, and nearly 70 years later, tha...'. (aimed at A's finding at 10.4-11.0s: The video lingers after its final line. This dead half-second costs a clean ending and gives the viewer an exit point in)",
+          "verified": true,
+          "checks": [
+            "duration 10500 ms vs planned 10480 ms: ok",
+            "loudness follows the planned sources: correlation 0.99 (threshold 0.80): ok",
+            "picture at 2.52s matches A at 2.52s: difference 0.001 (threshold 0.06): ok",
+            "picture at 7.75s matches A at 7.75s: difference 0.001 (threshold 0.06): ok"
+          ]
+        },
+        "vs_base": {
+          "first": "C",
+          "second": "A",
+          "scope": "whole",
+          "region": null,
+          "dimensions": [
+            {
+              "dimension": "opening_interest",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: Both open with the same body-measuring-a-bridge visual and line.",
+                "[A shown first] same: Both open with the same body-measuring-a-bridge animation and wording."
+              ]
+            },
+            {
+              "dimension": "comprehension",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: Both explain the same repeated measuring method and Smoot markings.",
+                "[A shown first] same: Both explain the same repeated body-length measurement and show the Smoots marking."
+              ]
+            },
+            {
+              "dimension": "information_progression",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: The same information appears in the same order and at the same rate.",
+                "[A shown first] same: Both reveal the steps, name Smoot, and end on the same bridge marking in the same order."
+              ]
+            },
+            {
+              "dimension": "pacing",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: The narration and visual timing are identical in both versions.",
+                "[A shown first] same: The narration and shot changes occur at the same moments in both versions."
+              ]
+            },
+            {
+              "dimension": "visual_narration_alignment",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: Both show the figure, measurement spans, and final bridge marking at the same spoken moments.",
+                "[A shown first] same: Both pair the measurement narration with the animation and the final claim with the painted “SMOOTS” photo."
+              ]
+            },
+            {
+              "dimension": "emotional_effect",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: Both build to the same reveal that the markings remain nearly seventy years later.",
+                "[A shown first] same: Both use the same gradual reveal from the unusual measurement to the real marking."
+              ]
+            },
+            {
+              "dimension": "payoff",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: Both end on the same photo of the large yellow “SMOOTS” bridge marking.",
+                "[A shown first] same: Both end with the identical visual proof that the bridge is marked in Smoots."
+              ]
+            },
+            {
+              "dimension": "memorability",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: Both use the same distinctive Smoot name, illustration, and final marking image.",
+                "[A shown first] same: Both use the same distinctive cartoon body measurement and large “SMOOTS” image."
+              ]
+            }
+          ],
+          "overall": {
+            "dimension": "overall",
+            "verdict": "same",
+            "votes": {
+              "same": 2
+            },
+            "reasons": [
+              "[C shown first] same: The versions are duplicates in their shown frames and transcript.",
+              "[A shown first] same: The versions have identical visible content, narration, sequence, and ending."
+            ]
+          },
+          "calls": 2,
+          "failed_calls": 0,
+          "rubric_version": "abc-rubric-v2",
+          "label": "MODEL JUDGMENT: both presentation orders; disagreement kept as 'unstable'"
+        },
+        "vs_other": {
+          "first": "C",
+          "second": "B",
+          "scope": "whole",
+          "region": null,
+          "dimensions": [
+            {
+              "dimension": "opening_interest",
+              "verdict": "unstable",
+              "votes": {
+                "same": 1,
+                "C": 1
+              },
+              "reasons": [
+                "[C shown first] same: Both open with the same body-on-bridge image and the same line about measuring it.",
+                "[B shown first] C: Version 2 quickly pushes into the figure’s feet and measurement line, while Version 1 stays farther away."
+              ]
+            },
+            {
+              "dimension": "comprehension",
+              "verdict": "unstable",
+              "votes": {
+                "same": 1,
+                "C": 1
+              },
+              "reasons": [
+                "[C shown first] same: Both explain that friends repeatedly moved Smoot forward and end by showing the SMOOTS marking.",
+                "[B shown first] C: Version 2’s close view of the body against the endpoint line makes the measuring method clearer than Version 1’s distant framing."
+              ]
+            },
+            {
+              "dimension": "information_progression",
+              "verdict": "unstable",
+              "votes": {
+                "same": 1,
+                "C": 1
+              },
+              "reasons": [
+                "[C shown first] same: The text and sequence of new facts are the same in both versions.",
+                "[B shown first] C: Version 2 moves from the endpoint close-up to the full repeated-body measurement, whereas Version 1 shows the same idea more flatly."
+              ]
+            },
+            {
+              "dimension": "pacing",
+              "verdict": "unstable",
+              "votes": {
+                "same": 1,
+                "C": 1
+              },
+              "reasons": [
+                "[C shown first] same: Each version uses the same spoken timing and nearly identical animated shots.",
+                "[B shown first] C: Version 2 uses tighter shots during the measurement and pulls wide for repetition; Version 1 lingers in similar wide views."
+              ]
+            },
+            {
+              "dimension": "visual_narration_alignment",
+              "verdict": "unstable",
+              "votes": {
+                "same": 1,
+                "C": 1
+              },
+              "reasons": [
+                "[C shown first] same: Both show the figure and measurement lines during the measurement explanation, then the real SMOOTS marking at the end.",
+                "[B shown first] C: When the words say they measured using his body, Version 2 visibly emphasizes his feet meeting the measurement mark."
+              ]
+            },
+            {
+              "dimension": "emotional_effect",
+              "verdict": "unstable",
+              "votes": {
+                "same": 1,
+                "C": 1
+              },
+              "reasons": [
+                "[C shown first] same: Both build the same small reveal from the repeated measuring animation to the pavement photo.",
+                "[B shown first] C: Version 2’s changing scale makes the odd body-measurement reveal feel more immediate; Version 1 is less visually punchy."
+              ]
+            },
+            {
+              "dimension": "payoff",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: Both finish on the same clear photo and statement that the bridge is marked in Smoots.",
+                "[B shown first] same: Both end on the same clear photo of the large yellow word “SMOOTS” with the same final line."
+              ]
+            },
+            {
+              "dimension": "memorability",
+              "verdict": "unstable",
+              "votes": {
+                "same": 1,
+                "C": 1
+              },
+              "reasons": [
+                "[C shown first] same: Both use the same unusual visual of a person as a bridge-measuring unit and the same final marking.",
+                "[B shown first] C: Version 2 makes the body-as-ruler image more vivid with close-ups, while Version 1 keeps it smaller."
+              ]
+            }
+          ],
+          "overall": {
+            "dimension": "overall",
+            "verdict": "unstable",
+            "votes": {
+              "same": 1,
+              "C": 1
+            },
+            "reasons": [
+              "[C shown first] same: No meaningful difference is visible or audible between the two complete versions.",
+              "[B shown first] C: Version 2 explains the physical measuring action more clearly and energetically, while keeping the identical final payoff."
+            ]
+          },
+          "calls": 2,
+          "failed_calls": 0,
+          "rubric_version": "abc-rubric-v2",
+          "label": "MODEL JUDGMENT: both presentation orders; disagreement kept as 'unstable'"
+        },
+        "target_region": {
+          "first": "C",
+          "second": "A",
+          "scope": "region",
+          "region": {
+            "c_ms": [
+              0,
+              10480
+            ],
+            "a_ms": [
+              0,
+              11000
+            ]
+          },
+          "dimensions": [
+            {
+              "dimension": "clarity",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: Both versions use the same words, animation, and final bridge-marking photo.",
+                "[A shown first] same: Both versions use the same animation, captions, and spoken wording."
+              ]
+            },
+            {
+              "dimension": "curiosity_or_anticipation",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: Both reveal Smoot’s name and the lasting markings at the same points.",
+                "[A shown first] same: Both reveal the repeated measuring and the Smoot markings at the same points."
+              ]
+            },
+            {
+              "dimension": "visual_narration_alignment",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: Each shows the body-length illustration during measurement and the “SMOOTS” marking at the end.",
+                "[A shown first] same: Both show the figure being repositioned during the measurement narration and the real marking at the end."
+              ]
+            },
+            {
+              "dimension": "pacing",
+              "verdict": "same",
+              "votes": {
+                "same": 2
+              },
+              "reasons": [
+                "[C shown first] same: The narration timestamps and matching scene progression are the same.",
+                "[A shown first] same: The caption and animation changes follow the same transcript timing in both."
+              ]
+            }
+          ],
+          "overall": {
+            "dimension": "overall",
+            "verdict": "same",
+            "votes": {
+              "same": 2
+            },
+            "reasons": [
+              "[C shown first] same: Neither version shows a meaningful difference in this stretch.",
+              "[A shown first] same: No meaningful visual, wording, or timing difference is shown between the versions."
+            ]
+          },
+          "calls": 2,
+          "failed_calls": 0,
+          "rubric_version": "abc-rubric-v2",
+          "label": "MODEL JUDGMENT: both presentation orders; disagreement kept as 'unstable'"
+        },
+        "protected": [
+          {
+            "item": "The opening animation immediately explains the body-as-measuring-unit premise.",
+            "kind": "content",
+            "status": "kept",
+            "evidence": "Version 2 opens with the same animation and text, “His friends measured a bridge using his body.”",
+            "source": "A"
+          },
+          {
+            "item": "The Smoot name reveal and “1 Smoot” label make the unit understandable and memorable.",
+            "kind": "content",
+            "status": "kept",
+            "evidence": "Version 2 retains the “His name was Smoot,” reveal and the visible “1 Smoot” label.",
+            "source": "A"
+          },
+          {
+            "item": "The real “SMOOTS” pavement image provides concrete visual proof that the markings still matter.",
+            "kind": "content",
+            "status": "kept",
+            "evidence": "Version 2 still shows the pavement photo with the large yellow word “SMOOTS.”",
+            "source": "A"
+          },
+          {
+            "item": "Do not add new claims or on-screen text",
+            "kind": "rule",
+            "status": "respected",
+            "evidence": "The Version 2 frames and transcript match Version 1, with no additional claims or on-screen text visible.",
+            "source": "A"
+          }
+        ],
+        "new_weaknesses": [
+          "8.4-10.4s [weak_or_missing_payoff, medium]: The ending proves the markings exist but never gives the measured total. The setup repeatedly foregrounds measuring a whole bridge, so withholding the resulting"
+        ],
+        "improved": [],
+        "regressed": [
+          "new weakness: 8.4-10.4s [weak_or_missing_payoff, medium]: The ending proves the markings exist but never gives the measured total. The setup repeatedly foregrounds measuring a whole bridge, so withholding the resulting"
+        ],
+        "unchanged": [
+          "opening_interest vs A",
+          "comprehension vs A",
+          "information_progression vs A",
+          "pacing vs A",
+          "visual_narration_alignment vs A",
+          "emotional_effect vs A",
+          "payoff vs A",
+          "memorability vs A"
+        ],
+        "uncertain": [],
+        "outcome": "tie",
+        "outcome_reason": "no reliable gain on the target dimensions (pacing, payoff); overall vs A: same"
+      },
+      "decision": "reject_keep_inputs",
+      "reason": "no reliable gain on the target dimensions (pacing, payoff); overall vs A: same",
+      "next_action": "try_another_c",
+      "next_action_reason": "the failed option is excluded and its result is given to the selector",
+      "lesson_id": "lesson_1a097909e13_18532bdc",
+      "timings_ms": {
+        "render_and_verify_ms": 1294,
+        "review_and_judge_ms": 42774,
+        "attempt_ms": 54233
+      },
+      "render_media_url": "/media/renders/65ec8e0a2a0e41a903c1ed1aef753024cb527834f13ad33c336ac1ccba9e7196.mp4"
+    },
+    {
+      "index": 2,
+      "proposal": null,
+      "render_hash": null,
+      "version_id": null,
+      "evaluation": null,
+      "decision": "stop",
+      "reason": "no C chosen: Both audits identify only a minor final-hold issue, and the prior attempt to fix that exact issue failed. No remaining executable option has evidence of improving first-viewer understanding or retention without a meaningful downside. Needed: A perceptibly redesigned final beat that lands the narration, proof image, and audio cadence together—without new claims or text and without cropping captions—rather than another near-identical trim or cosmetic zoom.",
+      "next_action": "stop",
+      "next_action_reason": "no C chosen: Both audits identify only a minor final-hold issue, and the prior attempt to fix that exact issue failed. No remaining executable option has evidence of improving first-viewer understanding or retention without a meaningful downside. Needed: A perceptibly redesigned final beat that lands the narration, proof image, and audio cadence together—without new claims or text and without cropping captions—rather than another near-identical trim or cosmetic zoom.",
+      "lesson_id": null,
+      "timings_ms": {},
+      "render_media_url": null
+    }
+  ],
+  "final_version": "",
+  "final_decision": "keep both inputs: no C demonstrated an improvement and A vs B gave no reliable overall preference",
+  "stop_reason": "no C chosen: Both audits identify only a minor final-hold issue, and the prior attempt to fix that exact issue failed. No remaining executable option has evidence of improving first-viewer understanding or retention without a meaningful downside. Needed: A perceptibly redesigned final beat that lands the narration, proof image, and audio cadence together—without new claims or text and without cropping captions—rather than another near-identical trim or cosmetic zoom.",
+  "usage": {
+    "model_calls": 35,
+    "max_model_calls": 260,
+    "deadline_s": 1500,
+    "elapsed_s": 121.7,
+    "input_tokens": 211023,
+    "output_tokens": 11169,
+    "cost_usd": null,
+    "cost_note": "not estimated: no verified price table is configured"
+  },
+  "runtime": {
+    "runtime_version": "director-v1",
+    "git_commit": "40f2803",
+    "prompt_sources_uncommitted_changes": false,
+    "prompt_source_sha256_16": {
+      "directorloop/audit/review.py": "4aea52c4f9ec6254",
+      "directorloop/audit/repairs.py": "4669a98d5c4d943c",
+      "directorloop/audit/revise.py": "1e34fddc4abc28bf",
+      "directorloop/runtime/director.py": "f62afc52039597e6",
+      "directorloop/providers/base.py": "3f38a4d6f438b9e3",
+      "directorloop/compare/judge.py": "0969ab9a03f42b78",
+      "directorloop/compare/recombine.py": "7743e99320ba64ad",
+      "directorloop/runtime/abc.py": "a676a3c538bbe9ed"
+    },
+    "reviewer": {
+      "provider": "openai",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "low"
+    },
+    "selector": {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high"
+    },
+    "decision_rules": "decide_next_action (deterministic, no model call)",
+    "renderer": "ffmpeg from typed, validated edit plans",
+    "asr": "whisper.cpp large-v3-turbo q5_0 (local)"
+  },
+  "mocked_stages": [],
+  "manual_interventions": [],
+  "annotations": [],
+  "launched_via": "cli",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0978f-0a08-7706-8c24-0ca1e0667365",
+  "weave_call_id": "01a0978f-0a08-7706-8c24-0ca1e0667365",
+  "timings_ms": {
+    "total_ms": 121709
+  },
+  "error": null
+}

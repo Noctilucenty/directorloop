@@ -1,0 +1,118 @@
+{
+  "id": "run_1a097793ebb_698b5eeb",
+  "config": {
+    "video_id": "beavers-v7",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "focus": null,
+    "constraints": [
+      "Do not add new claims or on-screen text",
+      "Keep the ending"
+    ],
+    "allowed_edits": null,
+    "iteration_budget": 3,
+    "max_attempts_per_finding": 2,
+    "category": "educational_short"
+  },
+  "status": "completed",
+  "stop_reason": "no runnable existing-video repair remains: 10.3-11.1s route C: needs new narration and matching captions",
+  "final_decision": "retain the original: no repair was attempted (see the stop reason)",
+  "created_at": "2026-09-12T21:15:00.667+00:00",
+  "ended_at": "2026-09-12T21:15:37.549+00:00",
+  "original_artifact_hash": "da4a50c19af5900e95c4dd01af4b4eab59a0a9d0696809d09bcc57d597d5e1c4",
+  "final_version_id": "v0",
+  "final_artifact_hash": "da4a50c19af5900e95c4dd01af4b4eab59a0a9d0696809d09bcc57d597d5e1c4",
+  "audit_ids": [
+    "audit_1a097793f13_7872218d"
+  ],
+  "repair_run_ids": [],
+  "lessons": [],
+  "runtime": {
+    "runtime_version": "director-v1",
+    "git_commit": "unknown",
+    "prompt_sources_uncommitted_changes": null,
+    "prompt_source_sha256_16": {
+      "directorloop/audit/review.py": "159e2e861bfebbd0",
+      "directorloop/audit/repairs.py": "ae0091b6f9944632",
+      "directorloop/audit/revise.py": "718b20dd8efa7b04",
+      "directorloop/runtime/director.py": "4e2c6b18e4cecbcc",
+      "directorloop/providers/base.py": "3f38a4d6f438b9e3"
+    },
+    "reviewer": {
+      "provider": "openai",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "low"
+    },
+    "selector": {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high"
+    },
+    "decision_rules": "decide_next_action (deterministic, no model call)",
+    "renderer": "ffmpeg from typed, validated edit plans",
+    "asr": "whisper.cpp large-v3-turbo q5_0 (local)",
+    "state": "data/runs/<run_id>.json, data/audit/<audit_id>/audit.json, data/repairs/<repair_id>.json, data/audit/lessons.jsonl"
+  },
+  "mocked_stages": [],
+  "manual_interventions": [],
+  "annotations": [],
+  "launched_via": "cli",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09779-3ebb-731f-969c-539a21f5db59",
+  "weave_call_id": "01a09779-3ebb-731f-969c-539a21f5db59",
+  "timings_ms": {
+    "total_ms": 36881
+  },
+  "error": null,
+  "iterations": [
+    {
+      "index": 1,
+      "current_version_id": "v0",
+      "current_artifact_hash": "da4a50c19af5900e95c4dd01af4b4eab59a0a9d0696809d09bcc57d597d5e1c4",
+      "audit_id": "audit_1a097793f13_7872218d",
+      "considered": [
+        {
+          "finding_id": "audit_1a097793f13_7872218d_f1",
+          "interval_ms": [
+            10300,
+            11100
+          ],
+          "issue_type": "weak_or_missing_payoff",
+          "objective": "comprehension",
+          "severity": "medium",
+          "uncertainty": "medium",
+          "weakness": "The ending resolves how the crates opened but leaves the repeatedly established expectation of why the beavers were dropped, and what happened after release, unanswered.",
+          "route": "C",
+          "runnable": false,
+          "edit": "",
+          "selection_reason": "None of the available edits addresses the unanswered purpose or post-release outcome. Reordering the mechanism sentence would not supply that information and could weaken the established visual correspondence; either punch-in only changes framing and risks cropping captions.",
+          "why_not_runnable": "needs new narration and matching captions",
+          "skipped": null
+        }
+      ],
+      "finding_id": null,
+      "finding": "",
+      "ranking_reason": "",
+      "selection_reason": "",
+      "repair_run_id": null,
+      "edit": "",
+      "mutation_type": null,
+      "change_verified": null,
+      "verification_checks": [],
+      "candidate_version_id": null,
+      "candidate_artifact_hash": null,
+      "candidate_audit_id": null,
+      "outcome": null,
+      "target_resolved": null,
+      "improved": [],
+      "regressed": [],
+      "decision": "stop",
+      "reason": "no runnable existing-video repair remains: 10.3-11.1s route C: needs new narration and matching captions",
+      "next_action": "stop",
+      "next_action_reason": "no runnable existing-video repair remains: 10.3-11.1s route C: needs new narration and matching captions",
+      "lesson_id": null,
+      "timings_ms": {},
+      "candidate_media_url": null
+    }
+  ],
+  "original_media_url": "/media/source/beavers-v7.mp4",
+  "final_media_url": "/media/source/beavers-v7.mp4"
+}

@@ -1,0 +1,118 @@
+{
+  "id": "run_1a097780ba0_3c15b43b",
+  "config": {
+    "video_id": "aptip",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "focus": null,
+    "constraints": [
+      "Do not add new claims or on-screen text",
+      "Keep the ending"
+    ],
+    "allowed_edits": null,
+    "iteration_budget": 3,
+    "max_attempts_per_finding": 2,
+    "category": "educational_short"
+  },
+  "status": "completed",
+  "stop_reason": "no runnable existing-video repair remains: 9.2-13.6s route B: no existing-video edit implements it: Neither punch-in is specifically targeted to the stem/contact point, and both may crop the burned-in captions, potentially worsening the stated readability problem. The other edits alter or remove required explanation or demonstration beats rather than clarifying the payoff.",
+  "final_decision": "retain the original: no repair was attempted (see the stop reason)",
+  "created_at": "2026-09-12T21:13:42.048+00:00",
+  "ended_at": "2026-09-12T21:14:25.514+00:00",
+  "original_artifact_hash": "97ab80b2a7d30cb3bb97f63b86ea97738691ab1819cdc8b37b784fc5a6cf0a14",
+  "final_version_id": "v0",
+  "final_artifact_hash": "97ab80b2a7d30cb3bb97f63b86ea97738691ab1819cdc8b37b784fc5a6cf0a14",
+  "audit_ids": [
+    "audit_1a097780c19_2b4cd97f"
+  ],
+  "repair_run_ids": [],
+  "lessons": [],
+  "runtime": {
+    "runtime_version": "director-v1",
+    "git_commit": "unknown",
+    "prompt_sources_uncommitted_changes": null,
+    "prompt_source_sha256_16": {
+      "directorloop/audit/review.py": "159e2e861bfebbd0",
+      "directorloop/audit/repairs.py": "ae0091b6f9944632",
+      "directorloop/audit/revise.py": "718b20dd8efa7b04",
+      "directorloop/runtime/director.py": "4e2c6b18e4cecbcc",
+      "directorloop/providers/base.py": "3f38a4d6f438b9e3"
+    },
+    "reviewer": {
+      "provider": "openai",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "low"
+    },
+    "selector": {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high"
+    },
+    "decision_rules": "decide_next_action (deterministic, no model call)",
+    "renderer": "ffmpeg from typed, validated edit plans",
+    "asr": "whisper.cpp large-v3-turbo q5_0 (local)",
+    "state": "data/runs/<run_id>.json, data/audit/<audit_id>/audit.json, data/repairs/<repair_id>.json, data/audit/lessons.jsonl"
+  },
+  "mocked_stages": [],
+  "manual_interventions": [],
+  "annotations": [],
+  "launched_via": "cli",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09778-0b9e-7a40-8431-6658325c1337",
+  "weave_call_id": "01a09778-0b9e-7a40-8431-6658325c1337",
+  "timings_ms": {
+    "total_ms": 43466
+  },
+  "error": null,
+  "iterations": [
+    {
+      "index": 1,
+      "current_version_id": "v0",
+      "current_artifact_hash": "97ab80b2a7d30cb3bb97f63b86ea97738691ab1819cdc8b37b784fc5a6cf0a14",
+      "audit_id": "audit_1a097780c19_2b4cd97f",
+      "considered": [
+        {
+          "finding_id": "audit_1a097780c19_2b4cd97f_f1",
+          "interval_ms": [
+            9200,
+            13600
+          ],
+          "issue_type": "framing_hides_important_action",
+          "objective": "comprehension",
+          "severity": "medium",
+          "uncertainty": "medium",
+          "weakness": "The payoff explanation relies on a small, visually obscured stem and is split into caption fragments that are harder to parse than the earlier simple statements.",
+          "route": "B",
+          "runnable": false,
+          "edit": "",
+          "selection_reason": "Neither punch-in is specifically targeted to the stem/contact point, and both may crop the burned-in captions, potentially worsening the stated readability problem. The other edits alter or remove required explanation or demonstration beats rather than clarifying the payoff.",
+          "why_not_runnable": "no existing-video edit implements it: Neither punch-in is specifically targeted to the stem/contact point, and both may crop the burned-in captions, potentially worsening the stated readability problem. The other edits alter or remove required explanation or demonstration beats rather than clarifying the payoff.",
+          "skipped": null
+        }
+      ],
+      "finding_id": null,
+      "finding": "",
+      "ranking_reason": "",
+      "selection_reason": "",
+      "repair_run_id": null,
+      "edit": "",
+      "mutation_type": null,
+      "change_verified": null,
+      "verification_checks": [],
+      "candidate_version_id": null,
+      "candidate_artifact_hash": null,
+      "candidate_audit_id": null,
+      "outcome": null,
+      "target_resolved": null,
+      "improved": [],
+      "regressed": [],
+      "decision": "stop",
+      "reason": "no runnable existing-video repair remains: 9.2-13.6s route B: no existing-video edit implements it: Neither punch-in is specifically targeted to the stem/contact point, and both may crop the burned-in captions, potentially worsening the stated readability problem. The other edits alter or remove required explanation or demonstration beats rather than clarifying the payoff.",
+      "next_action": "stop",
+      "next_action_reason": "no runnable existing-video repair remains: 9.2-13.6s route B: no existing-video edit implements it: Neither punch-in is specifically targeted to the stem/contact point, and both may crop the burned-in captions, potentially worsening the stated readability problem. The other edits alter or remove required explanation or demonstration beats rather than clarifying the payoff.",
+      "lesson_id": null,
+      "timings_ms": {},
+      "candidate_media_url": null
+    }
+  ],
+  "original_media_url": "/media/source/aptip.mp4",
+  "final_media_url": "/media/source/aptip.mp4"
+}

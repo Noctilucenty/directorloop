@@ -1,30 +1,23 @@
-export function fmtMs(ms: number | null | undefined): string {
+export function fmtS(ms: number | null | undefined, digits = 1): string {
   if (ms === null || ms === undefined || Number.isNaN(ms)) return "n/a";
-  if (ms < 1000) return `${Math.round(ms)} ms`;
-  const s = ms / 1000;
-  if (s < 60) return `${s.toFixed(s < 10 ? 2 : 1)} s`;
-  const m = Math.floor(s / 60);
-  const rest = s - m * 60;
-  return `${m}m ${rest.toFixed(0)}s`;
+  return `${(ms / 1000).toFixed(digits)} s`;
 }
 
-export function fmtSeconds(ms: number | null | undefined): string {
-  if (ms === null || ms === undefined) return "n/a";
-  return `${(ms / 1000).toFixed(1)} s`;
+export function fmtRange(startMs: number, endMs: number): string {
+  return `${(startMs / 1000).toFixed(1)}–${(endMs / 1000).toFixed(1)} s`;
 }
 
-export function fmtClock(iso: string | null | undefined): string {
-  if (!iso) return "";
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+export function fmtElapsed(ms: number | null | undefined): string {
+  if (ms === null || ms === undefined || Number.isNaN(ms)) return "n/a";
+  if (ms < 60000) return `${(ms / 1000).toFixed(1)} s`;
+  const m = Math.floor(ms / 60000);
+  const s = Math.floor((ms - m * 60000) / 1000);
+  return `${m}m ${s.toString().padStart(2, "0")}s`;
 }
 
-export function fmtDate(iso: string | null | undefined): string {
-  if (!iso) return "";
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString();
+export function fmtShare(v: number | null | undefined): string {
+  if (v === null || v === undefined) return "n/a";
+  return v.toFixed(2);
 }
 
 export function fmtPct(fraction: number | null | undefined, digits = 0): string {
@@ -32,22 +25,24 @@ export function fmtPct(fraction: number | null | undefined, digits = 0): string 
   return `${(fraction * 100).toFixed(digits)}%`;
 }
 
-export function fmtUsd(value: number | null | undefined): string {
-  if (value === null || value === undefined) return "unknown";
-  return `$${value.toFixed(value < 0.01 && value > 0 ? 4 : 2)}`;
+export function fmtClock(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-export function shortHash(hash: string | null | undefined, n = 10): string {
-  if (!hash) return "";
-  return hash.slice(0, n);
+export function fmtDateTime(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 
-export function humanize(id: string): string {
-  return id.replace(/^q_/, "").replace(/_/g, " ");
-}
-
-export function titleCase(s: string): string {
-  return s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+export function shortId(id: string | null | undefined, n = 8): string {
+  if (!id) return "";
+  const tail = id.split("_").pop() ?? id;
+  return tail.slice(0, n);
 }
 
 export function newIdempotencyKey(): string {
@@ -59,4 +54,21 @@ export function errorMessage(err: unknown): string {
   if (err instanceof Error) return err.message;
   if (typeof err === "string") return err;
   return "Unknown error";
+}
+
+export function capitalize(s: string): string {
+  return s ? s[0].toUpperCase() + s.slice(1) : s;
+}
+
+export function clamp(v: number, lo: number, hi: number): number {
+  return Math.min(hi, Math.max(lo, v));
+}
+
+/** Formats an ISO timestamp, or the compact YYYYMMDD-HHMMSS stamp some reports use (local time of the machine that wrote it). */
+export function fmtStamp(value: string | null | undefined): string {
+  if (!value) return "";
+  const m = /^(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})$/.exec(value);
+  if (!m) return fmtDateTime(value);
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]), Number(m[4]), Number(m[5]), Number(m[6]));
+  return d.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 }

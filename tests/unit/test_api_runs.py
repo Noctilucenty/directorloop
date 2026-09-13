@@ -125,7 +125,7 @@ def test_audit_view_serves_frames_without_local_paths(app_client: tuple[TestClie
         body = client.get(f"/api/audits/{aid}").json()
         assert body["findings"][0]["evidence_frames"][0]["url"] == f"/media/audit/{aid}/1500.jpg"
         assert "/private/" not in json.dumps(body) and str(data) not in json.dumps(body)
-        assert body["media_url"] == "/media/renders/" + "a" * 64 + ".mp4"
+        assert body["media_url"] is None, "an unregistered private path is not a render merely because its filename is a SHA"
         assert client.get(f"/media/audit/{aid}/1500.jpg").status_code == 200
         assert client.get(f"/media/audit/{aid}/..%2F..%2Faudit.json.jpg").status_code == 404
         assert client.get("/media/audit/not-an-audit/1500.jpg").status_code == 404

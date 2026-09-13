@@ -1,0 +1,104 @@
+{
+  "video_id": "aplaze",
+  "mode": "none",
+  "policy_version": 3,
+  "rankings": [
+    {
+      "mutation": "PAYOFF_EARLIER",
+      "hypothesis_id": "hyp_1a09744b825_001801a8",
+      "family": "proof_latency",
+      "score": 0.581,
+      "detection_confidence": 0.77,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.77; reference prior 0.50 (no reference split); experiment evidence ignored (no-memory mode)",
+      "description": "Move the payoff beat 'If you ever see this, the white cloud is your wa...' from 11.7s to right after the opening.",
+      "changed_variable": "position of the payoff beat",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 11740,
+      "target_end_ms": 15567,
+      "selected": true
+    },
+    {
+      "mutation": "RESULT_FIRST",
+      "hypothesis_id": "hyp_1a09744b825_001801a8",
+      "family": "proof_latency",
+      "score": 0.581,
+      "detection_confidence": 0.77,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.77; reference prior 0.50 (no reference split); experiment evidence ignored (no-memory mode)",
+      "description": "Open with the result beat 'If you ever see this, the white cloud is your wa...' (was at 11.7s).",
+      "changed_variable": "which beat opens the video",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 11740,
+      "target_end_ms": 15567,
+      "selected": true
+    },
+    {
+      "mutation": "PATTERN_INTERRUPT",
+      "hypothesis_id": "hyp_1a09744b825_bddf2d38",
+      "family": "visual_stagnation",
+      "score": 0.506,
+      "detection_confidence": 0.52,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.52; reference prior 0.50 (no reference split); experiment evidence ignored (no-memory mode)",
+      "description": "Punch in 1.25x at 13.7s inside the 4.3s static span (same footage and audio, new framing).",
+      "changed_variable": "framing during the longest static span",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 11300,
+      "target_end_ms": 15567,
+      "selected": true
+    },
+    {
+      "mutation": "CONTEXT_COMPRESSION",
+      "hypothesis_id": "hyp_1a09744b825_07542a06",
+      "family": "context_interruption",
+      "score": 0.488,
+      "detection_confidence": 0.46,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.46; reference prior 0.50 (no reference split); experiment evidence ignored (no-memory mode)",
+      "description": "Remove the setup beat 'Lava hitting the ocean creates laze.' (2.5s) before the proof.",
+      "changed_variable": "presence of one context beat",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 3380,
+      "target_end_ms": 5830,
+      "selected": true
+    }
+  ],
+  "skipped": []
+}

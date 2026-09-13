@@ -1,0 +1,86 @@
+[
+  {
+    "id": "abc_1a09799dc01_f3bd31aa",
+    "status": "failed",
+    "created_at": "2026-09-12T21:50:38.081+00:00",
+    "ended_at": "2026-09-12T21:52:21.151+00:00",
+    "objective": "Make a first-time viewer understand how the bridge was measured in Smoots and why the markings still matter, and keep them watching to the end.",
+    "a_video_id": "smoot-progress-proof-v2",
+    "b_video_id": "smoot-hybrid-v3",
+    "ab_overall": null,
+    "attempts": 0,
+    "decisions": [],
+    "final_version": "",
+    "final_decision": "",
+    "stop_reason": "the model provider ran out of credits during the independent audits of A and B; no comparison or C was produced",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09799-dc01-7c04-8d4c-546942ef3ea0",
+    "launched_via": "cli",
+    "total_ms": null,
+    "rubric_version": "abc-rubric-v2"
+  },
+  {
+    "id": "abc_1a0979874ab_05c246c4",
+    "status": "completed",
+    "created_at": "2026-09-12T21:49:06.091+00:00",
+    "ended_at": "2026-09-12T21:50:32.557+00:00",
+    "objective": "Make a first-time viewer understand who Smoot was and why police used the markings, and keep them watching to the end.",
+    "a_video_id": "smoot-police-payoff-v5",
+    "b_video_id": "smoot-relaxed-read-v6",
+    "ab_overall": "A",
+    "attempts": 0,
+    "decisions": [
+      "stop"
+    ],
+    "final_version": "A",
+    "final_decision": "keep A: no C demonstrated an improvement; A was preferred over B as a whole",
+    "stop_reason": "no C chosen: The evidence supports keeping A unchanged. The swaps either weaken its cold-feed opening or lengthen its ending without improving comprehension or payoff. The reorder risks breaking the logical setup, and the zooms risk cropping captions while leaving the alleged payoff problem intact. Needed: A better C would require phrase-level retiming of A’s second part—adding a small amount of breathing room around the Smoot/name and police-use clauses while trimming elsewhere—without importing B’s long static hold, changing claims, or adding text.",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09798-74aa-73b8-8b43-55791278da99",
+    "launched_via": "cli",
+    "total_ms": 86466,
+    "rubric_version": "abc-rubric-v2"
+  },
+  {
+    "id": "abc_1a0978f0a08_002eb452",
+    "status": "completed",
+    "created_at": "2026-09-12T21:38:48.976+00:00",
+    "ended_at": "2026-09-12T21:40:50.677+00:00",
+    "objective": "Make a first-time viewer understand how the bridge was measured in Smoots and why the markings still matter, and keep them watching to the end.",
+    "a_video_id": "smoot-cinematic-reedit-v1",
+    "b_video_id": "smoot-earlier-action-v3",
+    "ab_overall": "same",
+    "attempts": 1,
+    "decisions": [
+      "reject_keep_inputs",
+      "stop"
+    ],
+    "final_version": "",
+    "final_decision": "keep both inputs: no C demonstrated an improvement and A vs B gave no reliable overall preference",
+    "stop_reason": "no C chosen: Both audits identify only a minor final-hold issue, and the prior attempt to fix that exact issue failed. No remaining executable option has evidence of improving first-viewer understanding or retention without a meaningful downside. Needed: A perceptibly redesigned final beat that lands the narration, proof image, and audio cadence together—without new claims or text and without cropping captions—rather than another near-identical trim or cosmetic zoom.",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0978f-0a08-7706-8c24-0ca1e0667365",
+    "launched_via": "cli",
+    "total_ms": 121709,
+    "rubric_version": "abc-rubric-v2"
+  },
+  {
+    "id": "abc_1a09788a1d4_303d76b2",
+    "status": "completed",
+    "created_at": "2026-09-12T21:31:49.076+00:00",
+    "ended_at": "2026-09-12T21:33:46.503+00:00",
+    "objective": "Make a first-time viewer understand how the bridge was measured in Smoots and why the markings still matter, and keep them watching to the end.",
+    "a_video_id": "smoot-action-first-v1",
+    "b_video_id": "smoot-cinematic-reedit-v1",
+    "ab_overall": "A",
+    "attempts": 1,
+    "decisions": [
+      "reject_keep_inputs",
+      "stop"
+    ],
+    "final_version": "A",
+    "final_decision": "keep A: no C demonstrated an improvement; A was preferred over B as a whole",
+    "stop_reason": "no C chosen: Keep A unchanged. Swapping in B's part 1 would remove the explicit marking step that makes the process clear. Swapping part 2 has unstable evidence and introduces a loudness jump. The other repair options either reorder or remove essential material, or risk cropping burned-in captions. Needed: A better C would need a subtler, caption-safe way to give the final existing photo an intentional closing beat—without changing claims, disrupting the payoff, or merely repeating the failed pause trim—ideally validated with actual cold-audience retention data.",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09788-a1d4-7563-b261-47647873db85",
+    "launched_via": "cli",
+    "total_ms": 117426,
+    "rubric_version": "abc-rubric-v1"
+  }
+]

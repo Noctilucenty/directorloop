@@ -1,0 +1,465 @@
+{
+  "id": "audit_1a097793f13_7872218d",
+  "video_id": "beavers-v7",
+  "version_id": "v0",
+  "artifact_hash": "da4a50c19af5900e95c4dd01af4b4eab59a0a9d0696809d09bcc57d597d5e1c4",
+  "duration_ms": 11066,
+  "created_at": "2026-09-12T21:15:32.332+00:00",
+  "status": "complete",
+  "coverage": {
+    "mode": "sampled_frames_plus_asr",
+    "duration_ms": 11066,
+    "windows": [
+      {
+        "kind": "prefix",
+        "start_ms": 0,
+        "end_ms": 2000,
+        "frame_timestamps_ms": [
+          166,
+          500,
+          833,
+          1166,
+          1499,
+          1833
+        ],
+        "frame_width": 448,
+        "context_frames": 0,
+        "context_width": 256,
+        "transcript_words": 4
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 2000,
+        "end_ms": 4000,
+        "frame_timestamps_ms": [
+          2166,
+          2500,
+          2833,
+          3166,
+          3500,
+          3833
+        ],
+        "frame_width": 448,
+        "context_frames": 2,
+        "context_width": 256,
+        "transcript_words": 8
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 4000,
+        "end_ms": 6000,
+        "frame_timestamps_ms": [
+          4166,
+          4500,
+          4833,
+          5166,
+          5499,
+          5833
+        ],
+        "frame_width": 448,
+        "context_frames": 4,
+        "context_width": 256,
+        "transcript_words": 12
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 6000,
+        "end_ms": 8000,
+        "frame_timestamps_ms": [
+          6166,
+          6500,
+          6833,
+          7166,
+          7499,
+          7833
+        ],
+        "frame_width": 448,
+        "context_frames": 6,
+        "context_width": 256,
+        "transcript_words": 18
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 8000,
+        "end_ms": 10000,
+        "frame_timestamps_ms": [
+          8166,
+          8500,
+          8833,
+          9166,
+          9500,
+          9833
+        ],
+        "frame_width": 448,
+        "context_frames": 8,
+        "context_width": 256,
+        "transcript_words": 25
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 10000,
+        "end_ms": 11066,
+        "frame_timestamps_ms": [
+          10166,
+          10500,
+          10833
+        ],
+        "frame_width": 448,
+        "context_frames": 10,
+        "context_width": 256,
+        "transcript_words": 27
+      },
+      {
+        "kind": "diagnostic",
+        "start_ms": 0,
+        "end_ms": 11066,
+        "frame_timestamps_ms": [
+          250,
+          750,
+          1250,
+          1750,
+          2250,
+          2750,
+          3250,
+          3750,
+          4250,
+          4750,
+          5250,
+          5750,
+          6250,
+          6750,
+          7250,
+          7750,
+          8250,
+          8750,
+          9250,
+          9750,
+          10250,
+          10750
+        ],
+        "frame_width": 384,
+        "context_frames": 0,
+        "context_width": 0,
+        "transcript_words": 27
+      },
+      {
+        "kind": "closeup",
+        "start_ms": 9600,
+        "end_ms": 11066,
+        "frame_timestamps_ms": [
+          9700,
+          9900,
+          10100,
+          10300,
+          10500,
+          10700,
+          10900
+        ],
+        "frame_width": 512,
+        "context_frames": 0,
+        "context_width": 0,
+        "transcript_words": 0
+      }
+    ],
+    "total_frames_sent": 92,
+    "transcript_source": "whisper.cpp:ggml-large-v3-turbo-q5_0.bin",
+    "audio_inspection": "whisper.cpp transcript with word timings plus software loudness and silence measurements; the reviewer did not listen to music, sound effects, voice tone or audio-visual sync",
+    "provider": "openai",
+    "model": "gpt-5.6-terra",
+    "limitations": [
+      "frames are samples (3 per second in reviewed windows, 2 per second for diagnosis, 5 per second in close-ups); events between samples can be missed",
+      "not a frame-by-frame audiovisual review; the provider receives still images, not the video file",
+      "native video input unavailable with the configured provider (the Gemini native-video path is out of credit)"
+    ]
+  },
+  "window_reactions": [
+    {
+      "start_ms": 0,
+      "end_ms": 2000,
+      "understanding": "It appears to be explaining a 1948 event in Idaho where seventy-six beavers were parachuted in crates.",
+      "expectation": "I expect it to explain why the beavers were dropped and show what happened to them.",
+      "open_question": "Why were the beavers parachuted?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The surprising statement that Idaho parachuted seventy-six beavers, shown with an animated crate under a parachute, is intriguing.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2264,
+      "error": null
+    },
+    {
+      "start_ms": 2000,
+      "end_ms": 4000,
+      "understanding": "This is explaining a 1948 Idaho event where 76 beavers were parachuted in crates, and 75 survived the drops.",
+      "expectation": "I expect to learn why the beavers were dropped by parachute and what happened to them afterward.",
+      "open_question": "Why were the beavers parachuted into Idaho?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The reveal that seventy-five of the seventy-six beavers survived the drops makes the unusual story intriguing.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2026,
+      "error": null
+    },
+    {
+      "start_ms": 4000,
+      "end_ms": 6000,
+      "understanding": "The video is explaining a 1948 Idaho parachute drop of 76 beavers, where 75 survived, using an animated crate under a parachute.",
+      "expectation": "I expect it to explain how the parachute cords held the crate and what happened when the beavers landed.",
+      "open_question": "How did the parachute setup keep the crate from hurting the beavers?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The new on-screen label and narration, “Parachute cords,” begin explaining the mechanics of the drop.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2071,
+      "error": null
+    },
+    {
+      "start_ms": 6000,
+      "end_ms": 8000,
+      "understanding": "The video explains how Idaho parachuted 76 beavers in 1948 and how the crate-and-parachute setup worked.",
+      "expectation": "I expect to see what happened when the crate landed and whether the beavers got out safely.",
+      "open_question": "How did the crates open after landing?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The close-up explanation that parachute cords held the crates shut and then loosened on landing makes the mechanism interesting.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 1953,
+      "error": null
+    },
+    {
+      "start_ms": 8000,
+      "end_ms": 10000,
+      "understanding": "The video explains how Idaho parachuted 76 beavers in 1948, with 75 surviving because the crate cords loosened on landing.",
+      "expectation": "I expect to see the beavers leave the opened crates and learn what happened after their release.",
+      "open_question": "Why were the beavers parachuted?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The crates visibly opened to reveal beavers as the narration said they walked out.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2140,
+      "error": null
+    },
+    {
+      "start_ms": 10000,
+      "end_ms": 11066,
+      "understanding": "The video explains that Idaho parachuted 76 beavers in 1948; 75 survived because the crate cords loosened on landing and let them out.",
+      "expectation": "I expect to learn why the beavers were parachuted and what happened after their release.",
+      "open_question": "Why were the beavers parachuted into Idaho?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "I just saw the crates open and two animated beavers walk out, matching the narration.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2228,
+      "error": null
+    }
+  ],
+  "findings": [
+    {
+      "id": "audit_1a097793f13_7872218d_f1",
+      "version_id": "v0",
+      "start_ms": 10300,
+      "end_ms": 11100,
+      "evidence_frames": [
+        {
+          "t_ms": 10300,
+          "url": "/media/audit/audit_1a097793f13_7872218d/010300.jpg"
+        },
+        {
+          "t_ms": 10750,
+          "url": "/media/audit/audit_1a097793f13_7872218d/010750.jpg"
+        },
+        {
+          "t_ms": 11006,
+          "url": "/media/audit/audit_1a097793f13_7872218d/011006.jpg"
+        }
+      ],
+      "observed": [
+        {
+          "kind": "visual",
+          "text": "Two animated beavers are shown outside an open crate; the crate and loose cords remain on the ground.",
+          "t_ms": 10250
+        },
+        {
+          "kind": "caption",
+          "text": "“the beavers walked out.”",
+          "t_ms": 10250
+        },
+        {
+          "kind": "audio",
+          "text": "“the beavers walked out.”",
+          "t_ms": 10200
+        },
+        {
+          "kind": "mechanical",
+          "text": "The video ends at 11.1s, immediately after the release demonstration.",
+          "t_ms": 11100
+        }
+      ],
+      "viewer_understanding": "The viewer understands the crate mechanism and sees that the beavers exited safely, but still expects the reason for the unusual parachute drop and what followed the release.",
+      "predicted_reaction": "The mechanism has paid off, but an interested unfamiliar viewer may feel the broader story stops before answering its remaining central question: why the beavers were parachuted.",
+      "weakness": "The ending resolves how the crates opened but leaves the repeatedly established expectation of why the beavers were dropped, and what happened after release, unanswered.",
+      "issue_type": "weak_or_missing_payoff",
+      "alternatives": [
+        "The intended format may be a deliberately narrow explanation of the crate-release mechanism.",
+        "The video may be part of a series whose next installment supplies the wider context."
+      ],
+      "objective": "comprehension",
+      "severity": "medium",
+      "uncertainty": "medium",
+      "proposed_repair": "Add one concise final caption/narration beat after the beavers exit that states the shown story’s purpose or immediate outcome, if that information is available in the source material; otherwise, frame the opening more specifically as a story about the self-opening crate design so the ending matches the promise.",
+      "repair_kind": "narration_rewrite",
+      "keep_unchanged": [
+        "Keep the reveal of the opened crate and the beavers walking out.",
+        "Keep the clear visual correspondence between the narrated cord mechanism and the animation.",
+        "Keep the concise 11-second pacing where possible."
+      ],
+      "repair": {
+        "summary": "Add one concise final caption/narration beat after the beavers exit that states the shown story’s purpose or immediate outcome, if that information is available in the source material; otherwise, frame the opening more specifically as a story about the self-opening crate design so the ending matches the promise.",
+        "route": "C",
+        "runnable": false,
+        "mutation_type": null,
+        "edit_description": "",
+        "keep_unchanged": [
+          "Keep the reveal of the opened crate and the beavers walking out.",
+          "Keep the clear visual correspondence between the narrated cord mechanism and the animation.",
+          "Keep the concise 11-second pacing where possible."
+        ],
+        "required_materials": [
+          "new narration and matching captions"
+        ],
+        "dependency_state": "no generation or narration provider is enabled for automated repairs",
+        "secondary_changes": [],
+        "why_not_runnable": "needs new narration and matching captions",
+        "selection_reason": "None of the available edits addresses the unanswered purpose or post-release outcome. Reordering the mechanism sentence would not supply that information and could weaken the established visual correspondence; either punch-in only changes framing and risks cropping captions.",
+        "implements_proposal": true,
+        "proposal_route": null,
+        "proposal_needs": "",
+        "candidates_offered": [
+          "earlier_beat_02: Move 'Parachute cords held the crates shut, then loosene...' one sentence earlier.",
+          "zoom_center_beat_02: Punch in 1.3x centered during 10.1-11.1s (same footage, sound and timing; tighter framing).",
+          "zoom_motion_beat_02: Punch in 1.3x toward the middle left of the frame, where the most movement is during 10.1-11.1s (same footage, sound and timing; tighter framing)."
+        ]
+      },
+      "verified_closeup": true,
+      "closeup_note": "corrections: [mechanical] The provided frames show the release demonstration through 10.9s, but do not establish that the video ends at 11.1s."
+    }
+  ],
+  "strengths": [
+    {
+      "id": "audit_1a097793f13_7872218d_s1",
+      "start_ms": 0,
+      "end_ms": 3800,
+      "what": "The opening establishes an unusual premise quickly: Idaho, 1948, beavers, parachutes, and the survival count.",
+      "why": "The captions and narration deliver the surprising fact in short beats while the animation immediately shows a crate suspended below a parachute, making the premise easy to grasp.",
+      "evidence_frames": [
+        {
+          "t_ms": 250,
+          "url": "/media/audit/audit_1a097793f13_7872218d/000250.jpg"
+        },
+        {
+          "t_ms": 750,
+          "url": "/media/audit/audit_1a097793f13_7872218d/000750.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a097793f13_7872218d_s2",
+      "start_ms": 5200,
+      "end_ms": 8250,
+      "what": "The mechanism explanation is visually synchronized and progressively revealed.",
+      "why": "“Parachute cords,” “held the crates shut,” and “then loosened on landing” are accompanied by a close, increasingly clear view of the cords and crate, supporting understanding rather than relying on words alone.",
+      "evidence_frames": [
+        {
+          "t_ms": 5250,
+          "url": "/media/audit/audit_1a097793f13_7872218d/005250.jpg"
+        },
+        {
+          "t_ms": 6250,
+          "url": "/media/audit/audit_1a097793f13_7872218d/006250.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a097793f13_7872218d_s3",
+      "start_ms": 8250,
+      "end_ms": 10750,
+      "what": "The release payoff is concrete and easy to follow.",
+      "why": "The crate visibly opens, beavers appear inside, and then move out as the caption and narration say the boxes opened and the beavers walked out.",
+      "evidence_frames": [
+        {
+          "t_ms": 8250,
+          "url": "/media/audit/audit_1a097793f13_7872218d/008250.jpg"
+        },
+        {
+          "t_ms": 8750,
+          "url": "/media/audit/audit_1a097793f13_7872218d/008750.jpg"
+        }
+      ]
+    }
+  ],
+  "audience": {
+    "label": "MODEL JUDGMENT (predicted), not measured audience behavior",
+    "stop": {
+      "verdict": "YES",
+      "reason": "The immediate claim that Idaho parachuted beavers, paired with the visible parachute-and-crate animation, is unusual and instantly understandable.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "continue_watching": {
+      "verdict": "YES",
+      "reason": "The survival statistic creates curiosity, and the following explanation visibly answers how the crate system worked.",
+      "at_ms": 10000,
+      "to_whom": null
+    },
+    "finish": {
+      "verdict": "YES",
+      "reason": "The video is brief and builds directly to the visible opening-and-release result.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "like": {
+      "verdict": "MAYBE",
+      "reason": "The surprising fact and neat mechanical demonstration provide a small satisfying payoff, though the broader context is absent.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "send": {
+      "verdict": "MAYBE",
+      "reason": "It has a shareable odd-fact hook for people interested in unusual historical stories or animal facts.",
+      "at_ms": null,
+      "to_whom": "Friends who enjoy surprising animal or history facts."
+    },
+    "comment": {
+      "verdict": "MAYBE",
+      "reason": "Viewers may naturally ask why the beavers were parachuted or what happened after they walked out.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "save_or_replay": {
+      "verdict": "NO",
+      "reason": "The captions and visual mechanism are straightforward on a first viewing, with no demonstrated need to revisit it.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "visit_creator": {
+      "verdict": "MAYBE",
+      "reason": "A viewer intrigued by the unusual fact may look for more short animated history explainers, but the clip itself gives no direct creator-specific prompt.",
+      "at_ms": null,
+      "to_whom": null
+    }
+  },
+  "overall_summary": "This is a clear, fast animated explanation with a strong surprising hook and especially effective visual synchronization during the self-opening-crate demonstration. It successfully shows how the beavers got out, but it ends before satisfying the larger curiosity raised by the opening: why they were parachuted and what happened after release.",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09779-3f12-7708-b7df-0276bd78dab1",
+  "weave_call_id": "01a09779-3f12-7708-b7df-0276bd78dab1",
+  "timings_ms": {
+    "signals_asr_ms": 2463,
+    "cold_review_ms": 8540,
+    "diagnose_ms": 16379,
+    "closeup_ms": 2868,
+    "total_ms": 31576
+  },
+  "model_calls": 8,
+  "notes": [],
+  "incomplete_reasons": [],
+  "primed_with": [],
+  "media_url": null
+}

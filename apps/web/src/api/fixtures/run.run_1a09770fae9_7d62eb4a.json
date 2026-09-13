@@ -1,0 +1,117 @@
+{
+  "id": "run_1a09770fae9_7d62eb4a",
+  "config": {
+    "video_id": "beavers-v7",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "focus": null,
+    "constraints": [
+      "Do not add new claims or on-screen text",
+      "Keep the ending"
+    ],
+    "allowed_edits": null,
+    "iteration_budget": 3,
+    "max_attempts_per_finding": 2,
+    "category": "educational_short"
+  },
+  "status": "completed",
+  "stop_reason": "no runnable existing-video repair remains: 10.3-11.1s route C: needs a new or replacement shot",
+  "final_decision": "retain the original: no repair was attempted (see the stop reason)",
+  "created_at": "2026-09-12T21:05:59.017+00:00",
+  "ended_at": "2026-09-12T21:06:35.341+00:00",
+  "original_artifact_hash": "da4a50c19af5900e95c4dd01af4b4eab59a0a9d0696809d09bcc57d597d5e1c4",
+  "final_version_id": "v0",
+  "final_artifact_hash": "da4a50c19af5900e95c4dd01af4b4eab59a0a9d0696809d09bcc57d597d5e1c4",
+  "audit_ids": [
+    "audit_1a09770fb44_cb7c53c2"
+  ],
+  "repair_run_ids": [],
+  "lessons": [],
+  "runtime": {
+    "runtime_version": "director-v1",
+    "git_commit": "d93aae0",
+    "prompt_sources_uncommitted_changes": true,
+    "prompt_source_sha256_16": {
+      "directorloop/audit/review.py": "159e2e861bfebbd0",
+      "directorloop/audit/repairs.py": "ae0091b6f9944632",
+      "directorloop/audit/revise.py": "00d1e176a6faa095",
+      "directorloop/runtime/director.py": "c991190b50d3facd",
+      "directorloop/providers/base.py": "3f38a4d6f438b9e3"
+    },
+    "reviewer": {
+      "provider": "openai",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "low"
+    },
+    "selector": {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high"
+    },
+    "decision_rules": "decide_next_action (deterministic, no model call)",
+    "renderer": "ffmpeg from typed, validated edit plans",
+    "asr": "whisper.cpp large-v3-turbo q5_0 (local)",
+    "state": "data/runs/<run_id>.json, data/audit/<audit_id>/audit.json, data/repairs/<repair_id>.json, data/audit/lessons.jsonl"
+  },
+  "mocked_stages": [],
+  "manual_interventions": [],
+  "launched_via": "cli",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09770-fae9-7b57-8cb6-539cebd9ed29",
+  "weave_call_id": "01a09770-fae9-7b57-8cb6-539cebd9ed29",
+  "timings_ms": {
+    "total_ms": 36323
+  },
+  "error": null,
+  "iterations": [
+    {
+      "index": 1,
+      "current_version_id": "v0",
+      "current_artifact_hash": "da4a50c19af5900e95c4dd01af4b4eab59a0a9d0696809d09bcc57d597d5e1c4",
+      "audit_id": "audit_1a09770fb44_cb7c53c2",
+      "considered": [
+        {
+          "finding_id": "audit_1a09770fb44_cb7c53c2_f1",
+          "interval_ms": [
+            10300,
+            11100
+          ],
+          "issue_type": "weak_or_missing_payoff",
+          "objective": "comprehension",
+          "severity": "medium",
+          "uncertainty": "medium",
+          "weakness": "The video resolves the crate mechanism but ends before supplying the motivating context behind the parachuting, leaving the central curiosity only partly answered.",
+          "route": "C",
+          "runnable": false,
+          "edit": "",
+          "selection_reason": "None of the available edits supplies the missing motivation for the parachute drop or shows the beavers heading toward a destination. Reordering the existing sentences would not add context, while either zoom would only change framing and could crop captions.",
+          "why_not_runnable": "needs a new or replacement shot",
+          "skipped": null
+        }
+      ],
+      "finding_id": null,
+      "finding": "",
+      "ranking_reason": "",
+      "selection_reason": "",
+      "repair_run_id": null,
+      "edit": "",
+      "mutation_type": null,
+      "change_verified": null,
+      "verification_checks": [],
+      "candidate_version_id": null,
+      "candidate_artifact_hash": null,
+      "candidate_audit_id": null,
+      "outcome": null,
+      "target_resolved": null,
+      "improved": [],
+      "regressed": [],
+      "decision": "stop",
+      "reason": "no runnable existing-video repair remains: 10.3-11.1s route C: needs a new or replacement shot",
+      "next_action": "stop",
+      "next_action_reason": "no runnable existing-video repair remains: 10.3-11.1s route C: needs a new or replacement shot",
+      "lesson_id": null,
+      "timings_ms": {},
+      "candidate_media_url": null
+    }
+  ],
+  "original_media_url": "/media/source/beavers-v7.mp4",
+  "final_media_url": "/media/source/beavers-v7.mp4"
+}

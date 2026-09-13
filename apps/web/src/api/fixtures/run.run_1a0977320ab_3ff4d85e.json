@@ -1,0 +1,66 @@
+{
+  "id": "run_1a0977320ab_3ff4d85e",
+  "config": {
+    "video_id": "aplaze",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "focus": null,
+    "constraints": [
+      "Do not add new claims or on-screen text",
+      "Keep the ending"
+    ],
+    "allowed_edits": null,
+    "iteration_budget": 3,
+    "max_attempts_per_finding": 2,
+    "category": "educational_short"
+  },
+  "status": "failed",
+  "stop_reason": "stopped from outside the runtime: the development session terminated the process; not a DirectorLoop decision",
+  "final_decision": "",
+  "created_at": "2026-09-12T21:08:19.756+00:00",
+  "ended_at": "2026-09-12T21:12:05.041+00:00",
+  "original_artifact_hash": "",
+  "final_version_id": "v0",
+  "final_artifact_hash": "",
+  "audit_ids": [],
+  "repair_run_ids": [],
+  "lessons": [],
+  "runtime": {
+    "runtime_version": "director-v1",
+    "git_commit": "d93aae0",
+    "prompt_sources_uncommitted_changes": true,
+    "prompt_source_sha256_16": {
+      "directorloop/audit/review.py": "159e2e861bfebbd0",
+      "directorloop/audit/repairs.py": "ae0091b6f9944632",
+      "directorloop/audit/revise.py": "00d1e176a6faa095",
+      "directorloop/runtime/director.py": "c991190b50d3facd",
+      "directorloop/providers/base.py": "3f38a4d6f438b9e3"
+    },
+    "reviewer": {
+      "provider": "openai",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "low"
+    },
+    "selector": {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high"
+    },
+    "decision_rules": "decide_next_action (deterministic, no model call)",
+    "renderer": "ffmpeg from typed, validated edit plans",
+    "asr": "whisper.cpp large-v3-turbo q5_0 (local)",
+    "state": "data/runs/<run_id>.json, data/audit/<audit_id>/audit.json, data/repairs/<repair_id>.json, data/audit/lessons.jsonl"
+  },
+  "mocked_stages": [],
+  "manual_interventions": [
+    "2026-09-12 14:08 PDT: the development session killed this run's process after the Video A run exposed a defect in the protected-content check; the run did not finish its first audit"
+  ],
+  "annotations": [],
+  "launched_via": "cli",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09773-20ab-7c78-8e49-70f791c9eb17",
+  "weave_call_id": "01a09773-20ab-7c78-8e49-70f791c9eb17",
+  "timings_ms": {},
+  "error": "process terminated",
+  "iterations": [],
+  "original_media_url": "/media/source/aplaze.mp4",
+  "final_media_url": "/media/source/aplaze.mp4"
+}

@@ -1,0 +1,1015 @@
+{
+  "id": "cexp_1a09744b816_2009893a",
+  "video_id": "aplaze",
+  "created_at": "2026-09-12T20:18:29.467+00:00",
+  "policy_mode": "learned",
+  "generation": 1,
+  "outcome": "no_clear_winner",
+  "winner_label": null,
+  "arms": [
+    {
+      "id": "cexp_1a09744b816_2009893a_control",
+      "label": "control",
+      "status": "evaluated",
+      "media_url": "/media/renders/8c3329ba84e7f7b95a203de9fc2b590a00546bee8b7c3e1a8d21dfcb24c757bd.mp4",
+      "hook_media_url": "/media/hooks/8c3329ba84e7f7b95a203de9fc2b590a00546bee_hook3000.mp4",
+      "duration_ms": 15600,
+      "render_ms": 4769,
+      "outcome": null,
+      "outcome_reason": null,
+      "mutation": null,
+      "fitness": {
+        "hard_gates_passed": true,
+        "gate_notes": [],
+        "components": [
+          {
+            "name": "hook_topic_comprehension",
+            "value": 1,
+            "unit": "share of trials",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees only the first 3 s (4 frames + transcript of those 3 s)",
+            "trials": 3,
+            "valid": 3
+          },
+          {
+            "name": "message_comprehension",
+            "value": 3,
+            "unit": "of 3 questions",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees 8 frames + transcript of the rendered audio; questions frozen from the original transcript",
+            "trials": 3,
+            "valid": 9
+          },
+          {
+            "name": "payoff_ms",
+            "value": 11740,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "timeline start of the first proof or payoff beat (derived from the plan; roles are model labels)",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "context_before_payoff_ms",
+            "value": 2450,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "setup/context/problem beats after the opening and before the payoff",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "first_visual_change_ms",
+            "value": 200,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "scene cut or motion spike on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "longest_static_span_ms",
+            "value": 4300,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "no cut and low motion on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "duration_ms",
+            "value": 15600,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "render_ms",
+            "value": 4769,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          }
+        ]
+      },
+      "preference_reasons": {
+        "full": [],
+        "hook": []
+      }
+    },
+    {
+      "id": "cexp_1a09744b816_2009893a_A",
+      "label": "A",
+      "status": "evaluated",
+      "media_url": "/media/renders/186a6be49bef85dfabc073ac7c1eaa5a65bb58e414cbe647f40151aba379988a.mp4",
+      "hook_media_url": "/media/hooks/186a6be49bef85dfabc073ac7c1eaa5a65bb58e4_hook3000.mp4",
+      "duration_ms": 15600,
+      "render_ms": 4774,
+      "outcome": "loss",
+      "outcome_reason": "full-video model preference 0.25",
+      "mutation": {
+        "type": "RESULT_FIRST",
+        "description": "Open with the result beat 'If you ever see this, the white cloud is your wa...' (was at 11.7s).",
+        "changed_variable": "which beat opens the video",
+        "protected_variables": [
+          "spoken wording",
+          "music and voice inside each beat",
+          "burned-in captions",
+          "every other beat's order and length"
+        ],
+        "hypothesis_id": "hyp_1a09744b825_001801a8",
+        "target_start_ms": 11740,
+        "target_end_ms": 15567,
+        "expected_benefit": "prediction: addresses proof_latency (The evidence or answer arrives late (11.7s); people may leave before the video pays off it)",
+        "risk": "medium"
+      },
+      "fitness": {
+        "hard_gates_passed": true,
+        "gate_notes": [],
+        "components": [
+          {
+            "name": "hook_topic_comprehension",
+            "value": 1,
+            "unit": "share of trials",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees only the first 3 s (4 frames + transcript of those 3 s)",
+            "trials": 3,
+            "valid": 3
+          },
+          {
+            "name": "message_comprehension",
+            "value": 3,
+            "unit": "of 3 questions",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees 8 frames + transcript of the rendered audio; questions frozen from the original transcript",
+            "trials": 3,
+            "valid": 9
+          },
+          {
+            "name": "model_full_preference_vs_control",
+            "value": 0.25,
+            "unit": "share of 4 calls",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "both presentation orders, ties count half; a model judgment, not viewer behaviour",
+            "trials": null,
+            "valid": 4
+          },
+          {
+            "name": "model_hook_preference_vs_control",
+            "value": 0.5,
+            "unit": "share of 4 calls",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "first 3 s only, both orders",
+            "trials": null,
+            "valid": 4
+          },
+          {
+            "name": "payoff_ms",
+            "value": 0,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "timeline start of the first proof or payoff beat (derived from the plan; roles are model labels)",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "context_before_payoff_ms",
+            "value": 0,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "setup/context/problem beats after the opening and before the payoff",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "first_visual_change_ms",
+            "value": 3800,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "scene cut or motion spike on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "longest_static_span_ms",
+            "value": 3700,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "no cut and low motion on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "duration_ms",
+            "value": 15600,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "render_ms",
+            "value": 4774,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          }
+        ]
+      },
+      "preference_reasons": {
+        "full": [
+          "variant: It opens with the direct safety warning, creating a stronger immediate hook.",
+          "control: Version 2 begins immediately with the claim that the white cloud contains glass, creating a stronger hook.",
+          "control: Version 1 opens with the striking claim that the white cloud contains glass, creating immediate curiosity.",
+          "control: Version 2 opens with the striking claim that the white cloud contains glass, creating a stronger immediate hook."
+        ],
+        "hook": [
+          "variant: Version 2 opens with a direct warning that creates more immediate suspense.",
+          "control: The bold claim that the white cloud contains glass creates a more immediate, specific mystery.",
+          "variant: Version 2 opens with a dramatic visible lava-and-steam scene and an immediate warning that creates suspense.",
+          "control: It immediately presents the striking claim that the white cloud contains glass."
+        ]
+      }
+    },
+    {
+      "id": "cexp_1a09744b816_2009893a_B",
+      "label": "B",
+      "status": "evaluated",
+      "media_url": "/media/renders/ec4dfbc438da409ff7a1d8686630448401514a6a408f97536a6fea2d853408fe.mp4",
+      "hook_media_url": "/media/hooks/ec4dfbc438da409ff7a1d8686630448401514a6a_hook3000.mp4",
+      "duration_ms": 15600,
+      "render_ms": 4739,
+      "outcome": "neutral",
+      "outcome_reason": "full-video model preference 0.50",
+      "mutation": {
+        "type": "PATTERN_INTERRUPT",
+        "description": "Punch in 1.25x at 13.7s inside the 4.3s static span (same footage and audio, new framing).",
+        "changed_variable": "framing during the longest static span",
+        "protected_variables": [
+          "spoken wording",
+          "music and voice inside each beat",
+          "burned-in captions",
+          "every other beat's order and length"
+        ],
+        "hypothesis_id": "hyp_1a09744b825_bddf2d38",
+        "target_start_ms": 11300,
+        "target_end_ms": 15567,
+        "expected_benefit": "prediction: addresses visual_stagnation (The picture barely changes for 4.3s, which may lose attention.)",
+        "risk": "low"
+      },
+      "fitness": {
+        "hard_gates_passed": true,
+        "gate_notes": [],
+        "components": [
+          {
+            "name": "hook_topic_comprehension",
+            "value": 1,
+            "unit": "share of trials",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees only the first 3 s (4 frames + transcript of those 3 s)",
+            "trials": 3,
+            "valid": 3
+          },
+          {
+            "name": "message_comprehension",
+            "value": 3,
+            "unit": "of 3 questions",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees 8 frames + transcript of the rendered audio; questions frozen from the original transcript",
+            "trials": 3,
+            "valid": 9
+          },
+          {
+            "name": "model_full_preference_vs_control",
+            "value": 0.5,
+            "unit": "share of 4 calls",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "both presentation orders, ties count half; a model judgment, not viewer behaviour",
+            "trials": null,
+            "valid": 4
+          },
+          {
+            "name": "model_hook_preference_vs_control",
+            "value": null,
+            "unit": "n/a",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "identical opening to control; not tested",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "payoff_ms",
+            "value": 11740,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "timeline start of the first proof or payoff beat (derived from the plan; roles are model labels)",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "context_before_payoff_ms",
+            "value": 2450,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "setup/context/problem beats after the opening and before the payoff",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "first_visual_change_ms",
+            "value": 200,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "scene cut or motion spike on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "longest_static_span_ms",
+            "value": 2400,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "no cut and low motion on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "duration_ms",
+            "value": 15600,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "render_ms",
+            "value": 4739,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          }
+        ]
+      },
+      "preference_reasons": {
+        "full": [
+          "tie: Both versions show the same visuals and have identical audio transcript.",
+          "tie: Both versions show the same frames and have identical audio narration.",
+          "tie: Both versions show the same visuals and have the same transcript.",
+          "tie: Both versions show the same visuals and have the same audio transcript."
+        ],
+        "hook": []
+      }
+    },
+    {
+      "id": "cexp_1a09744b816_2009893a_C",
+      "label": "C",
+      "status": "evaluated",
+      "media_url": "/media/renders/6955c7033796d82a1a2010d4179d700943639fe212546254888328e87fe38fc7.mp4",
+      "hook_media_url": "/media/hooks/6955c7033796d82a1a2010d4179d700943639fe2_hook3000.mp4",
+      "duration_ms": 15600,
+      "render_ms": 4680,
+      "outcome": "loss",
+      "outcome_reason": "full-video model preference 0.25",
+      "mutation": {
+        "type": "PAYOFF_EARLIER",
+        "description": "Move the payoff beat 'If you ever see this, the white cloud is your wa...' from 11.7s to right after the opening.",
+        "changed_variable": "position of the payoff beat",
+        "protected_variables": [
+          "spoken wording",
+          "music and voice inside each beat",
+          "burned-in captions",
+          "every other beat's order and length"
+        ],
+        "hypothesis_id": "hyp_1a09744b825_001801a8",
+        "target_start_ms": 11740,
+        "target_end_ms": 15567,
+        "expected_benefit": "prediction: addresses proof_latency (The evidence or answer arrives late (11.7s); people may leave before the video pays off it)",
+        "risk": "medium"
+      },
+      "fitness": {
+        "hard_gates_passed": true,
+        "gate_notes": [],
+        "components": [
+          {
+            "name": "hook_topic_comprehension",
+            "value": 1,
+            "unit": "share of trials",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees only the first 3 s (4 frames + transcript of those 3 s)",
+            "trials": 3,
+            "valid": 3
+          },
+          {
+            "name": "message_comprehension",
+            "value": 3,
+            "unit": "of 3 questions",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees 8 frames + transcript of the rendered audio; questions frozen from the original transcript",
+            "trials": 3,
+            "valid": 9
+          },
+          {
+            "name": "model_full_preference_vs_control",
+            "value": 0.25,
+            "unit": "share of 4 calls",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "both presentation orders, ties count half; a model judgment, not viewer behaviour",
+            "trials": null,
+            "valid": 4
+          },
+          {
+            "name": "model_hook_preference_vs_control",
+            "value": null,
+            "unit": "n/a",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "identical opening to control; not tested",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "payoff_ms",
+            "value": 3380,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "timeline start of the first proof or payoff beat (derived from the plan; roles are model labels)",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "context_before_payoff_ms",
+            "value": 0,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "setup/context/problem beats after the opening and before the payoff",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "first_visual_change_ms",
+            "value": 200,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "scene cut or motion spike on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "longest_static_span_ms",
+            "value": 3700,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "no cut and low motion on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "duration_ms",
+            "value": 15600,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "render_ms",
+            "value": 4680,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          }
+        ]
+      },
+      "preference_reasons": {
+        "full": [
+          "variant: Version 2 delivers the safety warning immediately after the opening hook.",
+          "control: Version 2 explains the phenomenon before ending with the direct safety warning, giving it a stronger conclusion.",
+          "control: Version 1 explains what the cloud is before giving the warning, creating a clearer progression.",
+          "control: Version 2 explains what the cloud is before giving the warning, making the sequence clearer."
+        ],
+        "hook": []
+      }
+    },
+    {
+      "id": "cexp_1a09744b816_2009893a_D",
+      "label": "D",
+      "status": "evaluated",
+      "media_url": "/media/renders/5884f80694fbfaaa746f36f8c02dbcdb61eb05c634330bf84cd6a98be9cc0442.mp4",
+      "hook_media_url": "/media/hooks/5884f80694fbfaaa746f36f8c02dbcdb61eb05c6_hook3000.mp4",
+      "duration_ms": 13133,
+      "render_ms": 1121,
+      "outcome": "loss",
+      "outcome_reason": "full-video model preference 0.00",
+      "mutation": {
+        "type": "CONTEXT_COMPRESSION",
+        "description": "Remove the setup beat 'Lava hitting the ocean creates laze.' (2.5s) before the proof.",
+        "changed_variable": "presence of one context beat",
+        "protected_variables": [
+          "spoken wording",
+          "music and voice inside each beat",
+          "burned-in captions",
+          "every other beat's order and length"
+        ],
+        "hypothesis_id": "hyp_1a09744b825_07542a06",
+        "target_start_ms": 3380,
+        "target_end_ms": 5830,
+        "expected_benefit": "prediction: addresses context_interruption (Background context interrupts the momentum between the hook and the payoff.)",
+        "risk": "medium"
+      },
+      "fitness": {
+        "hard_gates_passed": true,
+        "gate_notes": [],
+        "components": [
+          {
+            "name": "hook_topic_comprehension",
+            "value": 1,
+            "unit": "share of trials",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees only the first 3 s (4 frames + transcript of those 3 s)",
+            "trials": 3,
+            "valid": 3
+          },
+          {
+            "name": "message_comprehension",
+            "value": 3,
+            "unit": "of 3 questions",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees 8 frames + transcript of the rendered audio; questions frozen from the original transcript",
+            "trials": 3,
+            "valid": 9
+          },
+          {
+            "name": "model_full_preference_vs_control",
+            "value": 0,
+            "unit": "share of 4 calls",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "both presentation orders, ties count half; a model judgment, not viewer behaviour",
+            "trials": null,
+            "valid": 4
+          },
+          {
+            "name": "model_hook_preference_vs_control",
+            "value": null,
+            "unit": "n/a",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "identical opening to control; not tested",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "payoff_ms",
+            "value": 9290,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "timeline start of the first proof or payoff beat (derived from the plan; roles are model labels)",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "context_before_payoff_ms",
+            "value": 0,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "setup/context/problem beats after the opening and before the payoff",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "first_visual_change_ms",
+            "value": 200,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "scene cut or motion spike on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "longest_static_span_ms",
+            "value": 4333,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "no cut and low motion on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "duration_ms",
+            "value": 13133,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "render_ms",
+            "value": 1121,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          }
+        ]
+      },
+      "preference_reasons": {
+        "full": [
+          "control: It adds a brief explanation that lava hitting the ocean creates laze, making the message clearer.",
+          "control: Version 2 adds the explanation that lava hitting the ocean creates laze, making the warning more informative.",
+          "control: It adds the concise explanation that lava hitting the ocean creates laze, making the warning clearer.",
+          "control: It adds a brief explanation of what creates the cloud, making the warning more informative."
+        ],
+        "hook": []
+      }
+    }
+  ],
+  "status": "completed",
+  "policy_version_before": 3,
+  "policy_version_after": 7,
+  "total_ms": 51140,
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09744-b816-7707-a3ca-176e3cd99df1",
+  "recorded": true,
+  "question": "Which single change best addresses: proof_latency; visual_stagnation; context_interruption",
+  "hypotheses": [
+    {
+      "id": "hyp_1a09744b825_001801a8",
+      "family": "proof_latency",
+      "statement": "The evidence or answer arrives late (11.7s); people may leave before the video pays off its opening.",
+      "region_start_ms": 3380,
+      "region_end_ms": 11740,
+      "region_basis": "creative structure",
+      "detection_confidence": 0.77,
+      "evidence": [
+        {
+          "kind": "model_eval",
+          "text": "first payoff beat starts at 11.7s of 15.6s (beat roles are language-model labels)",
+          "source": "language_model",
+          "ref": null
+        }
+      ],
+      "counterevidence": [
+        {
+          "kind": "model_eval",
+          "text": "the hook is labeled contradiction, so the opening may already carry the surprise"
+        }
+      ],
+      "candidate_mutations": [
+        "PAYOFF_EARLIER",
+        "RESULT_FIRST"
+      ],
+      "changed_variable": "when the proof or payoff appears"
+    },
+    {
+      "id": "hyp_1a09744b825_bddf2d38",
+      "family": "visual_stagnation",
+      "statement": "The picture barely changes for 4.3s, which may lose attention.",
+      "region_start_ms": 11300,
+      "region_end_ms": 15567,
+      "region_basis": "creative structure",
+      "detection_confidence": 0.52,
+      "evidence": [
+        {
+          "kind": "mechanical",
+          "text": "no shot cut and frame difference under threshold for 4.3s from 11.3s",
+          "source": "mechanical",
+          "ref": null
+        }
+      ],
+      "counterevidence": [
+        {
+          "kind": "mechanical",
+          "text": "low frame difference can hide slow meaningful motion; a held shot can be intentional"
+        }
+      ],
+      "candidate_mutations": [
+        "PATTERN_INTERRUPT"
+      ],
+      "changed_variable": "framing during the static stretch"
+    },
+    {
+      "id": "hyp_1a09744b825_07542a06",
+      "family": "context_interruption",
+      "statement": "Background context interrupts the momentum between the hook and the payoff.",
+      "region_start_ms": 3380,
+      "region_end_ms": 5830,
+      "region_basis": "creative structure",
+      "detection_confidence": 0.46,
+      "evidence": [
+        {
+          "kind": "model_eval",
+          "text": "2.5s of setup/context between the hook and the first proof or payoff: 'Lava hitting the ocean creates laze.'",
+          "source": "language_model",
+          "ref": "beat_01"
+        }
+      ],
+      "counterevidence": [
+        {
+          "kind": "model_eval",
+          "text": "context may be needed to understand the payoff; the comprehension suite guards against removing it"
+        }
+      ],
+      "candidate_mutations": [
+        "CONTEXT_COMPRESSION"
+      ],
+      "changed_variable": "whether one context beat is present"
+    }
+  ],
+  "ranking": [
+    {
+      "mutation": "RESULT_FIRST",
+      "hypothesis_id": "hyp_1a09744b825_001801a8",
+      "family": "proof_latency",
+      "score": 0.581,
+      "detection_confidence": 0.77,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.77; reference prior 0.50 (no reference split); experiment evidence 0.50 from 0 win(s), 0 loss(es), 0 neutral",
+      "description": "Open with the result beat 'If you ever see this, the white cloud is your wa...' (was at 11.7s).",
+      "changed_variable": "which beat opens the video",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 11740,
+      "target_end_ms": 15567,
+      "selected": true
+    },
+    {
+      "mutation": "PATTERN_INTERRUPT",
+      "hypothesis_id": "hyp_1a09744b825_bddf2d38",
+      "family": "visual_stagnation",
+      "score": 0.506,
+      "detection_confidence": 0.52,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 1,
+      "reason": "detection 0.52; reference prior 0.50 (no reference split); experiment evidence 0.50 from 0 win(s), 0 loss(es), 1 neutral",
+      "description": "Punch in 1.25x at 13.7s inside the 4.3s static span (same footage and audio, new framing).",
+      "changed_variable": "framing during the longest static span",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 11300,
+      "target_end_ms": 15567,
+      "selected": true
+    },
+    {
+      "mutation": "PAYOFF_EARLIER",
+      "hypothesis_id": "hyp_1a09744b825_001801a8",
+      "family": "proof_latency",
+      "score": 0.4977,
+      "detection_confidence": 0.77,
+      "reference_support": 0.5,
+      "policy_mean": 0.333,
+      "policy_wins": 0,
+      "policy_losses": 1,
+      "policy_neutral": 0,
+      "reason": "detection 0.77; reference prior 0.50 (no reference split); experiment evidence 0.33 from 0 win(s), 1 loss(es), 0 neutral",
+      "description": "Move the payoff beat 'If you ever see this, the white cloud is your wa...' from 11.7s to right after the opening.",
+      "changed_variable": "position of the payoff beat",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 11740,
+      "target_end_ms": 15567,
+      "selected": true
+    },
+    {
+      "mutation": "CONTEXT_COMPRESSION",
+      "hypothesis_id": "hyp_1a09744b825_07542a06",
+      "family": "context_interruption",
+      "score": 0.488,
+      "detection_confidence": 0.46,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 1,
+      "reason": "detection 0.46; reference prior 0.50 (no reference split); experiment evidence 0.50 from 0 win(s), 0 loss(es), 1 neutral",
+      "description": "Remove the setup beat 'Lava hitting the ocean creates laze.' (2.5s) before the proof.",
+      "changed_variable": "presence of one context beat",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 3380,
+      "target_end_ms": 5830,
+      "selected": true
+    }
+  ],
+  "decision": {
+    "outcome": "no_clear_winner",
+    "winner_arm_id": null,
+    "reason": "no arm met the win rule; keeping the control. cexp_1a09744b816_2009893a_A: loss (full-video model preference 0.25). cexp_1a09744b816_2009893a_B: neutral (full-video model preference 0.50). cexp_1a09744b816_2009893a_C: loss (full-video model preference 0.25). cexp_1a09744b816_2009893a_D: loss (full-video model preference 0.00).",
+    "primary_metric": "model_full_preference_vs_control",
+    "per_arm": {
+      "cexp_1a09744b816_2009893a_A": "loss",
+      "cexp_1a09744b816_2009893a_B": "neutral",
+      "cexp_1a09744b816_2009893a_C": "loss",
+      "cexp_1a09744b816_2009893a_D": "loss"
+    }
+  },
+  "policy_updates": [
+    {
+      "strategy": "strat_result_first__category_educational_short",
+      "mutation": "RESULT_FIRST",
+      "outcome": "loss",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "CONTRADICTED",
+        "wins": 0,
+        "losses": 1,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.333
+      },
+      "policy_version": 4
+    },
+    {
+      "strategy": "strat_pattern_interrupt__category_educational_short",
+      "mutation": "PATTERN_INTERRUPT",
+      "outcome": "neutral",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 1,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 2,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "policy_version": 5
+    },
+    {
+      "strategy": "strat_payoff_earlier__category_educational_short",
+      "mutation": "PAYOFF_EARLIER",
+      "outcome": "loss",
+      "before": {
+        "status": "CONTRADICTED",
+        "wins": 0,
+        "losses": 1,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.333
+      },
+      "after": {
+        "status": "REJECTED",
+        "wins": 0,
+        "losses": 2,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.25
+      },
+      "policy_version": 6
+    },
+    {
+      "strategy": "strat_context_compression__category_educational_short",
+      "mutation": "CONTEXT_COMPRESSION",
+      "outcome": "loss",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 1,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "CONTRADICTED",
+        "wins": 0,
+        "losses": 1,
+        "neutral": 1,
+        "rejected": 0,
+        "confidence": 0.375
+      },
+      "policy_version": 7
+    }
+  ],
+  "reference_patterns": [],
+  "suite": {
+    "id": "suite_aplaze",
+    "hash": "da187baea0fca9406d8527699e6ee29f57771ef9b44873b80da99e662e0c2b5b",
+    "questions": [
+      {
+        "id": "q_topic",
+        "text": "What is the video mainly about?"
+      },
+      {
+        "id": "q_message_1",
+        "text": "What surprising fact does the video reveal about the white cloud?"
+      },
+      {
+        "id": "q_message_2",
+        "text": "How does the video explain the formation and danger of laze?"
+      },
+      {
+        "id": "q_message_3",
+        "text": "What should a viewer do after seeing the white cloud?"
+      }
+    ]
+  },
+  "timings_ms": {
+    "genome_ms": 13,
+    "investigate_ms": 2,
+    "design_ms": 8,
+    "suite_ms": 8327,
+    "render_wall_ms": 5830,
+    "arm_media_ms": 25419,
+    "evaluate_wall_ms": 11499,
+    "total_ms": 51140
+  },
+  "model_calls": 80,
+  "notes": [
+    "no retention data: regions come from creative structure, not from measured drops",
+    "recorded into policy after the transfer comparison was saved (transfer report 20260912-131738)"
+  ]
+}

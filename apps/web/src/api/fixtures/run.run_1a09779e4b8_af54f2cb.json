@@ -1,0 +1,136 @@
+{
+  "id": "run_1a09779e4b8_af54f2cb",
+  "config": {
+    "video_id": "ocean-v7-before-quiet-repair",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "focus": null,
+    "constraints": [
+      "Do not add new claims or on-screen text",
+      "Keep the ending"
+    ],
+    "allowed_edits": null,
+    "iteration_budget": 3,
+    "max_attempts_per_finding": 2,
+    "category": "educational_short"
+  },
+  "status": "completed",
+  "stop_reason": "no runnable existing-video repair remains: 7.5-9.9s route B: a flattened MP4 cannot change animation or object timing independently | 10.0-12.0s route C: needs new narration and matching captions",
+  "final_decision": "retain the original: no repair was attempted (see the stop reason)",
+  "created_at": "2026-09-12T21:15:43.160+00:00",
+  "ended_at": "2026-09-12T21:16:37.647+00:00",
+  "original_artifact_hash": "c00e1bb5231bbf27f77b99b98eaad2c87737a3e6c96a1723ad95cc5af4f3173a",
+  "final_version_id": "v0",
+  "final_artifact_hash": "c00e1bb5231bbf27f77b99b98eaad2c87737a3e6c96a1723ad95cc5af4f3173a",
+  "audit_ids": [
+    "audit_1a09779e521_b31daf11"
+  ],
+  "repair_run_ids": [],
+  "lessons": [],
+  "runtime": {
+    "runtime_version": "director-v1",
+    "git_commit": "unknown",
+    "prompt_sources_uncommitted_changes": null,
+    "prompt_source_sha256_16": {
+      "directorloop/audit/review.py": "159e2e861bfebbd0",
+      "directorloop/audit/repairs.py": "ae0091b6f9944632",
+      "directorloop/audit/revise.py": "718b20dd8efa7b04",
+      "directorloop/runtime/director.py": "4e2c6b18e4cecbcc",
+      "directorloop/providers/base.py": "3f38a4d6f438b9e3"
+    },
+    "reviewer": {
+      "provider": "openai",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "low"
+    },
+    "selector": {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high"
+    },
+    "decision_rules": "decide_next_action (deterministic, no model call)",
+    "renderer": "ffmpeg from typed, validated edit plans",
+    "asr": "whisper.cpp large-v3-turbo q5_0 (local)",
+    "state": "data/runs/<run_id>.json, data/audit/<audit_id>/audit.json, data/repairs/<repair_id>.json, data/audit/lessons.jsonl"
+  },
+  "mocked_stages": [],
+  "manual_interventions": [],
+  "annotations": [],
+  "launched_via": "cli",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09779-e4b8-7e25-b207-3abb9faff33c",
+  "weave_call_id": "01a09779-e4b8-7e25-b207-3abb9faff33c",
+  "timings_ms": {
+    "total_ms": 54486
+  },
+  "error": null,
+  "iterations": [
+    {
+      "index": 1,
+      "current_version_id": "v0",
+      "current_artifact_hash": "c00e1bb5231bbf27f77b99b98eaad2c87737a3e6c96a1723ad95cc5af4f3173a",
+      "audit_id": "audit_1a09779e521_b31daf11",
+      "considered": [
+        {
+          "finding_id": "audit_1a09779e521_b31daf11_f1",
+          "interval_ms": [
+            7500,
+            9900
+          ],
+          "issue_type": "weak_or_missing_payoff",
+          "objective": "comprehension",
+          "severity": "low",
+          "uncertainty": "medium",
+          "weakness": "The main payoff is compressed into a broad statement and one arrow, so the exact insight inferred from the findings is not visibly developed.",
+          "route": "B",
+          "runnable": false,
+          "edit": "",
+          "selection_reason": "None of the available edits develops the specific inference from the toys’ Alaska arrival. Reordering, removing, or trimming beats would not clarify the inferred route, and a punch-in would only enlarge the existing broad visual while risking cropped captions.",
+          "why_not_runnable": "a flattened MP4 cannot change animation or object timing independently",
+          "skipped": null
+        },
+        {
+          "finding_id": "audit_1a09779e521_b31daf11_f2",
+          "interval_ms": [
+            10000,
+            12000
+          ],
+          "issue_type": "weak_emotional_or_social_relevance",
+          "objective": "motivation_to_engage",
+          "severity": "low",
+          "uncertainty": "medium",
+          "weakness": "The call to comment shifts from the specific toy-and-currents story to a generic beach-find question, which may limit a stronger discussion of the video’s subject.",
+          "route": "C",
+          "runnable": false,
+          "edit": "",
+          "selection_reason": "None of the available edits makes the viewer question more specifically connected to the toy-and-currents story. Removing or moving it would break the required direct-question ending and personal participation cue, while zooming or trimming would not address the wording weakness.",
+          "why_not_runnable": "needs new narration and matching captions",
+          "skipped": null
+        }
+      ],
+      "finding_id": null,
+      "finding": "",
+      "ranking_reason": "",
+      "selection_reason": "",
+      "repair_run_id": null,
+      "edit": "",
+      "mutation_type": null,
+      "change_verified": null,
+      "verification_checks": [],
+      "candidate_version_id": null,
+      "candidate_artifact_hash": null,
+      "candidate_audit_id": null,
+      "outcome": null,
+      "target_resolved": null,
+      "improved": [],
+      "regressed": [],
+      "decision": "stop",
+      "reason": "no runnable existing-video repair remains: 7.5-9.9s route B: a flattened MP4 cannot change animation or object timing independently | 10.0-12.0s route C: needs new narration and matching captions",
+      "next_action": "stop",
+      "next_action_reason": "no runnable existing-video repair remains: 7.5-9.9s route B: a flattened MP4 cannot change animation or object timing independently | 10.0-12.0s route C: needs new narration and matching captions",
+      "lesson_id": null,
+      "timings_ms": {},
+      "candidate_media_url": null
+    }
+  ],
+  "original_media_url": "/media/source/ocean-v7-before-quiet-repair.mp4",
+  "final_media_url": "/media/source/ocean-v7-before-quiet-repair.mp4"
+}

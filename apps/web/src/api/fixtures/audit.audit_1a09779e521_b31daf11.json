@@ -1,0 +1,621 @@
+{
+  "id": "audit_1a09779e521_b31daf11",
+  "video_id": "ocean-v7-before-quiet-repair",
+  "version_id": "v0",
+  "artifact_hash": "c00e1bb5231bbf27f77b99b98eaad2c87737a3e6c96a1723ad95cc5af4f3173a",
+  "duration_ms": 12033,
+  "created_at": "2026-09-12T21:16:21.217+00:00",
+  "status": "complete",
+  "coverage": {
+    "mode": "sampled_frames_plus_asr",
+    "duration_ms": 12033,
+    "windows": [
+      {
+        "kind": "prefix",
+        "start_ms": 0,
+        "end_ms": 2000,
+        "frame_timestamps_ms": [
+          166,
+          500,
+          833,
+          1166,
+          1499,
+          1833
+        ],
+        "frame_width": 448,
+        "context_frames": 0,
+        "context_width": 256,
+        "transcript_words": 6
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 2000,
+        "end_ms": 4000,
+        "frame_timestamps_ms": [
+          2166,
+          2500,
+          2833,
+          3166,
+          3500,
+          3833
+        ],
+        "frame_width": 448,
+        "context_frames": 2,
+        "context_width": 256,
+        "transcript_words": 10
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 4000,
+        "end_ms": 6000,
+        "frame_timestamps_ms": [
+          4166,
+          4500,
+          4833,
+          5166,
+          5499,
+          5833
+        ],
+        "frame_width": 448,
+        "context_frames": 4,
+        "context_width": 256,
+        "transcript_words": 16
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 6000,
+        "end_ms": 8000,
+        "frame_timestamps_ms": [
+          6166,
+          6500,
+          6833,
+          7166,
+          7499,
+          7833
+        ],
+        "frame_width": 448,
+        "context_frames": 6,
+        "context_width": 256,
+        "transcript_words": 24
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 8000,
+        "end_ms": 10000,
+        "frame_timestamps_ms": [
+          8166,
+          8500,
+          8833,
+          9166,
+          9500,
+          9833
+        ],
+        "frame_width": 448,
+        "context_frames": 8,
+        "context_width": 256,
+        "transcript_words": 28
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 10000,
+        "end_ms": 12033,
+        "frame_timestamps_ms": [
+          10166,
+          10500,
+          10833,
+          11166,
+          11500,
+          11833
+        ],
+        "frame_width": 448,
+        "context_frames": 10,
+        "context_width": 256,
+        "transcript_words": 32
+      },
+      {
+        "kind": "diagnostic",
+        "start_ms": 0,
+        "end_ms": 12033,
+        "frame_timestamps_ms": [
+          250,
+          750,
+          1250,
+          1750,
+          2250,
+          2750,
+          3250,
+          3750,
+          4250,
+          4750,
+          5250,
+          5750,
+          6250,
+          6750,
+          7250,
+          7750,
+          8250,
+          8750,
+          9250,
+          9750,
+          10250,
+          10750,
+          11250,
+          11750
+        ],
+        "frame_width": 384,
+        "context_frames": 0,
+        "context_width": 0,
+        "transcript_words": 32
+      },
+      {
+        "kind": "closeup",
+        "start_ms": 6600,
+        "end_ms": 10300,
+        "frame_timestamps_ms": [
+          6700,
+          6900,
+          7100,
+          7300,
+          7500,
+          7700,
+          7900,
+          8100,
+          8300,
+          8500,
+          8700,
+          8900,
+          9100,
+          9300,
+          9500,
+          9700
+        ],
+        "frame_width": 512,
+        "context_frames": 0,
+        "context_width": 0,
+        "transcript_words": 0
+      },
+      {
+        "kind": "closeup",
+        "start_ms": 9600,
+        "end_ms": 12033,
+        "frame_timestamps_ms": [
+          9700,
+          9900,
+          10100,
+          10300,
+          10500,
+          10700,
+          10900,
+          11100,
+          11300,
+          11500,
+          11700,
+          11900
+        ],
+        "frame_width": 512,
+        "context_frames": 0,
+        "context_width": 0,
+        "transcript_words": 0
+      }
+    ],
+    "total_frames_sent": 118,
+    "transcript_source": "whisper.cpp:ggml-large-v3-turbo-q5_0.bin",
+    "audio_inspection": "whisper.cpp transcript with word timings plus software loudness and silence measurements; the reviewer did not listen to music, sound effects, voice tone or audio-visual sync",
+    "provider": "openai",
+    "model": "gpt-5.6-terra",
+    "limitations": [
+      "frames are samples (3 per second in reviewed windows, 2 per second for diagnosis, 5 per second in close-ups); events between samples can be missed",
+      "not a frame-by-frame audiovisual review; the provider receives still images, not the video file",
+      "native video input unavailable with the configured provider (the Gemini native-video path is out of credit)"
+    ]
+  },
+  "window_reactions": [
+    {
+      "start_ms": 0,
+      "end_ms": 2000,
+      "understanding": "It appears to explain how lost bath toys in the North Pacific in 1992 helped scientists trace something, likely their movement.",
+      "expectation": "I expect it to explain what scientists traced and why the toys were useful.",
+      "open_question": "What exactly did the bath toys help scientists trace?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The animation shows the toys falling from boxes and the text says they “helped scientists,” creating a clear scientific mystery.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 1892,
+      "error": null
+    },
+    {
+      "start_ms": 2000,
+      "end_ms": 4000,
+      "understanding": "This is about bath toys lost in the North Pacific in 1992 that helped scientists trace ocean currents.",
+      "expectation": "I expect to see where the toys drifted months later and what scientists learned from them.",
+      "open_question": "How far did the toys travel?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The toys visibly float away from the cargo ship while the narration says they helped trace ocean currents.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 1740,
+      "error": null
+    },
+    {
+      "start_ms": 4000,
+      "end_ms": 6000,
+      "understanding": "The video explains how lost bath toys from a 1992 North Pacific ship spill helped scientists trace ocean currents, with some toys washing ashore months later.",
+      "expectation": "I expect it to show where the toys traveled or explain what scientists learned from their paths.",
+      "open_question": "How far did the bath toys drift before they washed up?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The animation of toy ducks reaching a shoreline and the narration that some washed up make the story feel like it is leading to a result.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2013,
+      "error": null
+    },
+    {
+      "start_ms": 6000,
+      "end_ms": 8000,
+      "understanding": "The video explains how lost bath toys spilled from a ship helped scientists trace ocean currents, with some washing up in Alaska.",
+      "expectation": "I expect it to explain where and when the toys were found and what scientists learned.",
+      "open_question": "Where and when were the toys found?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The narration and on-screen prompt \"where and when\" set up the next part of the story.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 1949,
+      "error": null
+    },
+    {
+      "start_ms": 8000,
+      "end_ms": 10000,
+      "understanding": "The video explains how bath toys spilled from a ship and later found in Alaska helped scientists infer ocean currents.",
+      "expectation": "I expect it to explain what the toys revealed about the currents.",
+      "open_question": "What ocean-current route did the toys reveal?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The on-screen arrow labeled “INFERRED FLOW” makes the toys’ findings feel like a clear scientific clue.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2052,
+      "error": null
+    },
+    {
+      "start_ms": 10000,
+      "end_ms": 12033,
+      "understanding": "The video explains how bath toys spilled from a ship and later found in Alaska helped scientists trace ocean currents.",
+      "expectation": "I expect more examples or an explanation of other unusual beach finds.",
+      "open_question": "What is the strangest beach find being referred to?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The video directly asks, “What’s your strangest beach find?” while showing a person holding a toy on the shore.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2205,
+      "error": null
+    }
+  ],
+  "findings": [
+    {
+      "id": "audit_1a09779e521_b31daf11_f1",
+      "version_id": "v0",
+      "start_ms": 7500,
+      "end_ms": 9900,
+      "evidence_frames": [
+        {
+          "t_ms": 7500,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/007500.jpg"
+        },
+        {
+          "t_ms": 8750,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/008750.jpg"
+        },
+        {
+          "t_ms": 9250,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/009250.jpg"
+        }
+      ],
+      "observed": [
+        {
+          "kind": "caption",
+          "text": "The captions progress from “where and when” to “they were found” and “became clues.”",
+          "t_ms": 7750
+        },
+        {
+          "kind": "visual",
+          "text": "A shoreline marked “ALASKA” shows a kneeling person with small toys; a curved arrow labeled “INFERRED FLOW” appears over the water.",
+          "t_ms": 9250
+        },
+        {
+          "kind": "mechanical",
+          "text": "The measurement flags 7.0–9.9s as a still stretch, with quiet stretches at 7.0–7.4s and 9.5–9.9s.",
+          "t_ms": 7000
+        },
+        {
+          "kind": "audio",
+          "text": "The spoken line says, “Where and when they were found became clues.”",
+          "t_ms": 7400
+        }
+      ],
+      "viewer_understanding": "The viewer understands that toys found in Alaska were used to infer current flow, but may expect a more specific result about the route or discovery.",
+      "predicted_reaction": "Engaged, with a mild risk that the scientific payoff feels summarized rather than demonstrated.",
+      "weakness": "The main payoff is compressed into a broad statement and one arrow, so the exact insight inferred from the findings is not visibly developed.",
+      "issue_type": "weak_or_missing_payoff",
+      "alternatives": [
+        "The video may intentionally be a very short overview rather than a full explanation.",
+        "The simple arrow may be sufficient for viewers who only need the core takeaway."
+      ],
+      "objective": "comprehension",
+      "severity": "low",
+      "uncertainty": "medium",
+      "proposed_repair": "Keep the Alaska beach discovery, then animate the inferred-flow arrow from the spill area toward Alaska and add a brief specific caption naming that this route was inferred from where the toys arrived; retain the concise pacing.",
+      "repair_kind": "source_animation_or_timing",
+      "keep_unchanged": [
+        "The beach-find reveal in Alaska.",
+        "The “INFERRED FLOW” visual metaphor.",
+        "The concise caption-led storytelling style."
+      ],
+      "repair": {
+        "summary": "Keep the Alaska beach discovery, then animate the inferred-flow arrow from the spill area toward Alaska and add a brief specific caption naming that this route was inferred from where the toys arrived; retain the concise pacing.",
+        "route": "B",
+        "runnable": false,
+        "mutation_type": null,
+        "edit_description": "",
+        "keep_unchanged": [
+          "The beach-find reveal in Alaska.",
+          "The “INFERRED FLOW” visual metaphor.",
+          "The concise caption-led storytelling style."
+        ],
+        "required_materials": [
+          "the original editing or animation project for this video (not found next to the file)"
+        ],
+        "dependency_state": "source project not available; the repair can be described but not executed",
+        "secondary_changes": [],
+        "why_not_runnable": "a flattened MP4 cannot change animation or object timing independently",
+        "selection_reason": "None of the available edits develops the specific inference from the toys’ Alaska arrival. Reordering, removing, or trimming beats would not clarify the inferred route, and a punch-in would only enlarge the existing broad visual while risking cropped captions.",
+        "implements_proposal": true,
+        "proposal_route": null,
+        "proposal_needs": "",
+        "candidates_offered": [
+          "remove_beat_01: Remove the sentence 'Months after a ship spilled them, some washed up i...' (3.8-7.3s) with its footage.",
+          "later_beat_01: Move 'Months after a ship spilled them, some washed up i...' to after the next sentence.",
+          "earlier_beat_01: Move 'Months after a ship spilled them, some washed up i...' one sentence earlier.",
+          "remove_beat_02: Remove the sentence 'Where and when they were found became clues.' (7.3-9.9s) with its footage.",
+          "later_beat_02: Move 'Where and when they were found became clues.' to after the next sentence.",
+          "earlier_beat_02: Move 'Where and when they were found became clues.' one sentence earlier.",
+          "trim_end_beat_02_9510: Shorten the 0.30s pause at the end of 'Where and when they were found became clues.'.",
+          "zoom_center_beat_02: Punch in 1.3x centered during 7.3-9.9s (same footage, sound and timing; tighter framing).",
+          "zoom_motion_beat_02: Punch in 1.3x toward the lower right of the frame, where the most movement is during 7.3-9.9s (same footage, sound and timing; tighter framing).",
+          "remove_beat_03: Remove the sentence 'What's your strangest beach find?' (9.9-12.0s) with its footage.",
+          "earlier_beat_03: Move 'What's your strangest beach find?' one sentence earlier."
+        ]
+      },
+      "verified_closeup": true,
+      "closeup_note": "corrections: [mechanical] The scene appears largely static, but the provided frames and word timings cannot verify measurement flags or characterize the audio as quiet."
+    },
+    {
+      "id": "audit_1a09779e521_b31daf11_f2",
+      "version_id": "v0",
+      "start_ms": 10000,
+      "end_ms": 12000,
+      "evidence_frames": [
+        {
+          "t_ms": 10250,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/010250.jpg"
+        },
+        {
+          "t_ms": 11250,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/011250.jpg"
+        },
+        {
+          "t_ms": 11750,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/011750.jpg"
+        }
+      ],
+      "observed": [
+        {
+          "kind": "caption",
+          "text": "The closing text asks, “What’s your strangest beach find?”",
+          "t_ms": 10250
+        },
+        {
+          "kind": "audio",
+          "text": "The spoken closing question is, “What’s your strangest beach find?”",
+          "t_ms": 10000
+        },
+        {
+          "kind": "visual",
+          "text": "A kneeling person holds a yellow toy on the beach, with other small toys and rocks nearby.",
+          "t_ms": 10750
+        },
+        {
+          "kind": "mechanical",
+          "text": "The measurement flags 10.5–12.0s as a still stretch.",
+          "t_ms": 10500
+        }
+      ],
+      "viewer_understanding": "The historical explanation is complete and the creator is inviting the viewer to respond with a personal beach-find story.",
+      "predicted_reaction": "Engaged; some viewers may answer mentally, though the prompt is broad and not tightly tied to the unusual scientific-current takeaway.",
+      "weakness": "The call to comment shifts from the specific toy-and-currents story to a generic beach-find question, which may limit a stronger discussion of the video’s subject.",
+      "issue_type": "weak_emotional_or_social_relevance",
+      "alternatives": [
+        "The broad question may deliberately maximize accessibility because anyone can answer it.",
+        "A simple personal prompt is appropriate for a 12-second video."
+      ],
+      "objective": "motivation_to_engage",
+      "severity": "low",
+      "uncertainty": "medium",
+      "proposed_repair": "Retain the person holding the toy and the direct-question ending, but revise the prompt to invite a related response, such as viewers’ oddest beach find or whether they would use found objects to map a current.",
+      "repair_kind": "narration_rewrite",
+      "keep_unchanged": [
+        "The clean closing image of the person holding a toy.",
+        "A short, direct viewer question.",
+        "The ending’s personal participation cue."
+      ],
+      "repair": {
+        "summary": "Retain the person holding the toy and the direct-question ending, but revise the prompt to invite a related response, such as viewers’ oddest beach find or whether they would use found objects to map a current.",
+        "route": "C",
+        "runnable": false,
+        "mutation_type": null,
+        "edit_description": "",
+        "keep_unchanged": [
+          "The clean closing image of the person holding a toy.",
+          "A short, direct viewer question.",
+          "The ending’s personal participation cue."
+        ],
+        "required_materials": [
+          "new narration and matching captions"
+        ],
+        "dependency_state": "no generation or narration provider is enabled for automated repairs",
+        "secondary_changes": [],
+        "why_not_runnable": "needs new narration and matching captions",
+        "selection_reason": "None of the available edits makes the viewer question more specifically connected to the toy-and-currents story. Removing or moving it would break the required direct-question ending and personal participation cue, while zooming or trimming would not address the wording weakness.",
+        "implements_proposal": true,
+        "proposal_route": null,
+        "proposal_needs": "",
+        "candidates_offered": [
+          "remove_beat_02: Remove the sentence 'Where and when they were found became clues.' (7.3-9.9s) with its footage.",
+          "later_beat_02: Move 'Where and when they were found became clues.' to after the next sentence.",
+          "earlier_beat_02: Move 'Where and when they were found became clues.' one sentence earlier.",
+          "trim_end_beat_02_9510: Shorten the 0.30s pause at the end of 'Where and when they were found became clues.'.",
+          "remove_beat_03: Remove the sentence 'What's your strangest beach find?' (9.9-12.0s) with its footage.",
+          "earlier_beat_03: Move 'What's your strangest beach find?' one sentence earlier.",
+          "zoom_center_beat_03: Punch in 1.3x centered during 9.9-12.0s (same footage, sound and timing; tighter framing).",
+          "zoom_motion_beat_03: Punch in 1.3x toward the middle left of the frame, where the most movement is during 9.9-12.0s (same footage, sound and timing; tighter framing)."
+        ]
+      },
+      "verified_closeup": true,
+      "closeup_note": "corrections: [caption] At 10.25s, the on-screen text reads only “What’s your strangest”; “beach find?” appears later, beginning around 11.1s. The complete question is visible by about 11.1s."
+    }
+  ],
+  "strengths": [
+    {
+      "id": "audit_1a09779e521_b31daf11_s1",
+      "start_ms": 0,
+      "end_ms": 3800,
+      "what": "The opening immediately presents the lost toys, ship-spill action, location/date context, and the scientific purpose.",
+      "why": "The captions state “Lost bath toys,” “North Pacific · 1992,” and “helped scientists trace ocean currents,” while the toys visibly leave the ship and drift away; this establishes a clear curiosity hook quickly.",
+      "evidence_frames": [
+        {
+          "t_ms": 250,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/000250.jpg"
+        },
+        {
+          "t_ms": 750,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/000750.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a09779e521_b31daf11_s2",
+      "start_ms": 3800,
+      "end_ms": 6750,
+      "what": "The cause-and-result progression from ship spill to toys washing ashore is visually easy to follow.",
+      "why": "The animation moves the toys from open water toward a beach, then shows a person encountering them as the captions say some “washed up” “in Alaska.”",
+      "evidence_frames": [
+        {
+          "t_ms": 4750,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/004750.jpg"
+        },
+        {
+          "t_ms": 5750,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/005750.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a09779e521_b31daf11_s3",
+      "start_ms": 7400,
+      "end_ms": 9750,
+      "what": "The Alaska finding is converted into a legible scientific conclusion with a labeled directional arrow.",
+      "why": "The caption says that the finds “became clues,” and the “INFERRED FLOW” arrow visually connects the discoveries to the current-flow idea.",
+      "evidence_frames": [
+        {
+          "t_ms": 8250,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/008250.jpg"
+        },
+        {
+          "t_ms": 8750,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/008750.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a09779e521_b31daf11_s4",
+      "start_ms": 10000,
+      "end_ms": 12000,
+      "what": "The ending gives the viewer an explicit, easy-to-understand invitation to participate.",
+      "why": "The spoken and on-screen question directly asks about the viewer’s strangest beach find while the beach scene remains on screen.",
+      "evidence_frames": [
+        {
+          "t_ms": 10250,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/010250.jpg"
+        },
+        {
+          "t_ms": 11250,
+          "url": "/media/audit/audit_1a09779e521_b31daf11/011250.jpg"
+        }
+      ]
+    }
+  ],
+  "audience": {
+    "label": "MODEL JUDGMENT (predicted), not measured audience behavior",
+    "stop": {
+      "verdict": "YES",
+      "reason": "The first seconds pair a surprising premise—lost bath toys—with visible ship-spill action and a scientific promise.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "continue_watching": {
+      "verdict": "YES",
+      "reason": "The story advances clearly from spill to drifting toys to an Alaska discovery and inferred flow.",
+      "at_ms": 7000,
+      "to_whom": null
+    },
+    "finish": {
+      "verdict": "YES",
+      "reason": "The video is brief and maintains a coherent visual explanation through a direct closing question.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "like": {
+      "verdict": "MAYBE",
+      "reason": "The concise, visually clear science anecdote offers a satisfying fact, though the final scientific takeaway is high-level.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "send": {
+      "verdict": "MAYBE",
+      "reason": "It could be shared with people who enjoy short surprising science or ocean-related facts.",
+      "at_ms": null,
+      "to_whom": "Friends interested in unusual real-world science anecdotes or the ocean."
+    },
+    "comment": {
+      "verdict": "MAYBE",
+      "reason": "The final question gives viewers a natural opening to share a beach-find story.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "save_or_replay": {
+      "verdict": "MAYBE",
+      "reason": "The short visual explanation is easy to revisit, but it does not provide a detailed route or additional reference information to save.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "visit_creator": {
+      "verdict": "INSUFFICIENT_EVIDENCE",
+      "reason": "The clip does not visibly offer a series hook, creator identity, or a reason to seek more content.",
+      "at_ms": null,
+      "to_whom": null
+    }
+  },
+  "overall_summary": "This is a clear, fast visual story with an immediately intriguing premise and a logical path from ship spill to Alaska finds. Its only mild limitation is that the scientific conclusion is shown as a broad inferred-flow idea rather than a more specific discovery. The closing question is accessible, although a more story-specific prompt could produce stronger engagement.",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09779-e521-73c0-904e-da5bdd9c0308",
+  "weave_call_id": "01a09779-e521-73c0-904e-da5bdd9c0308",
+  "timings_ms": {
+    "signals_asr_ms": 3770,
+    "cold_review_ms": 7781,
+    "diagnose_ms": 18351,
+    "closeup_ms": 6983,
+    "total_ms": 37951
+  },
+  "model_calls": 9,
+  "notes": [],
+  "incomplete_reasons": [],
+  "primed_with": [],
+  "media_url": null
+}

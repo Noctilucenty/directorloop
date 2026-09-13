@@ -11,6 +11,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -35,6 +36,21 @@ class Settings(BaseSettings):
     dl_max_iterations: int = 1
     dl_job_deadline_seconds: int = 45
     dl_approved_spend_usd: float = 2.0
+    # Explicit opt-in durable application budget; the legacy approval field
+    # above is not enforcement. Share one ID across all covered processes.
+    dl_spend_limit_usd: float | None = Field(default=None, gt=0)
+    dl_spend_budget_id: str = ""
+    dl_spend_ledger_path: str = ""
+    dl_spend_per_run_limit_usd: float | None = Field(default=None, gt=0)
+    dl_spend_max_physical_attempts: int = Field(default=100, ge=1)
+    dl_spend_max_run_attempts: int = Field(default=30, ge=1)
+    dl_max_output_tokens: int = Field(default=2048, ge=1, le=32768)
+    # Separate sponsor screening lane; never switches the final evaluator.
+    dl_screening_enabled: bool = False
+    dl_screening_spend_limit_usd: float = Field(default=2.0, gt=0, le=2.0)
+    dl_screening_spend_budget_id: str = "screening-app-20260912-v1"
+    dl_screening_spend_ledger_path: str = ""
+    dl_screening_max_physical_attempts: int = Field(default=30, ge=1, le=160)
     dl_gpu_concurrency: int = 1
     dl_external_media_consent: Literal["demo_assets_only", "all_project_media"] = "demo_assets_only"
 
@@ -54,6 +70,15 @@ class Settings(BaseSettings):
     dl_probe_prompt_version: str = "v2-independent-questions"
     dl_wandb_inference_probe_model: str = "Qwen/Qwen3.8-27B"
     dl_wandb_inference_planner_model: str = "moonshotai/Kimi-K2.6"
+
+    # Temporal attention analysis (cold review). Coarse windows keep the existing 2 s scan; precision scans re-review
+    # moments where predicted risk rises, within these limits (see directorloop/audit/attention.py).
+    dl_attention_precision_enabled: bool = True
+    dl_attention_coarse_window_ms: int = 2000
+    dl_attention_precision_window_ms: int = 500
+    dl_attention_max_precision_regions: int = 2
+    dl_attention_max_precision_windows: int = 10
+    dl_asr_language: str = Field(default="en", pattern=r"^(auto|[a-z]{2,3})$")
 
     # Provider secrets
     gemini_api_key: str = ""

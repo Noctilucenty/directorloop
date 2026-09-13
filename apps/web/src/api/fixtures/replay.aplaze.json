@@ -1,0 +1,569 @@
+{
+  "kind": "experiment",
+  "video_id": "aplaze",
+  "experiment_id": "cexp_1a09744b816_2009893a",
+  "total_ms": 51140,
+  "events": [
+    {
+      "at_ms": 0,
+      "stage": "ANALYZING",
+      "message": "building the creative genome of the actual video (cached per file hash)",
+      "data": null
+    },
+    {
+      "at_ms": 13,
+      "stage": "ANALYZING",
+      "message": "genome: 4 beats, 6 shots, hook contradiction",
+      "data": {
+        "genome": {
+          "duration_ms": 15567,
+          "hook_type": "contradiction",
+          "first_words": "That white cloud looks harmless, but it contains glass.",
+          "first_visual": "A white plume rises where ocean waves meet a dark rocky lava shoreline.",
+          "first_visual_change_ms": 200,
+          "first_proof_ms": null,
+          "first_payoff_ms": 11740,
+          "context_before_proof_ms": 2450,
+          "longest_static_span_ms": 4267,
+          "shots_per_10s": 3.85,
+          "speech_rate_wps": 3.02,
+          "beats": [
+            {
+              "id": "beat_00",
+              "ms": [
+                0,
+                3380
+              ],
+              "role": "hook",
+              "text": "That white cloud looks harmless, but it contains glass."
+            },
+            {
+              "id": "beat_01",
+              "ms": [
+                3380,
+                5830
+              ],
+              "role": "setup",
+              "text": "Lava hitting the ocean creates laze."
+            },
+            {
+              "id": "beat_02",
+              "ms": [
+                5830,
+                11740
+              ],
+              "role": "mechanism",
+              "text": "It is steam and acid gas mixed with tiny glass shards that can irritate your eyes and lungs."
+            },
+            {
+              "id": "beat_03",
+              "ms": [
+                11740,
+                15567
+              ],
+              "role": "payoff",
+              "text": "If you ever see this, the white cloud is your warning to back away."
+            }
+          ],
+          "open_loops": [
+            {
+              "opened": 0,
+              "resolved": 5830,
+              "what": "The opening claim that the apparently harmless white cloud contains glass is explained as steam and acid gas mixed with tiny glass shards."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "at_ms": 15,
+      "stage": "DIAGNOSING",
+      "message": "potential weak region from structure: proof_latency at 3.4-11.7s",
+      "data": {
+        "weak_region": {
+          "start_ms": 3380,
+          "end_ms": 11740,
+          "basis": "creative structure",
+          "evidence_class": "model_eval",
+          "description": "potential weak region from structure: proof_latency at 3.4-11.7s"
+        },
+        "hypotheses": [
+          {
+            "id": "hyp_1a09744b825_001801a8",
+            "family": "proof_latency",
+            "statement": "The evidence or answer arrives late (11.7s); people may leave before the video pays off its opening.",
+            "region_ms": [
+              3380,
+              11740
+            ],
+            "basis": "creative structure",
+            "confidence": 0.77,
+            "evidence": [
+              "first payoff beat starts at 11.7s of 15.6s (beat roles are language-model labels)"
+            ],
+            "counterevidence": [
+              "the hook is labeled contradiction, so the opening may already carry the surprise"
+            ],
+            "mutations": [
+              "PAYOFF_EARLIER",
+              "RESULT_FIRST"
+            ],
+            "changed_variable": "when the proof or payoff appears"
+          },
+          {
+            "id": "hyp_1a09744b825_bddf2d38",
+            "family": "visual_stagnation",
+            "statement": "The picture barely changes for 4.3s, which may lose attention.",
+            "region_ms": [
+              11300,
+              15567
+            ],
+            "basis": "creative structure",
+            "confidence": 0.52,
+            "evidence": [
+              "no shot cut and frame difference under threshold for 4.3s from 11.3s"
+            ],
+            "counterevidence": [
+              "low frame difference can hide slow meaningful motion; a held shot can be intentional"
+            ],
+            "mutations": [
+              "PATTERN_INTERRUPT"
+            ],
+            "changed_variable": "framing during the static stretch"
+          },
+          {
+            "id": "hyp_1a09744b825_07542a06",
+            "family": "context_interruption",
+            "statement": "Background context interrupts the momentum between the hook and the payoff.",
+            "region_ms": [
+              3380,
+              5830
+            ],
+            "basis": "creative structure",
+            "confidence": 0.46,
+            "evidence": [
+              "2.5s of setup/context between the hook and the first proof or payoff: 'Lava hitting the ocean creates laze.'"
+            ],
+            "counterevidence": [
+              "context may be needed to understand the payoff; the comprehension suite guards against removing it"
+            ],
+            "mutations": [
+              "CONTEXT_COMPRESSION"
+            ],
+            "changed_variable": "whether one context beat is present"
+          }
+        ],
+        "retention_note": "no retention data: regions come from creative structure, not from measured drops"
+      }
+    },
+    {
+      "at_ms": 23,
+      "stage": "PLANNING",
+      "message": "ranked experiments: RESULT_FIRST 0.581, PATTERN_INTERRUPT 0.506, PAYOFF_EARLIER 0.498, CONTEXT_COMPRESSION 0.488",
+      "data": {
+        "ranking": [
+          {
+            "mutation": "RESULT_FIRST",
+            "hypothesis_id": "hyp_1a09744b825_001801a8",
+            "family": "proof_latency",
+            "score": 0.581,
+            "detection_confidence": 0.77,
+            "reference_support": 0.5,
+            "policy_mean": 0.5,
+            "policy_wins": 0,
+            "policy_losses": 0,
+            "policy_neutral": 0,
+            "reason": "detection 0.77; reference prior 0.50 (no reference split); experiment evidence 0.50 from 0 win(s), 0 loss(es), 0 neutral",
+            "description": "Open with the result beat 'If you ever see this, the white cloud is your wa...' (was at 11.7s).",
+            "changed_variable": "which beat opens the video",
+            "protected_variables": [
+              "spoken wording",
+              "music and voice inside each beat",
+              "burned-in captions",
+              "every other beat's order and length"
+            ],
+            "target_start_ms": 11740,
+            "target_end_ms": 15567,
+            "selected": true
+          },
+          {
+            "mutation": "PATTERN_INTERRUPT",
+            "hypothesis_id": "hyp_1a09744b825_bddf2d38",
+            "family": "visual_stagnation",
+            "score": 0.506,
+            "detection_confidence": 0.52,
+            "reference_support": 0.5,
+            "policy_mean": 0.5,
+            "policy_wins": 0,
+            "policy_losses": 0,
+            "policy_neutral": 1,
+            "reason": "detection 0.52; reference prior 0.50 (no reference split); experiment evidence 0.50 from 0 win(s), 0 loss(es), 1 neutral",
+            "description": "Punch in 1.25x at 13.7s inside the 4.3s static span (same footage and audio, new framing).",
+            "changed_variable": "framing during the longest static span",
+            "protected_variables": [
+              "spoken wording",
+              "music and voice inside each beat",
+              "burned-in captions",
+              "every other beat's order and length"
+            ],
+            "target_start_ms": 11300,
+            "target_end_ms": 15567,
+            "selected": true
+          },
+          {
+            "mutation": "PAYOFF_EARLIER",
+            "hypothesis_id": "hyp_1a09744b825_001801a8",
+            "family": "proof_latency",
+            "score": 0.4977,
+            "detection_confidence": 0.77,
+            "reference_support": 0.5,
+            "policy_mean": 0.333,
+            "policy_wins": 0,
+            "policy_losses": 1,
+            "policy_neutral": 0,
+            "reason": "detection 0.77; reference prior 0.50 (no reference split); experiment evidence 0.33 from 0 win(s), 1 loss(es), 0 neutral",
+            "description": "Move the payoff beat 'If you ever see this, the white cloud is your wa...' from 11.7s to right after the opening.",
+            "changed_variable": "position of the payoff beat",
+            "protected_variables": [
+              "spoken wording",
+              "music and voice inside each beat",
+              "burned-in captions",
+              "every other beat's order and length"
+            ],
+            "target_start_ms": 11740,
+            "target_end_ms": 15567,
+            "selected": true
+          },
+          {
+            "mutation": "CONTEXT_COMPRESSION",
+            "hypothesis_id": "hyp_1a09744b825_07542a06",
+            "family": "context_interruption",
+            "score": 0.488,
+            "detection_confidence": 0.46,
+            "reference_support": 0.5,
+            "policy_mean": 0.5,
+            "policy_wins": 0,
+            "policy_losses": 0,
+            "policy_neutral": 1,
+            "reason": "detection 0.46; reference prior 0.50 (no reference split); experiment evidence 0.50 from 0 win(s), 0 loss(es), 1 neutral",
+            "description": "Remove the setup beat 'Lava hitting the ocean creates laze.' (2.5s) before the proof.",
+            "changed_variable": "presence of one context beat",
+            "protected_variables": [
+              "spoken wording",
+              "music and voice inside each beat",
+              "burned-in captions",
+              "every other beat's order and length"
+            ],
+            "target_start_ms": 3380,
+            "target_end_ms": 5830,
+            "selected": true
+          }
+        ],
+        "selected": [
+          "RESULT_FIRST",
+          "PATTERN_INTERRUPT",
+          "PAYOFF_EARLIER",
+          "CONTEXT_COMPRESSION"
+        ],
+        "reference_patterns": [],
+        "policy": [
+          {
+            "mutation": "RESULT_FIRST",
+            "strategy": null,
+            "status": "no evidence yet",
+            "wins": 0,
+            "losses": 0,
+            "neutral": 0,
+            "rejected": 0
+          },
+          {
+            "mutation": "PATTERN_INTERRUPT",
+            "strategy": "strat_pattern_interrupt__category_educational_short",
+            "status": "PROPOSED",
+            "wins": 0,
+            "losses": 0,
+            "neutral": 1,
+            "rejected": 0
+          },
+          {
+            "mutation": "PAYOFF_EARLIER",
+            "strategy": "strat_payoff_earlier__category_educational_short",
+            "status": "CONTRADICTED",
+            "wins": 0,
+            "losses": 1,
+            "neutral": 0,
+            "rejected": 0
+          },
+          {
+            "mutation": "CONTEXT_COMPRESSION",
+            "strategy": "strat_context_compression__category_educational_short",
+            "status": "PROPOSED",
+            "wins": 0,
+            "losses": 0,
+            "neutral": 1,
+            "rejected": 0
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "at_ms": 8350,
+      "stage": "PLANNING",
+      "message": "frozen suite da187baea0fc (4 questions); no-media control weak: none",
+      "data": null
+    },
+    {
+      "at_ms": 8350,
+      "stage": "RENDERING",
+      "message": "rendering control + 4 variants in parallel",
+      "data": null
+    },
+    {
+      "at_ms": 14180,
+      "stage": "RENDERING",
+      "message": "rendered 5 arms in 5830 ms",
+      "data": {
+        "arms": [
+          {
+            "label": "control",
+            "media_url": "/media/renders/8c3329ba84e7f7b95a203de9fc2b590a00546bee8b7c3e1a8d21dfcb24c757bd.mp4",
+            "render_ms": 4769
+          },
+          {
+            "label": "A",
+            "media_url": "/media/renders/186a6be49bef85dfabc073ac7c1eaa5a65bb58e414cbe647f40151aba379988a.mp4",
+            "render_ms": 4774
+          },
+          {
+            "label": "B",
+            "media_url": "/media/renders/ec4dfbc438da409ff7a1d8686630448401514a6a408f97536a6fea2d853408fe.mp4",
+            "render_ms": 4739
+          },
+          {
+            "label": "C",
+            "media_url": "/media/renders/6955c7033796d82a1a2010d4179d700943639fe212546254888328e87fe38fc7.mp4",
+            "render_ms": 4680
+          },
+          {
+            "label": "D",
+            "media_url": "/media/renders/5884f80694fbfaaa746f36f8c02dbcdb61eb05c634330bf84cd6a98be9cc0442.mp4",
+            "render_ms": 1121
+          }
+        ]
+      }
+    },
+    {
+      "at_ms": 39599,
+      "stage": "EVALUATING",
+      "message": "evaluating 5 arms with the same frozen suite (3 trials, one question per call, pairwise both orders)",
+      "data": null
+    },
+    {
+      "at_ms": 51098,
+      "stage": "DECIDING",
+      "message": "NO_CLEAR_WINNER: no arm met the win rule; keeping the control. cexp_1a09744b816_2009893a_A: loss (full-video model preference 0.25). cexp_1a09744b816_2009893a_B: neutral (full-video model preference 0.50). cexp_1a09744b816_2009893a_C: loss (full-video model preference 0.25). cexp_1a09744b816_2009893a_D: loss (full-video model preference 0.00).",
+      "data": {
+        "decision": {
+          "outcome": "no_clear_winner",
+          "winner_arm_id": null,
+          "reason": "no arm met the win rule; keeping the control. cexp_1a09744b816_2009893a_A: loss (full-video model preference 0.25). cexp_1a09744b816_2009893a_B: neutral (full-video model preference 0.50). cexp_1a09744b816_2009893a_C: loss (full-video model preference 0.25). cexp_1a09744b816_2009893a_D: loss (full-video model preference 0.00).",
+          "primary_metric": "model_full_preference_vs_control",
+          "per_arm": {
+            "cexp_1a09744b816_2009893a_A": "loss",
+            "cexp_1a09744b816_2009893a_B": "neutral",
+            "cexp_1a09744b816_2009893a_C": "loss",
+            "cexp_1a09744b816_2009893a_D": "loss"
+          }
+        },
+        "per_arm_detail": {
+          "control": {
+            "label": "control",
+            "message_questions": {
+              "q_message_1": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              },
+              "q_message_2": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              },
+              "q_message_3": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              }
+            },
+            "model_calls": 12,
+            "eval_ms": 4676,
+            "mechanical_failures": []
+          },
+          "A": {
+            "label": "A",
+            "message_questions": {
+              "q_message_1": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              },
+              "q_message_2": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              },
+              "q_message_3": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              }
+            },
+            "full_preference_reasons": [
+              "variant: It opens with the direct safety warning, creating a stronger immediate hook.",
+              "control: Version 2 begins immediately with the claim that the white cloud contains glass, creating a stronger hook.",
+              "control: Version 1 opens with the striking claim that the white cloud contains glass, creating immediate curiosity.",
+              "control: Version 2 opens with the striking claim that the white cloud contains glass, creating a stronger immediate hook."
+            ],
+            "hook_preference_reasons": [
+              "variant: Version 2 opens with a direct warning that creates more immediate suspense.",
+              "control: The bold claim that the white cloud contains glass creates a more immediate, specific mystery.",
+              "variant: Version 2 opens with a dramatic visible lava-and-steam scene and an immediate warning that creates suspense.",
+              "control: It immediately presents the striking claim that the white cloud contains glass."
+            ],
+            "model_calls": 20,
+            "eval_ms": 9289,
+            "mechanical_failures": []
+          },
+          "B": {
+            "label": "B",
+            "message_questions": {
+              "q_message_1": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              },
+              "q_message_2": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              },
+              "q_message_3": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              }
+            },
+            "full_preference_reasons": [
+              "tie: Both versions show the same visuals and have identical audio transcript.",
+              "tie: Both versions show the same frames and have identical audio narration.",
+              "tie: Both versions show the same visuals and have the same transcript.",
+              "tie: Both versions show the same visuals and have the same audio transcript."
+            ],
+            "model_calls": 16,
+            "eval_ms": 7256,
+            "mechanical_failures": []
+          },
+          "C": {
+            "label": "C",
+            "message_questions": {
+              "q_message_1": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              },
+              "q_message_2": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              },
+              "q_message_3": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              }
+            },
+            "full_preference_reasons": [
+              "variant: Version 2 delivers the safety warning immediately after the opening hook.",
+              "control: Version 2 explains the phenomenon before ending with the direct safety warning, giving it a stronger conclusion.",
+              "control: Version 1 explains what the cloud is before giving the warning, creating a clearer progression.",
+              "control: Version 2 explains what the cloud is before giving the warning, making the sequence clearer."
+            ],
+            "model_calls": 16,
+            "eval_ms": 7660,
+            "mechanical_failures": []
+          },
+          "D": {
+            "label": "D",
+            "message_questions": {
+              "q_message_1": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              },
+              "q_message_2": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              },
+              "q_message_3": {
+                "passed": true,
+                "rate": 1,
+                "valid": 3,
+                "weak_leakage": false
+              }
+            },
+            "full_preference_reasons": [
+              "control: It adds a brief explanation that lava hitting the ocean creates laze, making the message clearer.",
+              "control: Version 2 adds the explanation that lava hitting the ocean creates laze, making the warning more informative.",
+              "control: It adds the concise explanation that lava hitting the ocean creates laze, making the warning clearer.",
+              "control: It adds a brief explanation of what creates the cloud, making the warning more informative."
+            ],
+            "model_calls": 16,
+            "eval_ms": 6755,
+            "mechanical_failures": []
+          }
+        }
+      }
+    },
+    {
+      "at_ms": 51119,
+      "stage": "LEARNING",
+      "message": "recording every arm (wins, losses, neutral, rejected) in the creative policy",
+      "data": null
+    },
+    {
+      "at_ms": 51140,
+      "stage": "DONE",
+      "message": "experiment cexp_1a09744b816_2009893a finished in 51140 ms",
+      "data": {
+        "experiment_id": "cexp_1a09744b816_2009893a",
+        "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09744-b816-7707-a3ca-176e3cd99df1",
+        "timings_ms": {
+          "genome_ms": 13,
+          "investigate_ms": 2,
+          "design_ms": 8,
+          "suite_ms": 8327,
+          "render_wall_ms": 5830,
+          "arm_media_ms": 25419,
+          "evaluate_wall_ms": 11499,
+          "total_ms": 51140
+        }
+      }
+    }
+  ]
+}

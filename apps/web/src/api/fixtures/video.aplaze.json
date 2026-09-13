@@ -1,0 +1,921 @@
+{
+  "video_id": "aplaze",
+  "title": "Laze: the white cloud that contains glass",
+  "duration_ms": 15567,
+  "category": "educational_short",
+  "source": "owned_curio",
+  "media_url": "/media/source/aplaze.mp4",
+  "role": "demo_b",
+  "has_genome": true,
+  "retention_class": null,
+  "latest_experiment_id": "cexp_1a09744b816_2009893a",
+  "genome": {
+    "artifact_hash": "bee8fd5a72d36a88cc51e69ea02105e07161de14a991dc8bff844e18dc439504",
+    "duration_ms": 15567,
+    "beats": [
+      {
+        "id": "beat_00",
+        "index": 0,
+        "start_ms": 0,
+        "end_ms": 3380,
+        "text": "That white cloud looks harmless, but it contains glass.",
+        "role": "hook",
+        "role_confidence": 0.99,
+        "is_question": false,
+        "is_claim": true,
+        "redundant_with_beat_id": null
+      },
+      {
+        "id": "beat_01",
+        "index": 1,
+        "start_ms": 3380,
+        "end_ms": 5830,
+        "text": "Lava hitting the ocean creates laze.",
+        "role": "setup",
+        "role_confidence": 0.85,
+        "is_question": false,
+        "is_claim": true,
+        "redundant_with_beat_id": null
+      },
+      {
+        "id": "beat_02",
+        "index": 2,
+        "start_ms": 5830,
+        "end_ms": 11740,
+        "text": "It is steam and acid gas mixed with tiny glass shards that can irritate your eyes and lungs.",
+        "role": "mechanism",
+        "role_confidence": 0.9,
+        "is_question": false,
+        "is_claim": true,
+        "redundant_with_beat_id": null
+      },
+      {
+        "id": "beat_03",
+        "index": 3,
+        "start_ms": 11740,
+        "end_ms": 15567,
+        "text": "If you ever see this, the white cloud is your warning to back away.",
+        "role": "payoff",
+        "role_confidence": 0.8,
+        "is_question": false,
+        "is_claim": true,
+        "redundant_with_beat_id": null
+      }
+    ],
+    "shots": [
+      {
+        "id": "shot_00",
+        "start_ms": 0,
+        "end_ms": 2833
+      },
+      {
+        "id": "shot_01",
+        "start_ms": 2833,
+        "end_ms": 5633
+      },
+      {
+        "id": "shot_02",
+        "start_ms": 5633,
+        "end_ms": 7467
+      },
+      {
+        "id": "shot_03",
+        "start_ms": 7467,
+        "end_ms": 9367
+      },
+      {
+        "id": "shot_04",
+        "start_ms": 9367,
+        "end_ms": 11167
+      },
+      {
+        "id": "shot_05",
+        "start_ms": 11167,
+        "end_ms": 15567
+      }
+    ],
+    "hook": {
+      "hook_type": {
+        "value": "contradiction",
+        "source": "language_model",
+        "confidence": 0.96,
+        "note": ""
+      },
+      "first_spoken_words": {
+        "value": "That white cloud looks harmless, but it contains glass.",
+        "source": "asr",
+        "confidence": 0.8,
+        "note": ""
+      },
+      "first_visual_description": {
+        "value": "A white plume rises where ocean waves meet a dark rocky lava shoreline.",
+        "source": "vision_model",
+        "confidence": 0.7,
+        "note": ""
+      },
+      "face_visible_at_start": {
+        "value": false,
+        "source": "vision_model",
+        "confidence": 0.7,
+        "note": ""
+      },
+      "product_or_subject_visible_at_start": {
+        "value": true,
+        "source": "vision_model",
+        "confidence": 0.7,
+        "note": ""
+      },
+      "first_visual_change_ms": {
+        "value": 200,
+        "source": "mechanical",
+        "confidence": 0.9,
+        "note": "first shot cut (scene>0.3) or motion spike >=0.05 after 150 ms"
+      },
+      "first_meaningful_motion_ms": {
+        "value": 100,
+        "source": "mechanical",
+        "confidence": 0.9,
+        "note": "mean frame difference >= 0.02 at 10 fps"
+      },
+      "first_claim_ms": {
+        "value": 0,
+        "source": "language_model",
+        "confidence": 0.7,
+        "note": ""
+      },
+      "first_question_ms": {
+        "value": null,
+        "source": "language_model",
+        "confidence": 0.7,
+        "note": ""
+      }
+    },
+    "first_proof_ms": {
+      "value": null,
+      "source": "language_model",
+      "confidence": 0.7,
+      "note": "no beat labeled proof"
+    },
+    "first_payoff_ms": {
+      "value": 11740,
+      "source": "language_model",
+      "confidence": 0.7,
+      "note": "beat_03"
+    },
+    "context_before_proof_ms": {
+      "value": 2450,
+      "source": "language_model",
+      "confidence": 0.7,
+      "note": "setup/context/problem beats before the first proof or payoff"
+    },
+    "longest_static_span_ms": {
+      "value": 4267,
+      "source": "mechanical",
+      "confidence": 0.85,
+      "note": "no cut and motion < 0.012"
+    },
+    "longest_static_span_start_ms": {
+      "value": 11300,
+      "source": "mechanical",
+      "confidence": 0.85,
+      "note": ""
+    },
+    "shots_per_10s": {
+      "value": 3.85,
+      "source": "mechanical",
+      "confidence": 0.9,
+      "note": ""
+    },
+    "speech_rate_wps": {
+      "value": 3.02,
+      "source": "asr",
+      "confidence": 0.8,
+      "note": ""
+    },
+    "open_loops": [
+      {
+        "opened_ms": 0,
+        "resolved_ms": 5830,
+        "description": "The opening claim that the apparently harmless white cloud contains glass is explained as steam and acid gas mixed with tiny glass shards.",
+        "confidence": 0.94
+      }
+    ],
+    "motion_curve": [
+      [
+        100,
+        0.0531
+      ],
+      [
+        200,
+        0.0514
+      ],
+      [
+        300,
+        0.0408
+      ],
+      [
+        400,
+        0.0202
+      ],
+      [
+        500,
+        0.0214
+      ],
+      [
+        600,
+        0.0196
+      ],
+      [
+        700,
+        0.0181
+      ],
+      [
+        800,
+        0.0189
+      ],
+      [
+        900,
+        0.0194
+      ],
+      [
+        1000,
+        0.0171
+      ],
+      [
+        1100,
+        0.0145
+      ],
+      [
+        1200,
+        0.0146
+      ],
+      [
+        1300,
+        0.0137
+      ],
+      [
+        1400,
+        0.0119
+      ],
+      [
+        1500,
+        0.0112
+      ],
+      [
+        1600,
+        0.0111
+      ],
+      [
+        1700,
+        0.011
+      ],
+      [
+        1800,
+        0.0112
+      ],
+      [
+        1900,
+        0.0134
+      ],
+      [
+        2000,
+        0.0187
+      ],
+      [
+        2100,
+        0.019
+      ],
+      [
+        2200,
+        0.0172
+      ],
+      [
+        2300,
+        0.0144
+      ],
+      [
+        2400,
+        0.0143
+      ],
+      [
+        2500,
+        0.0144
+      ],
+      [
+        2600,
+        0.0157
+      ],
+      [
+        2700,
+        0.0141
+      ],
+      [
+        2800,
+        0.3178
+      ],
+      [
+        2900,
+        0.0183
+      ],
+      [
+        3000,
+        0.0167
+      ],
+      [
+        3100,
+        0.0198
+      ],
+      [
+        3200,
+        0.0201
+      ],
+      [
+        3300,
+        0.0185
+      ],
+      [
+        3400,
+        0.0198
+      ],
+      [
+        3500,
+        0.0194
+      ],
+      [
+        3600,
+        0.0178
+      ],
+      [
+        3700,
+        0.019
+      ],
+      [
+        3800,
+        0.0212
+      ],
+      [
+        3900,
+        0.0216
+      ],
+      [
+        4000,
+        0.0227
+      ],
+      [
+        4100,
+        0.0254
+      ],
+      [
+        4200,
+        0.0191
+      ],
+      [
+        4300,
+        0.0193
+      ],
+      [
+        4400,
+        0.0213
+      ],
+      [
+        4500,
+        0.0233
+      ],
+      [
+        4600,
+        0.0236
+      ],
+      [
+        4700,
+        0.0212
+      ],
+      [
+        4800,
+        0.0215
+      ],
+      [
+        4900,
+        0.0214
+      ],
+      [
+        5000,
+        0.0203
+      ],
+      [
+        5100,
+        0.0222
+      ],
+      [
+        5200,
+        0.0231
+      ],
+      [
+        5300,
+        0.0214
+      ],
+      [
+        5400,
+        0.0212
+      ],
+      [
+        5500,
+        0.0255
+      ],
+      [
+        5600,
+        0.1577
+      ],
+      [
+        5700,
+        0.0396
+      ],
+      [
+        5800,
+        0.0344
+      ],
+      [
+        5900,
+        0.0296
+      ],
+      [
+        6000,
+        0.0228
+      ],
+      [
+        6100,
+        0.0189
+      ],
+      [
+        6200,
+        0.0193
+      ],
+      [
+        6300,
+        0.018
+      ],
+      [
+        6400,
+        0.0196
+      ],
+      [
+        6500,
+        0.0218
+      ],
+      [
+        6600,
+        0.0192
+      ],
+      [
+        6700,
+        0.0199
+      ],
+      [
+        6800,
+        0.0178
+      ],
+      [
+        6900,
+        0.0209
+      ],
+      [
+        7000,
+        0.0271
+      ],
+      [
+        7100,
+        0.033
+      ],
+      [
+        7200,
+        0.0411
+      ],
+      [
+        7300,
+        0.0447
+      ],
+      [
+        7400,
+        0.0516
+      ],
+      [
+        7500,
+        0.2782
+      ],
+      [
+        7600,
+        0.0083
+      ],
+      [
+        7700,
+        0.0098
+      ],
+      [
+        7800,
+        0.0082
+      ],
+      [
+        7900,
+        0.0093
+      ],
+      [
+        8000,
+        0.0085
+      ],
+      [
+        8100,
+        0.0091
+      ],
+      [
+        8200,
+        0.0091
+      ],
+      [
+        8300,
+        0.0107
+      ],
+      [
+        8400,
+        0.0087
+      ],
+      [
+        8500,
+        0.0099
+      ],
+      [
+        8600,
+        0.0086
+      ],
+      [
+        8700,
+        0.0094
+      ],
+      [
+        8800,
+        0.0101
+      ],
+      [
+        8900,
+        0.0083
+      ],
+      [
+        9000,
+        0.0084
+      ],
+      [
+        9100,
+        0.0072
+      ],
+      [
+        9200,
+        0.0102
+      ],
+      [
+        9300,
+        0.0117
+      ],
+      [
+        9400,
+        0.2509
+      ],
+      [
+        9500,
+        0.0654
+      ],
+      [
+        9600,
+        0.0691
+      ],
+      [
+        9700,
+        0.0711
+      ],
+      [
+        9800,
+        0.0665
+      ],
+      [
+        9900,
+        0.0575
+      ],
+      [
+        10000,
+        0.0492
+      ],
+      [
+        10100,
+        0.0444
+      ],
+      [
+        10200,
+        0.0354
+      ],
+      [
+        10300,
+        0.0331
+      ],
+      [
+        10400,
+        0.0325
+      ],
+      [
+        10500,
+        0.0367
+      ],
+      [
+        10600,
+        0.0377
+      ],
+      [
+        10700,
+        0.0385
+      ],
+      [
+        10800,
+        0.0384
+      ],
+      [
+        10900,
+        0.0397
+      ],
+      [
+        11000,
+        0.0394
+      ],
+      [
+        11100,
+        0.0394
+      ],
+      [
+        11200,
+        0.3462
+      ],
+      [
+        11300,
+        0.0021
+      ],
+      [
+        11400,
+        0.0022
+      ],
+      [
+        11500,
+        0.0026
+      ],
+      [
+        11600,
+        0.0024
+      ],
+      [
+        11700,
+        0.0021
+      ],
+      [
+        11800,
+        0.0021
+      ],
+      [
+        11900,
+        0.0022
+      ],
+      [
+        12000,
+        0.0044
+      ],
+      [
+        12100,
+        0.0027
+      ],
+      [
+        12200,
+        0.0024
+      ],
+      [
+        12300,
+        0.0037
+      ],
+      [
+        12400,
+        0.0021
+      ],
+      [
+        12500,
+        0.0014
+      ],
+      [
+        12600,
+        0.0023
+      ],
+      [
+        12700,
+        0.0017
+      ],
+      [
+        12800,
+        0.0014
+      ],
+      [
+        12900,
+        0.0014
+      ],
+      [
+        13000,
+        0.0045
+      ],
+      [
+        13100,
+        0.0022
+      ],
+      [
+        13200,
+        0.0026
+      ],
+      [
+        13300,
+        0.0013
+      ],
+      [
+        13400,
+        0.0021
+      ],
+      [
+        13500,
+        0.0024
+      ],
+      [
+        13600,
+        0.0015
+      ],
+      [
+        13700,
+        0.0047
+      ],
+      [
+        13800,
+        0.0039
+      ],
+      [
+        13900,
+        0.002
+      ],
+      [
+        14000,
+        0.0022
+      ],
+      [
+        14100,
+        0.0023
+      ],
+      [
+        14200,
+        0.0025
+      ],
+      [
+        14300,
+        0.0014
+      ],
+      [
+        14400,
+        0.0051
+      ],
+      [
+        14500,
+        0.0035
+      ],
+      [
+        14600,
+        0.002
+      ],
+      [
+        14700,
+        0.002
+      ],
+      [
+        14800,
+        0.0012
+      ],
+      [
+        14900,
+        0.0019
+      ],
+      [
+        15000,
+        0.0027
+      ],
+      [
+        15100,
+        0.0015
+      ],
+      [
+        15200,
+        0.0049
+      ],
+      [
+        15300,
+        0.0015
+      ],
+      [
+        15400,
+        0.0016
+      ],
+      [
+        15500,
+        0.0015
+      ]
+    ]
+  },
+  "investigation": {
+    "weak_region": {
+      "start_ms": 3380,
+      "end_ms": 11740,
+      "basis": "creative structure",
+      "evidence_class": "model_eval",
+      "description": "potential weak region from structure: proof_latency at 3.4-11.7s"
+    },
+    "hypotheses": [
+      {
+        "id": "hyp_1a09744b825_001801a8",
+        "family": "proof_latency",
+        "statement": "The evidence or answer arrives late (11.7s); people may leave before the video pays off its opening.",
+        "region_start_ms": 3380,
+        "region_end_ms": 11740,
+        "region_basis": "creative structure",
+        "detection_confidence": 0.77,
+        "evidence": [
+          {
+            "kind": "model_eval",
+            "text": "first payoff beat starts at 11.7s of 15.6s (beat roles are language-model labels)",
+            "source": "language_model",
+            "ref": null
+          }
+        ],
+        "counterevidence": [
+          {
+            "kind": "model_eval",
+            "text": "the hook is labeled contradiction, so the opening may already carry the surprise"
+          }
+        ],
+        "candidate_mutations": [
+          "PAYOFF_EARLIER",
+          "RESULT_FIRST"
+        ],
+        "changed_variable": "when the proof or payoff appears"
+      },
+      {
+        "id": "hyp_1a09744b825_bddf2d38",
+        "family": "visual_stagnation",
+        "statement": "The picture barely changes for 4.3s, which may lose attention.",
+        "region_start_ms": 11300,
+        "region_end_ms": 15567,
+        "region_basis": "creative structure",
+        "detection_confidence": 0.52,
+        "evidence": [
+          {
+            "kind": "mechanical",
+            "text": "no shot cut and frame difference under threshold for 4.3s from 11.3s",
+            "source": "mechanical",
+            "ref": null
+          }
+        ],
+        "counterevidence": [
+          {
+            "kind": "mechanical",
+            "text": "low frame difference can hide slow meaningful motion; a held shot can be intentional"
+          }
+        ],
+        "candidate_mutations": [
+          "PATTERN_INTERRUPT"
+        ],
+        "changed_variable": "framing during the static stretch"
+      },
+      {
+        "id": "hyp_1a09744b825_07542a06",
+        "family": "context_interruption",
+        "statement": "Background context interrupts the momentum between the hook and the payoff.",
+        "region_start_ms": 3380,
+        "region_end_ms": 5830,
+        "region_basis": "creative structure",
+        "detection_confidence": 0.46,
+        "evidence": [
+          {
+            "kind": "model_eval",
+            "text": "2.5s of setup/context between the hook and the first proof or payoff: 'Lava hitting the ocean creates laze.'",
+            "source": "language_model",
+            "ref": "beat_01"
+          }
+        ],
+        "counterevidence": [
+          {
+            "kind": "model_eval",
+            "text": "context may be needed to understand the payoff; the comprehension suite guards against removing it"
+          }
+        ],
+        "candidate_mutations": [
+          "CONTEXT_COMPRESSION"
+        ],
+        "changed_variable": "whether one context beat is present"
+      }
+    ],
+    "retention_note": "no retention data: regions come from creative structure, not from measured drops"
+  },
+  "retention": null
+}

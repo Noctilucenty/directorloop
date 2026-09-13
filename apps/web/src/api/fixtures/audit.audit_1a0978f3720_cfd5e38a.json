@@ -1,0 +1,438 @@
+{
+  "id": "audit_1a0978f3720_cfd5e38a",
+  "video_id": "smoot-cinematic-reedit-v1",
+  "version_id": "A",
+  "artifact_hash": "7a65cae132ba45cb82d007a171a5371b7b11d8b73ff0793895175920952e084c",
+  "duration_ms": 11000,
+  "created_at": "2026-09-12T21:39:30.877+00:00",
+  "status": "complete",
+  "coverage": {
+    "mode": "sampled_frames_plus_asr",
+    "duration_ms": 11000,
+    "windows": [
+      {
+        "kind": "prefix",
+        "start_ms": 0,
+        "end_ms": 2000,
+        "frame_timestamps_ms": [
+          166,
+          500,
+          833,
+          1166,
+          1499,
+          1833
+        ],
+        "frame_width": 448,
+        "context_frames": 0,
+        "context_width": 256,
+        "transcript_words": 7
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 2000,
+        "end_ms": 4000,
+        "frame_timestamps_ms": [
+          2166,
+          2500,
+          2833,
+          3166,
+          3500,
+          3833
+        ],
+        "frame_width": 448,
+        "context_frames": 2,
+        "context_width": 256,
+        "transcript_words": 15
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 4000,
+        "end_ms": 6000,
+        "frame_timestamps_ms": [
+          4166,
+          4500,
+          4833,
+          5166,
+          5499,
+          5833
+        ],
+        "frame_width": 448,
+        "context_frames": 4,
+        "context_width": 256,
+        "transcript_words": 21
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 6000,
+        "end_ms": 8000,
+        "frame_timestamps_ms": [
+          6166,
+          6500,
+          6833,
+          7166,
+          7499,
+          7833
+        ],
+        "frame_width": 448,
+        "context_frames": 6,
+        "context_width": 256,
+        "transcript_words": 25
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 8000,
+        "end_ms": 10000,
+        "frame_timestamps_ms": [
+          8166,
+          8500,
+          8833,
+          9166,
+          9500,
+          9833
+        ],
+        "frame_width": 448,
+        "context_frames": 8,
+        "context_width": 256,
+        "transcript_words": 31
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 10000,
+        "end_ms": 11000,
+        "frame_timestamps_ms": [
+          10166,
+          10500,
+          10833
+        ],
+        "frame_width": 448,
+        "context_frames": 10,
+        "context_width": 256,
+        "transcript_words": 31
+      },
+      {
+        "kind": "diagnostic",
+        "start_ms": 0,
+        "end_ms": 11000,
+        "frame_timestamps_ms": [
+          250,
+          750,
+          1250,
+          1750,
+          2250,
+          2750,
+          3250,
+          3750,
+          4250,
+          4750,
+          5250,
+          5750,
+          6250,
+          6750,
+          7250,
+          7750,
+          8250,
+          8750,
+          9250,
+          9750,
+          10250,
+          10750
+        ],
+        "frame_width": 384,
+        "context_frames": 0,
+        "context_width": 0,
+        "transcript_words": 31
+      },
+      {
+        "kind": "closeup",
+        "start_ms": 10000,
+        "end_ms": 11000,
+        "frame_timestamps_ms": [
+          10100,
+          10300,
+          10500,
+          10700,
+          10900
+        ],
+        "frame_width": 512,
+        "context_frames": 0,
+        "context_width": 0,
+        "transcript_words": 0
+      }
+    ],
+    "total_frames_sent": 90,
+    "transcript_source": "whisper.cpp:ggml-large-v3-turbo-q5_0.bin",
+    "audio_inspection": "whisper.cpp transcript with word timings plus software loudness and silence measurements; the reviewer did not listen to music, sound effects, voice tone or audio-visual sync",
+    "provider": "openai",
+    "model": "gpt-5.6-terra",
+    "limitations": [
+      "frames are samples (3 per second in reviewed windows, 2 per second for diagnosis, 5 per second in close-ups); events between samples can be missed",
+      "not a frame-by-frame audiovisual review; the provider receives still images, not the video file",
+      "native video input unavailable with the configured provider (the Gemini native-video path is out of credit)"
+    ]
+  },
+  "window_reactions": [
+    {
+      "start_ms": 0,
+      "end_ms": 2000,
+      "understanding": "It looks like a story explaining how some friends measured a bridge by using a man’s body as a measuring unit.",
+      "expectation": "I expect it to explain the measurement or reveal why they used his body.",
+      "open_question": "How did using his body let them measure the bridge?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The simple animation shows the man lying beside measurement lines while the narration says his friends measured a bridge using his body.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 1984,
+      "error": null
+    },
+    {
+      "start_ms": 2000,
+      "end_ms": 4000,
+      "understanding": "It’s explaining how a man’s friends measured a bridge by laying him down and moving him forward repeatedly.",
+      "expectation": "I expect it to reveal why they needed this odd measurement or what result they got.",
+      "open_question": "Why are they measuring the bridge with his body?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The simple animation clearly shows him being moved forward while the narration says they did it again and again.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2042,
+      "error": null
+    },
+    {
+      "start_ms": 4000,
+      "end_ms": 6000,
+      "understanding": "It’s explaining how friends measured a bridge by repeatedly laying a man named Smoot down end to end.",
+      "expectation": "I expect it to say how long the bridge measured in Smoots and what happened afterward.",
+      "open_question": "How many Smoots long was the bridge?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The reveal that the person was named Smoot makes the repeated-body measurement setup click.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2057,
+      "error": null
+    },
+    {
+      "start_ms": 6000,
+      "end_ms": 8000,
+      "understanding": "It’s explaining how a guy named Smoot was used as a body-length unit to measure a bridge, shown as “1 Smoot.”",
+      "expectation": "I expect it to explain what happened nearly seventy years later and why the Smoot measurement still matters.",
+      "open_question": "What happened seventy years later?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The “1 Smoot” label and the setup that something happened nearly seventy years later make the story feel like it’s leading to a payoff.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2190,
+      "error": null
+    },
+    {
+      "start_ms": 8000,
+      "end_ms": 10000,
+      "understanding": "It explains that a man named Smoot was used body-length by body-length to measure a bridge, and the bridge is still marked in “Smoots.”",
+      "expectation": "I expect a quick explanation or reveal of why this weird measurement became famous.",
+      "open_question": "Why did they choose him and why did the markings stay?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The real photo of “SMOOTS” painted on the bridge makes the story feel real and lands the punchline.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2261,
+      "error": null
+    },
+    {
+      "start_ms": 10000,
+      "end_ms": 11000,
+      "understanding": "It explains how friends measured a bridge by repeatedly using a man named Smoot as the unit, and the bridge is still marked with “SMOOTS.”",
+      "expectation": "It feels like the story has ended, so I expect either a new fact or the video to stop.",
+      "open_question": "",
+      "reaction": "neutral",
+      "attention_risk": "medium",
+      "cause": "The screen has held on the same photo of the yellow “SMOOTS” pavement marking with no new narration.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 1653,
+      "error": null
+    }
+  ],
+  "findings": [
+    {
+      "id": "audit_1a0978f3720_cfd5e38a_f1",
+      "version_id": "A",
+      "start_ms": 10400,
+      "end_ms": 11000,
+      "evidence_frames": [
+        {
+          "t_ms": 10400,
+          "url": "/media/audit/audit_1a0978f3720_cfd5e38a/010400.jpg"
+        },
+        {
+          "t_ms": 10750,
+          "url": "/media/audit/audit_1a0978f3720_cfd5e38a/010750.jpg"
+        }
+      ],
+      "observed": [
+        {
+          "kind": "visual",
+          "text": "The same close photo of a yellow “SMOOTS” pavement marking remains on screen.",
+          "t_ms": 10750
+        },
+        {
+          "kind": "caption",
+          "text": "On-screen text remains “marked in Smoots.”",
+          "t_ms": 10750
+        },
+        {
+          "kind": "caption",
+          "text": "Photo credit text remains visible: “Harvard Bridge, Massachusetts · July 2024” and “Photo: August Schwerdfeger · CC BY 4.0.”",
+          "t_ms": 10750
+        },
+        {
+          "kind": "audio",
+          "text": "No further spoken words occur after “Smoots” at 9.7s.",
+          "t_ms": 9700
+        },
+        {
+          "kind": "mechanical",
+          "text": "A quiet stretch runs from 10.4s to the 11.0s end, while the shot is held from 8.3s to 11.0s.",
+          "t_ms": 10400
+        }
+      ],
+      "viewer_understanding": "The story is complete: Smoot's body became a unit and the bridge still has Smoot markings.",
+      "predicted_reaction": "Neutral; attention risk rises because the payoff image has already landed and nothing changes before the end.",
+      "weakness": "The video lingers after its final line. This dead half-second costs a clean ending and gives the viewer an exit point instead of a final beat.",
+      "issue_type": "weak_or_missing_payoff",
+      "alternatives": [
+        "The hold may be intentional to let viewers read the photo credit.",
+        "The hold may be designed as a brief visual button after the final fact."
+      ],
+      "objective": "attention",
+      "severity": "low",
+      "uncertainty": "low",
+      "proposed_repair": "Cut to the end immediately after “Smoots” finishes around 9.7s, or replace the final 0.5–0.8 seconds with one new, concise visual detail while retaining the photo and credit long enough to read.",
+      "repair_kind": "trim_or_tighten",
+      "keep_unchanged": [
+        "Keep the real photo of the painted “SMOOTS” marking as the final payoff.",
+        "Keep the final statement that the bridge is still marked in Smoots.",
+        "Keep the visible source credit."
+      ],
+      "repair": null,
+      "verified_closeup": true,
+      "closeup_note": "corrections: The claim that the shot was held beginning at 8.3s cannot be verified from the provided 10.10–10.90s frames and word timing; only its continued hold during the shown ending is supported."
+    }
+  ],
+  "strengths": [
+    {
+      "id": "audit_1a0978f3720_cfd5e38a_s1",
+      "start_ms": 100,
+      "end_ms": 4250,
+      "what": "The animation directly demonstrates the unusual premise: a person lies beside measurement lines, then is shown being moved forward repeatedly.",
+      "why": "The visual and wording make the body-as-measuring-unit idea understandable immediately, sustaining the setup without requiring prior knowledge.",
+      "evidence_frames": [
+        {
+          "t_ms": 250,
+          "url": "/media/audit/audit_1a0978f3720_cfd5e38a/000250.jpg"
+        },
+        {
+          "t_ms": 2750,
+          "url": "/media/audit/audit_1a0978f3720_cfd5e38a/002750.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a0978f3720_cfd5e38a_s2",
+      "start_ms": 5100,
+      "end_ms": 7750,
+      "what": "The name reveal and “1 Smoot” label connect the person to the unit.",
+      "why": "“His name was Smoot” turns the prior repeated action into a memorable explanation, and the label makes the unit explicit.",
+      "evidence_frames": [
+        {
+          "t_ms": 5250,
+          "url": "/media/audit/audit_1a0978f3720_cfd5e38a/005250.jpg"
+        },
+        {
+          "t_ms": 6250,
+          "url": "/media/audit/audit_1a0978f3720_cfd5e38a/006250.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a0978f3720_cfd5e38a_s3",
+      "start_ms": 8200,
+      "end_ms": 9750,
+      "what": "The animation gives way to a real photograph of “SMOOTS” painted on pavement for the conclusion.",
+      "why": "This is a concrete proof image that makes the odd story feel real and cleanly lands the promised later consequence.",
+      "evidence_frames": [
+        {
+          "t_ms": 8250,
+          "url": "/media/audit/audit_1a0978f3720_cfd5e38a/008250.jpg"
+        },
+        {
+          "t_ms": 9250,
+          "url": "/media/audit/audit_1a0978f3720_cfd5e38a/009250.jpg"
+        }
+      ]
+    }
+  ],
+  "audience": {
+    "label": "MODEL JUDGMENT (predicted), not measured audience behavior",
+    "stop": {
+      "verdict": "YES",
+      "reason": "The opening immediately presents an odd, legible premise—friends measuring a bridge with a person’s body—and visually demonstrates it.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "continue_watching": {
+      "verdict": "YES",
+      "reason": "Each short beat answers the setup: repeated movement, the Smoot name reveal, then proof that the markings remain.",
+      "at_ms": 10400,
+      "to_whom": null
+    },
+    "finish": {
+      "verdict": "YES",
+      "reason": "The video is only 11 seconds and the real “SMOOTS” photo provides a clear payoff before the end.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "like": {
+      "verdict": "MAYBE",
+      "reason": "It delivers a neat, self-contained odd fact with a satisfying real-world proof image, though no direct emotional or personal hook is shown.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "send": {
+      "verdict": "MAYBE",
+      "reason": "It is an easy shareable trivia fact for friends who enjoy quirky facts or unusual measurement stories.",
+      "at_ms": null,
+      "to_whom": "Friends who enjoy short trivia or odd historical anecdotes."
+    },
+    "comment": {
+      "verdict": "NO",
+      "reason": "The video states its fact cleanly but does not pose a question, invite a response, or leave a dispute to discuss.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "save_or_replay": {
+      "verdict": "NO",
+      "reason": "The fact is quickly understood in one pass, with no dense information or demonstrated practical reference value requiring replay.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "visit_creator": {
+      "verdict": "INSUFFICIENT_EVIDENCE",
+      "reason": "The clip establishes a short-fact format but shows no creator identity, series cue, or explicit reason to seek more.",
+      "at_ms": null,
+      "to_whom": null
+    }
+  },
+  "overall_summary": "This is a clear, efficient micro-story: the animation explains the premise, the Smoot reveal makes it click, and the real bridge marking proves the payoff. The only visible pacing defect is the unnecessary final hold after the story has already ended; trim it for a sharper finish.",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0978f-3720-7dc4-9cff-410afecac33e",
+  "weave_call_id": "01a0978f-3720-7dc4-9cff-410afecac33e",
+  "timings_ms": {
+    "signals_asr_ms": 3417,
+    "cold_review_ms": 7183,
+    "diagnose_ms": 13129,
+    "closeup_ms": 6005,
+    "total_ms": 30365
+  },
+  "model_calls": 8,
+  "notes": [],
+  "incomplete_reasons": [],
+  "primed_with": [],
+  "media_url": "/media/renders/7a65cae132ba45cb82d007a171a5371b7b11d8b73ff0793895175920952e084c.mp4"
+}

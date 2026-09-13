@@ -1,0 +1,246 @@
+{
+  "id": "run_1a097719df3_7d704e04",
+  "config": {
+    "video_id": "aptip",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "focus": null,
+    "constraints": [
+      "Do not add new claims or on-screen text",
+      "Keep the ending"
+    ],
+    "allowed_edits": null,
+    "iteration_budget": 3,
+    "max_attempts_per_finding": 2,
+    "category": "educational_short"
+  },
+  "status": "completed",
+  "stop_reason": "no runnable existing-video repair remains: 9.2-13.6s route C: no existing-video edit implements it: None of the available edits adds the requested brighter close-up or side-angle insert. The center punch-in only enlarges the same dark footage, may not isolate the off-center contact point, and risks cropping the burned-in captions. The sequencing and trimming edits do not improve visual proof and could disrupt protected timing or narration.",
+  "final_decision": "retain the original: none of 1 rendered repair attempt(s) demonstrated an improvement",
+  "created_at": "2026-09-12T21:06:40.755+00:00",
+  "ended_at": "2026-09-12T21:08:14.016+00:00",
+  "original_artifact_hash": "97ab80b2a7d30cb3bb97f63b86ea97738691ab1819cdc8b37b784fc5a6cf0a14",
+  "final_version_id": "v0",
+  "final_artifact_hash": "97ab80b2a7d30cb3bb97f63b86ea97738691ab1819cdc8b37b784fc5a6cf0a14",
+  "audit_ids": [
+    "audit_1a097719e54_89c7a8e5",
+    "audit_1a097723ab1_644b891d"
+  ],
+  "repair_run_ids": [
+    "repair_1a0977235a9_aba54f84"
+  ],
+  "lessons": [
+    {
+      "lesson_id": "lesson_1a09772e18f_44e58236",
+      "run_id": "run_1a097719df3_7d704e04",
+      "repair_run_id": "repair_1a0977235a9_aba54f84",
+      "video_id": "aptip",
+      "category": "educational_short",
+      "created_at": "2026-09-12T21:08:03.599+00:00",
+      "video_characteristics": {
+        "duration_ms": 13867,
+        "hook_type": "demonstration",
+        "beats": 5,
+        "shots": 1,
+        "longest_static_span_ms": 7467,
+        "first_payoff_ms": 9370
+      },
+      "finding": {
+        "issue_type": "framing_hides_important_action",
+        "objective": "comprehension",
+        "severity": "low",
+        "uncertainty": "medium",
+        "interval_ms": [
+          9200,
+          13600
+        ],
+        "weakness": "The crucial stem/contact detail is too dark and small to serve as a clear visual proof of the concluding explanation."
+      },
+      "repair": {
+        "route": "A",
+        "mutation_type": "PUNCH_IN",
+        "edit": "Punch in 1.3x toward the lower left of the frame, where the most movement is during 9.4-13.6s (same footage, sound and timing; tighter framing).",
+        "selection_reason": "This does not add the proposed brighter close-up or side-angle insert, but it plausibly reduces the specific weakness by enlarging the active lower-left area where the stem/contact detail is likely located while preserving the continuous demonstration, timing, narration, and upright-spin payoff. It is preferable to the centered zoom, though the render should be checked for caption cropping."
+      },
+      "result": {
+        "status": "rejected",
+        "outcome": "regression",
+        "target_resolved": "no",
+        "improved": [],
+        "regressed": [
+          "protected content lost: Do not add new claims or on-screen text (This is an instruction rather than visible video content, and no such instruction is shown on-screen)"
+        ],
+        "incomplete_reasons": []
+      },
+      "uncertainty": {
+        "stability": {
+          "runs": 8,
+          "agreeing_runs": 2,
+          "order_flips": 2,
+          "agreement": "target: 1 of 2 order-swapped pairs agreed; whole video: 1 of 2 order-swapped pairs agreed"
+        },
+        "change_verified": true
+      },
+      "applies_when": "educational_short; issue framing_hides_important_action; hook demonstration; flattened MP4 with burned-in captions",
+      "evidence_class": "model_eval",
+      "label": "MODEL JUDGMENT lesson from one offline repair; not audience data",
+      "policy_update": {
+        "strategy": "strat_pattern_interrupt__category_educational_short",
+        "status": "CONTRADICTED",
+        "wins": 0,
+        "losses": 1,
+        "neutral": 2,
+        "policy_version": 8
+      }
+    }
+  ],
+  "runtime": {
+    "runtime_version": "director-v1",
+    "git_commit": "d93aae0",
+    "prompt_sources_uncommitted_changes": true,
+    "prompt_source_sha256_16": {
+      "directorloop/audit/review.py": "159e2e861bfebbd0",
+      "directorloop/audit/repairs.py": "ae0091b6f9944632",
+      "directorloop/audit/revise.py": "00d1e176a6faa095",
+      "directorloop/runtime/director.py": "c991190b50d3facd",
+      "directorloop/providers/base.py": "3f38a4d6f438b9e3"
+    },
+    "reviewer": {
+      "provider": "openai",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "low"
+    },
+    "selector": {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high"
+    },
+    "decision_rules": "decide_next_action (deterministic, no model call)",
+    "renderer": "ffmpeg from typed, validated edit plans",
+    "asr": "whisper.cpp large-v3-turbo q5_0 (local)",
+    "state": "data/runs/<run_id>.json, data/audit/<audit_id>/audit.json, data/repairs/<repair_id>.json, data/audit/lessons.jsonl"
+  },
+  "mocked_stages": [],
+  "manual_interventions": [],
+  "annotations": [
+    "2026-09-12 14:10 PDT: iteration 1's REGRESSION came from two comparison defects found afterwards: the constraint 'Do not add new claims or on-screen text' was checked as on-screen content (judged 'lost' because the rule is not shown), and the target-moment clips used separate transcriptions whose boundary word differed. Both were fixed (two-version rule/content check; words mapped through the edit plan). The fresh audit still flagged the weakness at the mapped interval, so the target was not resolved either way. Superseded by the rerun after the fix."
+  ],
+  "launched_via": "cli",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09771-9df3-72d6-ac6f-16a29b47c514",
+  "weave_call_id": "01a09771-9df3-72d6-ac6f-16a29b47c514",
+  "timings_ms": {
+    "total_ms": 93260
+  },
+  "error": null,
+  "iterations": [
+    {
+      "index": 1,
+      "current_version_id": "v0",
+      "current_artifact_hash": "97ab80b2a7d30cb3bb97f63b86ea97738691ab1819cdc8b37b784fc5a6cf0a14",
+      "audit_id": "audit_1a097719e54_89c7a8e5",
+      "considered": [
+        {
+          "finding_id": "audit_1a097719e54_89c7a8e5_f1",
+          "interval_ms": [
+            9200,
+            13600
+          ],
+          "issue_type": "framing_hides_important_action",
+          "objective": "comprehension",
+          "severity": "low",
+          "uncertainty": "medium",
+          "weakness": "The crucial stem/contact detail is too dark and small to serve as a clear visual proof of the concluding explanation.",
+          "route": "A",
+          "runnable": true,
+          "edit": "Punch in 1.3x toward the lower left of the frame, where the most movement is during 9.4-13.6s (same footage, sound and timing; tighter framing).",
+          "selection_reason": "This does not add the proposed brighter close-up or side-angle insert, but it plausibly reduces the specific weakness by enlarging the active lower-left area where the stem/contact detail is likely located while preserving the continuous demonstration, timing, narration, and upright-spin payoff. It is preferable to the centered zoom, though the render should be checked for caption cropping.",
+          "why_not_runnable": null,
+          "skipped": null
+        }
+      ],
+      "finding_id": "audit_1a097719e54_89c7a8e5_f1",
+      "finding": "The crucial stem/contact detail is too dark and small to serve as a clear visual proof of the concluding explanation.",
+      "ranking_reason": "severity low, uncertainty medium; policy evidence mean for PUNCH_IN 0.50",
+      "selection_reason": "This does not add the proposed brighter close-up or side-angle insert, but it plausibly reduces the specific weakness by enlarging the active lower-left area where the stem/contact detail is likely located while preserving the continuous demonstration, timing, narration, and upright-spin payoff. It is preferable to the centered zoom, though the render should be checked for caption cropping.",
+      "repair_run_id": "repair_1a0977235a9_aba54f84",
+      "edit": "Punch in 1.3x toward the lower left of the frame, where the most movement is during 9.4-13.6s (same footage, sound and timing; tighter framing).",
+      "mutation_type": "PUNCH_IN",
+      "change_verified": true,
+      "verification_checks": [
+        "duration 13900 ms vs planned 13867 ms: ok",
+        "frame at 11.48s: difference to the original 0.183, to the original cropped as planned 0.002 (ok, reframed as planned)"
+      ],
+      "candidate_version_id": "v1-ed861c36",
+      "candidate_artifact_hash": "ed861c36e1e6d5551a91e31e347fc119c7ea5a951dd8ed3754867b01848dfb70",
+      "candidate_audit_id": "audit_1a097723ab1_644b891d",
+      "outcome": "regression",
+      "target_resolved": "no",
+      "improved": [],
+      "regressed": [
+        "protected content lost: Do not add new claims or on-screen text (This is an instruction rather than visible video content, and no such instruction is shown on-screen)"
+      ],
+      "decision": "reject_keep_current",
+      "reason": "the candidate is worse: protected content lost: Do not add new claims or on-screen text (This is an instruction rather than visible video content, and no such instruction is shown on-screen)",
+      "next_action": "try_alternative",
+      "next_action_reason": "the failed edit is excluded and its result is given to the selector, which must justify another edit or choose none",
+      "lesson_id": "lesson_1a09772e18f_44e58236",
+      "timings_ms": {
+        "render_ms": 1084,
+        "fresh_review_ms": 26027,
+        "compare_ms": 16686,
+        "iteration_ms": 52725
+      },
+      "candidate_media_url": "/media/renders/ed861c36e1e6d5551a91e31e347fc119c7ea5a951dd8ed3754867b01848dfb70.mp4"
+    },
+    {
+      "index": 2,
+      "current_version_id": "v0",
+      "current_artifact_hash": "97ab80b2a7d30cb3bb97f63b86ea97738691ab1819cdc8b37b784fc5a6cf0a14",
+      "audit_id": "audit_1a097719e54_89c7a8e5",
+      "considered": [
+        {
+          "finding_id": "audit_1a097719e54_89c7a8e5_f1",
+          "interval_ms": [
+            9200,
+            13600
+          ],
+          "issue_type": "framing_hides_important_action",
+          "objective": "comprehension",
+          "severity": "low",
+          "uncertainty": "medium",
+          "weakness": "The crucial stem/contact detail is too dark and small to serve as a clear visual proof of the concluding explanation.",
+          "route": "C",
+          "runnable": false,
+          "edit": "",
+          "selection_reason": "None of the available edits adds the requested brighter close-up or side-angle insert. The center punch-in only enlarges the same dark footage, may not isolate the off-center contact point, and risks cropping the burned-in captions. The sequencing and trimming edits do not improve visual proof and could disrupt protected timing or narration.",
+          "why_not_runnable": "no existing-video edit implements it: None of the available edits adds the requested brighter close-up or side-angle insert. The center punch-in only enlarges the same dark footage, may not isolate the off-center contact point, and risks cropping the burned-in captions. The sequencing and trimming edits do not improve visual proof and could disrupt protected timing or narration.",
+          "skipped": null
+        }
+      ],
+      "finding_id": null,
+      "finding": "",
+      "ranking_reason": "",
+      "selection_reason": "",
+      "repair_run_id": null,
+      "edit": "",
+      "mutation_type": null,
+      "change_verified": null,
+      "verification_checks": [],
+      "candidate_version_id": null,
+      "candidate_artifact_hash": null,
+      "candidate_audit_id": null,
+      "outcome": null,
+      "target_resolved": null,
+      "improved": [],
+      "regressed": [],
+      "decision": "stop",
+      "reason": "no runnable existing-video repair remains: 9.2-13.6s route C: no existing-video edit implements it: None of the available edits adds the requested brighter close-up or side-angle insert. The center punch-in only enlarges the same dark footage, may not isolate the off-center contact point, and risks cropping the burned-in captions. The sequencing and trimming edits do not improve visual proof and could disrupt protected timing or narration.",
+      "next_action": "stop",
+      "next_action_reason": "no runnable existing-video repair remains: 9.2-13.6s route C: no existing-video edit implements it: None of the available edits adds the requested brighter close-up or side-angle insert. The center punch-in only enlarges the same dark footage, may not isolate the off-center contact point, and risks cropping the burned-in captions. The sequencing and trimming edits do not improve visual proof and could disrupt protected timing or narration.",
+      "lesson_id": null,
+      "timings_ms": {},
+      "candidate_media_url": null
+    }
+  ],
+  "original_media_url": "/media/source/aptip.mp4",
+  "final_media_url": "/media/source/aptip.mp4"
+}

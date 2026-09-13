@@ -1,0 +1,172 @@
+[
+  {
+    "id": "run_1a09779e4b8_af54f2cb",
+    "video_id": "ocean-v7-before-quiet-repair",
+    "status": "completed",
+    "created_at": "2026-09-12T21:15:43.160+00:00",
+    "ended_at": "2026-09-12T21:16:37.647+00:00",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "iteration_budget": 3,
+    "iterations": 0,
+    "decisions": [
+      "stop"
+    ],
+    "final_version_id": "v0",
+    "final_decision": "retain the original: no repair was attempted (see the stop reason)",
+    "stop_reason": "no runnable existing-video repair remains: 7.5-9.9s route B: a flattened MP4 cannot change animation or object timing independently | 10.0-12.0s route C: needs new narration and matching captions",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09779-e4b8-7e25-b207-3abb9faff33c",
+    "launched_via": "cli",
+    "total_ms": 54486
+  },
+  {
+    "id": "run_1a097793ebb_698b5eeb",
+    "video_id": "beavers-v7",
+    "status": "completed",
+    "created_at": "2026-09-12T21:15:00.667+00:00",
+    "ended_at": "2026-09-12T21:15:37.549+00:00",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "iteration_budget": 3,
+    "iterations": 0,
+    "decisions": [
+      "stop"
+    ],
+    "final_version_id": "v0",
+    "final_decision": "retain the original: no repair was attempted (see the stop reason)",
+    "stop_reason": "no runnable existing-video repair remains: 10.3-11.1s route C: needs new narration and matching captions",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09779-3ebb-731f-969c-539a21f5db59",
+    "launched_via": "cli",
+    "total_ms": 36881
+  },
+  {
+    "id": "run_1a09778cb39_7abd2aaf",
+    "video_id": "aplaze",
+    "status": "completed",
+    "created_at": "2026-09-12T21:14:31.097+00:00",
+    "ended_at": "2026-09-12T21:14:54.458+00:00",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "iteration_budget": 3,
+    "iterations": 0,
+    "decisions": [
+      "stop"
+    ],
+    "final_version_id": "v0",
+    "final_decision": "retain the original: no repair was attempted (see the stop reason)",
+    "stop_reason": "the audit of v0 found no weaknesses to repair",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09778-cb38-7153-8884-5cc00922a1c8",
+    "launched_via": "cli",
+    "total_ms": 23360
+  },
+  {
+    "id": "run_1a097780ba0_3c15b43b",
+    "video_id": "aptip",
+    "status": "completed",
+    "created_at": "2026-09-12T21:13:42.048+00:00",
+    "ended_at": "2026-09-12T21:14:25.514+00:00",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "iteration_budget": 3,
+    "iterations": 0,
+    "decisions": [
+      "stop"
+    ],
+    "final_version_id": "v0",
+    "final_decision": "retain the original: no repair was attempted (see the stop reason)",
+    "stop_reason": "no runnable existing-video repair remains: 9.2-13.6s route B: no existing-video edit implements it: Neither punch-in is specifically targeted to the stem/contact point, and both may crop the burned-in captions, potentially worsening the stated readability problem. The other edits alter or remove required explanation or demonstration beats rather than clarifying the payoff.",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09778-0b9e-7a40-8431-6658325c1337",
+    "launched_via": "cli",
+    "total_ms": 43466
+  },
+  {
+    "id": "run_1a0977320ab_3ff4d85e",
+    "video_id": "aplaze",
+    "status": "failed",
+    "created_at": "2026-09-12T21:08:19.756+00:00",
+    "ended_at": "2026-09-12T21:12:05.041+00:00",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "iteration_budget": 3,
+    "iterations": 0,
+    "decisions": [],
+    "final_version_id": "v0",
+    "final_decision": "",
+    "stop_reason": "stopped from outside the runtime: the development session terminated the process; not a DirectorLoop decision",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09773-20ab-7c78-8e49-70f791c9eb17",
+    "launched_via": "cli",
+    "total_ms": null
+  },
+  {
+    "id": "run_1a097719df3_7d704e04",
+    "video_id": "aptip",
+    "status": "completed",
+    "created_at": "2026-09-12T21:06:40.755+00:00",
+    "ended_at": "2026-09-12T21:08:14.016+00:00",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "iteration_budget": 3,
+    "iterations": 1,
+    "decisions": [
+      "reject_keep_current",
+      "stop"
+    ],
+    "final_version_id": "v0",
+    "final_decision": "retain the original: none of 1 rendered repair attempt(s) demonstrated an improvement",
+    "stop_reason": "no runnable existing-video repair remains: 9.2-13.6s route C: no existing-video edit implements it: None of the available edits adds the requested brighter close-up or side-angle insert. The center punch-in only enlarges the same dark footage, may not isolate the off-center contact point, and risks cropping the burned-in captions. The sequencing and trimming edits do not improve visual proof and could disrupt protected timing or narration.",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09771-9df3-72d6-ac6f-16a29b47c514",
+    "launched_via": "cli",
+    "total_ms": 93260
+  },
+  {
+    "id": "run_1a09770fae9_7d62eb4a",
+    "video_id": "beavers-v7",
+    "status": "completed",
+    "created_at": "2026-09-12T21:05:59.017+00:00",
+    "ended_at": "2026-09-12T21:06:35.341+00:00",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "iteration_budget": 3,
+    "iterations": 0,
+    "decisions": [
+      "stop"
+    ],
+    "final_version_id": "v0",
+    "final_decision": "retain the original: no repair was attempted (see the stop reason)",
+    "stop_reason": "no runnable existing-video repair remains: 10.3-11.1s route C: needs a new or replacement shot",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09770-fae9-7b57-8cb6-539cebd9ed29",
+    "launched_via": "cli",
+    "total_ms": 36323
+  },
+  {
+    "id": "run_1a0976cfd8d_4fe4a1ff",
+    "video_id": "beavers-v7",
+    "status": "completed",
+    "created_at": "2026-09-12T21:01:37.556+00:00",
+    "ended_at": "2026-09-12T21:02:17.279+00:00",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "iteration_budget": 3,
+    "iterations": 0,
+    "decisions": [
+      "stop"
+    ],
+    "final_version_id": "v0",
+    "final_decision": "retain the original: no repair was attempted (see the stop reason)",
+    "stop_reason": "no runnable existing-video repair remains: 8.0-8.2s route C: needs a new or replacement shot | 9.9-11.1s route B: a flattened MP4 cannot change caption text and styling (captions are burned into the pixels) independently",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0976c-fd8d-7228-bcae-c718d4e64154",
+    "launched_via": "cli",
+    "total_ms": 39729
+  },
+  {
+    "id": "run_1a0976b6ec3_cbf77fb1",
+    "video_id": "aptip",
+    "status": "completed",
+    "created_at": "2026-09-12T20:59:55.459+00:00",
+    "ended_at": "2026-09-12T21:00:30.473+00:00",
+    "objective": "Keep a first-time viewer watching and make the tippe top's flip easy to follow, without losing the surprise.",
+    "iteration_budget": 3,
+    "iterations": 0,
+    "decisions": [
+      "stop"
+    ],
+    "final_version_id": "v0",
+    "final_decision": "retain the original: no candidate demonstrated an improvement",
+    "stop_reason": "no runnable existing-video repair remains: 9.2-13.1s route B: a flattened MP4 cannot change caption text and styling (captions are burned into the pixels) independently",
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0976b-6ec2-79ec-8309-59508cd45502",
+    "launched_via": "cli",
+    "total_ms": 35003
+  }
+]

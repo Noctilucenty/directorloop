@@ -1,0 +1,511 @@
+{
+  "id": "abc_1a0979874ab_05c246c4",
+  "status": "completed",
+  "created_at": "2026-09-12T21:49:06.091+00:00",
+  "ended_at": "2026-09-12T21:50:32.557+00:00",
+  "context": {
+    "creative_type": "educational short",
+    "audience": "general viewers who do not know the topic",
+    "objective": "Make a first-time viewer understand who Smoot was and why police used the markings, and keep them watching to the end.",
+    "expected_payoff": "",
+    "encounter": "a cold scrolling feed on a phone with sound on",
+    "source": "declared_by_owner"
+  },
+  "constraints": [
+    "Do not add new claims or on-screen text"
+  ],
+  "limits": {
+    "iteration_budget": 2,
+    "max_model_calls": 260,
+    "deadline_s": 1500
+  },
+  "rubric": {
+    "version": "abc-rubric-v2",
+    "whole_dimensions": {
+      "opening_interest": "In the first seconds, which version gives this viewer a clearer reason to keep watching?",
+      "comprehension": "By the end, which version leaves this viewer understanding what happened and why?",
+      "information_progression": "Which version adds new information or meaning at a better rate, without confusing jumps or needless repetition?",
+      "pacing": "Which version's pacing better fits what is shown and said at each moment (neither rushed nor dragging)?",
+      "visual_narration_alignment": "Which version's pictures better show what is being said at the same moment?",
+      "emotional_effect": "Which version creates more curiosity, anticipation, surprise or delight at the right moments?",
+      "payoff": "Which version lands its final point or payoff more clearly?",
+      "memorability": "Which version is this viewer more likely to remember or retell?"
+    },
+    "region_dimensions": {
+      "clarity": "In this stretch, which version makes what is happening easier to follow?",
+      "curiosity_or_anticipation": "In this stretch, which version builds or keeps more curiosity or anticipation?",
+      "visual_narration_alignment": "In this stretch, which version's pictures better show what is being said?",
+      "pacing": "In this stretch, which version's timing better fits what is shown and said?"
+    },
+    "sampling": {
+      "whole": {
+        "fps": 2,
+        "max_frames": 24,
+        "width": 320,
+        "words": "timed words of the rendered speech"
+      },
+      "region": {
+        "fps": 3,
+        "max_frames": 10,
+        "width": 384,
+        "words": "timed words inside the stretch"
+      }
+    },
+    "verdict_rules": "Each dimension is asked in both presentation orders (repeats=1). Same label in both orders -> that label; 'same' in both -> same; different answers -> unstable; no valid answer -> unclear. Votes are kept.",
+    "core_dimensions": [
+      "comprehension",
+      "payoff"
+    ],
+    "instruction_template": "Frames with timestamps under 100 s belong to Version 1; frames at 100 s or later belong to Version 2 (subtract 100 s).\nBoth versions present the same idea. They are {scope_text}.\nThe viewing situation for both: {encounter}. The intended viewer: {audience}. The purpose of the video: {objective}.{payoff}\nYou did not hear the audio; the words are a transcript of the rendered speech with times.\nAnswer every question with '1', '2', 'same' (no meaningful difference) or 'unclear' (these frames and words cannot tell), and one short, blunt reason tied to what you saw or read: say plainly what is worse in the losing version, not polite generalities.\nQuestions:\n{questions}\nFinally, overall: which version better serves this viewer and purpose {overall_text}?",
+    "context": {
+      "creative_type": "educational short",
+      "audience": "general viewers who do not know the topic",
+      "objective": "Make a first-time viewer understand who Smoot was and why police used the markings, and keep them watching to the end.",
+      "expected_payoff": "",
+      "encounter": "a cold scrolling feed on a phone with sound on",
+      "source": "declared_by_owner"
+    },
+    "reviewer": "openai:gpt-5.6-terra",
+    "selector": "openai:gpt-5.6-sol",
+    "sha256": "737629801419e7c074c2589678341e27a7422b94923b91bf0abcce9747048a93"
+  },
+  "versions": {
+    "A": {
+      "label": "A",
+      "video_id": "smoot-police-payoff-v5",
+      "title": "",
+      "role": "input",
+      "original_hash": "2a6c491a297abf957ef8dcbf64a57bccbe0d6af88bdda9d6abdd61581b16e518",
+      "evaluated_hash": "340d3c2016c0f2e5f6002e2f87d72f1fcebaf7a8e4de925010336a1a70e15351",
+      "duration_ms": 7466,
+      "audit_id": "audit_1a09798aaaf_cd259af9",
+      "audit_status": "complete",
+      "genome_cached": false,
+      "notes": [
+        "evaluated file is the original re-rendered through the same pipeline as C (identical timeline)"
+      ],
+      "media_url": "/media/renders/340d3c2016c0f2e5f6002e2f87d72f1fcebaf7a8e4de925010336a1a70e15351.mp4"
+    },
+    "B": {
+      "label": "B",
+      "video_id": "smoot-relaxed-read-v6",
+      "title": "",
+      "role": "input",
+      "original_hash": "12f53ac60931272a0a40ca43f6a87de8115efb547360e7959093bdedad2e71bb",
+      "evaluated_hash": "c257c964d4d370022dc610e23432a71f0b01f48a1ecb5d451815945047acbe4c",
+      "duration_ms": 10400,
+      "audit_id": "audit_1a09798aaaf_6e616ea1",
+      "audit_status": "complete",
+      "genome_cached": false,
+      "notes": [
+        "evaluated file is the original re-rendered through the same pipeline as C (identical timeline)"
+      ],
+      "media_url": "/media/renders/c257c964d4d370022dc610e23432a71f0b01f48a1ecb5d451815945047acbe4c.mp4"
+    }
+  },
+  "comparison": {
+    "comparable": true,
+    "confounds": [],
+    "transcript_similarity": 1,
+    "alignment": [
+      {
+        "index": 0,
+        "kind": "shared",
+        "a_beats": [
+          "beat_00"
+        ],
+        "b_beats": [
+          "beat_00"
+        ],
+        "a_start_ms": 0,
+        "a_end_ms": 2890,
+        "b_start_ms": 0,
+        "b_end_ms": 4280,
+        "text_a": "His friends used him as a ruler to measure a bridge.",
+        "text_b": "His friends used him as a ruler, to measure a bridge.",
+        "similarity": 1
+      },
+      {
+        "index": 1,
+        "kind": "shared",
+        "a_beats": [
+          "beat_01"
+        ],
+        "b_beats": [
+          "beat_01"
+        ],
+        "a_start_ms": 2890,
+        "a_end_ms": 7466,
+        "b_start_ms": 4280,
+        "b_end_ms": 10400,
+        "text_a": "His name was Smoot, and police later used those markings to locate accidents.",
+        "text_b": "His name was Smoot, and police later used those markings to locate accidents.",
+        "similarity": 1
+      }
+    ],
+    "whole": {
+      "first": "A",
+      "second": "B",
+      "scope": "whole",
+      "region": null,
+      "dimensions": [
+        {
+          "dimension": "opening_interest",
+          "verdict": "A",
+          "votes": {
+            "A": 2
+          },
+          "reasons": [
+            "[A shown first] A: Version 2 lingers longer before explaining the bridge, while Version 1 reaches the premise faster.",
+            "[B shown first] A: Version 2 reaches the bridge-measurement reveal sooner; Version 1 lingers on the opening setup."
+          ]
+        },
+        {
+          "dimension": "comprehension",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[A shown first] same: Both state that friends measured a bridge with Smoot and police used the markings to locate accidents.",
+            "[B shown first] same: Both state that Smoot was used to measure the bridge and that police used the markings for accidents."
+          ]
+        },
+        {
+          "dimension": "information_progression",
+          "verdict": "A",
+          "votes": {
+            "A": 2
+          },
+          "reasons": [
+            "[A shown first] A: Version 2 stretches the same bridge setup with no new information for longer.",
+            "[B shown first] A: Version 2 moves through each fact without Version 1's long pauses on the same bridge image."
+          ]
+        },
+        {
+          "dimension": "pacing",
+          "verdict": "A",
+          "votes": {
+            "A": 2
+          },
+          "reasons": [
+            "[A shown first] A: Version 2 has slower gaps over the same static bridge animation, making it drag.",
+            "[B shown first] A: Version 2 is brisk while still showing each caption and the final road-marking photo; Version 1 drags on repeated static animation."
+          ]
+        },
+        {
+          "dimension": "visual_narration_alignment",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[A shown first] same: Both show the person as a ruler, then the “SMOOTS” road marking as those points are said.",
+            "[B shown first] same: Both show the person-as-ruler animation for the measurement claim and the SMOOTS road marking for the police claim."
+          ]
+        },
+        {
+          "dimension": "emotional_effect",
+          "verdict": "unstable",
+          "votes": {
+            "same": 1,
+            "A": 1
+          },
+          "reasons": [
+            "[A shown first] same: Both use the same odd human-ruler reveal and the same final real-world marking image.",
+            "[B shown first] A: Version 2 gets to the odd reveal and real SMOOTS marking faster; Version 1 delays those moments."
+          ]
+        },
+        {
+          "dimension": "payoff",
+          "verdict": "same",
+          "votes": {
+            "same": 2
+          },
+          "reasons": [
+            "[A shown first] same: Both end on the clear visual payoff of “SMOOTS” markings used to locate accidents.",
+            "[B shown first] same: Both end on the same clear photo of the SMOOTS marking while stating it helped locate accidents."
+          ]
+        },
+        {
+          "dimension": "memorability",
+          "verdict": "unstable",
+          "votes": {
+            "same": 1,
+            "A": 1
+          },
+          "reasons": [
+            "[A shown first] same: Both contain the same memorable image of a person measuring a bridge and the same Smoots photo.",
+            "[B shown first] A: Version 2 delivers the strange ruler-to-real-road-marking turn more tightly, while Version 1 repeats the animation too long."
+          ]
+        }
+      ],
+      "overall": {
+        "dimension": "overall",
+        "verdict": "A",
+        "votes": {
+          "A": 2
+        },
+        "reasons": [
+          "[A shown first] A: It delivers the identical story and payoff without Version 2’s unnecessary slowdowns.",
+          "[B shown first] A: Version 2 gives the same complete explanation faster, without the dead time that slows Version 1."
+        ]
+      },
+      "calls": 2,
+      "failed_calls": 0,
+      "rubric_version": "abc-rubric-v2",
+      "label": "MODEL JUDGMENT: both presentation orders; disagreement kept as 'unstable'"
+    },
+    "regions": [
+      {
+        "first": "A",
+        "second": "B",
+        "scope": "region",
+        "region": {
+          "unit_index": 0,
+          "a_ms": [
+            0,
+            2890
+          ],
+          "b_ms": [
+            0,
+            4280
+          ]
+        },
+        "dimensions": [
+          {
+            "dimension": "clarity",
+            "verdict": "unstable",
+            "votes": {
+              "same": 1,
+              "A": 1
+            },
+            "reasons": [
+              "[A shown first] same: Both state the same sentence while showing the person lying along marked bridge measurements.",
+              "[B shown first] A: Version 1 leaves a long silent gap before “to measure a bridge,” while Version 2 states the full action sooner."
+            ]
+          },
+          {
+            "dimension": "curiosity_or_anticipation",
+            "verdict": "unstable",
+            "votes": {
+              "same": 1,
+              "A": 1
+            },
+            "reasons": [
+              "[A shown first] same: Both reveal the same unusual premise at nearly the same visual progression.",
+              "[B shown first] A: Version 1 stalls on the same image and phrase; Version 2 moves to the payoff sooner."
+            ]
+          },
+          {
+            "dimension": "visual_narration_alignment",
+            "verdict": "same",
+            "votes": {
+              "same": 2
+            },
+            "reasons": [
+              "[A shown first] same: Both versions show the figure used beside measurement marks as the camera pulls back over the bridge.",
+              "[B shown first] same: Both show the figure lying beside repeated measurement marks on the bridge as the words describe using him as a ruler."
+            ]
+          },
+          {
+            "dimension": "pacing",
+            "verdict": "A",
+            "votes": {
+              "A": 2
+            },
+            "reasons": [
+              "[A shown first] A: Version 2 drags the first clause while the same simple zoom-out is already clear; Version 1 reaches the bridge reveal sooner.",
+              "[B shown first] A: Version 1 drags the first clause across about 2.5 seconds, whereas Version 2 delivers the sentence more continuously."
+            ]
+          }
+        ],
+        "overall": {
+          "dimension": "overall",
+          "verdict": "A",
+          "votes": {
+            "A": 2
+          },
+          "reasons": [
+            "[A shown first] A: Version 2 is slower without adding any clearer visual explanation or stronger hook.",
+            "[B shown first] A: Version 2 explains the visual gag faster instead of lingering on the same setup."
+          ]
+        },
+        "calls": 2,
+        "failed_calls": 0,
+        "rubric_version": "abc-rubric-v2",
+        "label": "MODEL JUDGMENT: both presentation orders; disagreement kept as 'unstable'"
+      },
+      {
+        "first": "A",
+        "second": "B",
+        "scope": "region",
+        "region": {
+          "unit_index": 1,
+          "a_ms": [
+            2890,
+            7466
+          ],
+          "b_ms": [
+            4280,
+            10400
+          ]
+        },
+        "dimensions": [
+          {
+            "dimension": "clarity",
+            "verdict": "same",
+            "votes": {
+              "same": 2
+            },
+            "reasons": [
+              "[A shown first] same: Both state that Smoot’s markings were later used by police to locate accidents.",
+              "[B shown first] same: Both show the Smoot measurement animation and then the road marking while saying the same explanation."
+            ]
+          },
+          {
+            "dimension": "curiosity_or_anticipation",
+            "verdict": "same",
+            "votes": {
+              "same": 2
+            },
+            "reasons": [
+              "[A shown first] same: Both reveal the same short explanation with no meaningful added suspense.",
+              "[B shown first] same: Both reveal the same unusual detail, that police used Smoot markings to locate accidents."
+            ]
+          },
+          {
+            "dimension": "visual_narration_alignment",
+            "verdict": "same",
+            "votes": {
+              "same": 2
+            },
+            "reasons": [
+              "[A shown first] same: Both show the Smoot-length figure for the name and markings, then a real SMOOTS road marking.",
+              "[B shown first] same: Both pair the named figure and “1 Smoot” label with the narration, then show a real “SMOOTS” marking."
+            ]
+          },
+          {
+            "dimension": "pacing",
+            "verdict": "unstable",
+            "votes": {
+              "B": 1,
+              "A": 1
+            },
+            "reasons": [
+              "[A shown first] B: Version 1 rushes the sentence into about four seconds, while Version 2 gives each phrase more time to read.",
+              "[B shown first] A: Version 1 holds nearly two seconds after the sentence ends, while Version 2 reaches the road-marking payoff sooner."
+            ]
+          }
+        ],
+        "overall": {
+          "dimension": "overall",
+          "verdict": "unstable",
+          "votes": {
+            "B": 1,
+            "A": 1
+          },
+          "reasons": [
+            "[A shown first] B: The slower delivery makes the same clear visual explanation easier to absorb while scrolling.",
+            "[B shown first] A: It delivers the same clear visual explanation with less dead hold after the spoken line."
+          ]
+        },
+        "calls": 2,
+        "failed_calls": 0,
+        "rubric_version": "abc-rubric-v2",
+        "label": "MODEL JUDGMENT: both presentation orders; disagreement kept as 'unstable'"
+      }
+    ],
+    "findings_by_unit": {
+      "B:1": [
+        "7.7-10.4s The payoff is incomplete: the video establishes a bizarre human measurement unit, but never gives the measurement result the setup naturally"
+      ]
+    },
+    "strengths_by_unit": {
+      "A:0": [
+        "The opening immediately visualizes the bizarre premise."
+      ],
+      "A:1": [
+        "The name reveal makes the measurement concept concrete.",
+        "The real-photo payoff supports the claim and gives the fact practical relevance."
+      ],
+      "B:0": [
+        "The opening uses a clear absurd premise and immediately visualizes it with a person lying along a marked span on a bridge."
+      ],
+      "B:1": [
+        "The opening uses a clear absurd premise and immediately visualizes it with a person lying along a marked span on a bridge.",
+        "The name reveal is cleanly tied to the visual unit label.",
+        "The real-photo reveal gives the story credibility and a tangible payoff."
+      ]
+    },
+    "best_supported": "A",
+    "best_supported_reason": "A was preferred as a whole in both presentation orders"
+  },
+  "attempts": [
+    {
+      "index": 1,
+      "proposal": null,
+      "render_hash": null,
+      "version_id": null,
+      "evaluation": null,
+      "decision": "stop",
+      "reason": "no C chosen: The evidence supports keeping A unchanged. The swaps either weaken its cold-feed opening or lengthen its ending without improving comprehension or payoff. The reorder risks breaking the logical setup, and the zooms risk cropping captions while leaving the alleged payoff problem intact. Needed: A better C would require phrase-level retiming of A’s second part—adding a small amount of breathing room around the Smoot/name and police-use clauses while trimming elsewhere—without importing B’s long static hold, changing claims, or adding text.",
+      "next_action": "stop",
+      "next_action_reason": "no C chosen: The evidence supports keeping A unchanged. The swaps either weaken its cold-feed opening or lengthen its ending without improving comprehension or payoff. The reorder risks breaking the logical setup, and the zooms risk cropping captions while leaving the alleged payoff problem intact. Needed: A better C would require phrase-level retiming of A’s second part—adding a small amount of breathing room around the Smoot/name and police-use clauses while trimming elsewhere—without importing B’s long static hold, changing claims, or adding text.",
+      "lesson_id": null,
+      "timings_ms": {},
+      "render_media_url": null
+    }
+  ],
+  "final_version": "A",
+  "final_decision": "keep A: no C demonstrated an improvement; A was preferred over B as a whole",
+  "stop_reason": "no C chosen: The evidence supports keeping A unchanged. The swaps either weaken its cold-feed opening or lengthen its ending without improving comprehension or payoff. The reorder risks breaking the logical setup, and the zooms risk cropping captions while leaving the alleged payoff problem intact. Needed: A better C would require phrase-level retiming of A’s second part—adding a small amount of breathing room around the Smoot/name and police-use clauses while trimming elsewhere—without importing B’s long static hold, changing claims, or adding text.",
+  "usage": {
+    "model_calls": 21,
+    "max_model_calls": 260,
+    "deadline_s": 1500,
+    "elapsed_s": 86.5,
+    "input_tokens": 114643,
+    "output_tokens": 7676,
+    "cost_usd": null,
+    "cost_note": "not estimated: no verified price table is configured"
+  },
+  "runtime": {
+    "runtime_version": "director-v1",
+    "git_commit": "519f365",
+    "prompt_sources_uncommitted_changes": false,
+    "prompt_source_sha256_16": {
+      "directorloop/audit/review.py": "4aea52c4f9ec6254",
+      "directorloop/audit/repairs.py": "4669a98d5c4d943c",
+      "directorloop/audit/revise.py": "1e34fddc4abc28bf",
+      "directorloop/runtime/director.py": "f62afc52039597e6",
+      "directorloop/providers/base.py": "3f38a4d6f438b9e3",
+      "directorloop/compare/judge.py": "0969ab9a03f42b78",
+      "directorloop/compare/recombine.py": "7743e99320ba64ad",
+      "directorloop/runtime/abc.py": "d7195d0ae5b4672f"
+    },
+    "reviewer": {
+      "provider": "openai",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "low"
+    },
+    "selector": {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high"
+    },
+    "decision_rules": "decide_next_action (deterministic, no model call)",
+    "renderer": "ffmpeg from typed, validated edit plans",
+    "asr": "whisper.cpp large-v3-turbo q5_0 (local)"
+  },
+  "mocked_stages": [],
+  "manual_interventions": [],
+  "annotations": [],
+  "launched_via": "cli",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09798-74aa-73b8-8b43-55791278da99",
+  "weave_call_id": "01a09798-74aa-73b8-8b43-55791278da99",
+  "timings_ms": {
+    "total_ms": 86466
+  },
+  "error": null
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "id": "cexp_1a09744b816_2009893a",
+    "video_id": "aplaze",
+    "created_at": "2026-09-12T20:18:29.467+00:00",
+    "policy_mode": "learned",
+    "generation": 1,
+    "outcome": "no_clear_winner",
+    "winner_label": null,
+    "arms": 5,
+    "status": "completed",
+    "policy_version_before": 3,
+    "policy_version_after": 7,
+    "total_ms": 51140,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09744-b816-7707-a3ca-176e3cd99df1",
+    "recorded": true
+  },
+  {
+    "id": "cexp_1a097415c48_7bf9dc2b",
+    "video_id": "aptip",
+    "created_at": "2026-09-12T20:14:12.851+00:00",
+    "policy_mode": "learned",
+    "generation": 1,
+    "outcome": "no_clear_winner",
+    "winner_label": null,
+    "arms": 4,
+    "status": "completed",
+    "policy_version_before": 0,
+    "policy_version_after": 3,
+    "total_ms": 14636,
+    "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09741-5c48-7404-9c6c-09d72832d0a9",
+    "recorded": true
+  }
+]

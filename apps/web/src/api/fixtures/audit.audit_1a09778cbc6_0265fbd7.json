@@ -1,0 +1,428 @@
+{
+  "id": "audit_1a09778cbc6_0265fbd7",
+  "video_id": "aplaze",
+  "version_id": "v0",
+  "artifact_hash": "bee8fd5a72d36a88cc51e69ea02105e07161de14a991dc8bff844e18dc439504",
+  "duration_ms": 15567,
+  "created_at": "2026-09-12T21:14:54.436+00:00",
+  "status": "complete",
+  "coverage": {
+    "mode": "sampled_frames_plus_asr",
+    "duration_ms": 15567,
+    "windows": [
+      {
+        "kind": "prefix",
+        "start_ms": 0,
+        "end_ms": 2000,
+        "frame_timestamps_ms": [
+          166,
+          500,
+          833,
+          1166,
+          1499,
+          1833
+        ],
+        "frame_width": 448,
+        "context_frames": 0,
+        "context_width": 256,
+        "transcript_words": 7
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 2000,
+        "end_ms": 4000,
+        "frame_timestamps_ms": [
+          2166,
+          2500,
+          2833,
+          3166,
+          3500,
+          3833
+        ],
+        "frame_width": 448,
+        "context_frames": 2,
+        "context_width": 256,
+        "transcript_words": 11
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 4000,
+        "end_ms": 6000,
+        "frame_timestamps_ms": [
+          4166,
+          4500,
+          4833,
+          5166,
+          5499,
+          5833
+        ],
+        "frame_width": 448,
+        "context_frames": 4,
+        "context_width": 256,
+        "transcript_words": 16
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 6000,
+        "end_ms": 8000,
+        "frame_timestamps_ms": [
+          6166,
+          6500,
+          6833,
+          7166,
+          7499,
+          7833
+        ],
+        "frame_width": 448,
+        "context_frames": 6,
+        "context_width": 256,
+        "transcript_words": 23
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 8000,
+        "end_ms": 10000,
+        "frame_timestamps_ms": [
+          8166,
+          8500,
+          8833,
+          9166,
+          9500,
+          9833
+        ],
+        "frame_width": 448,
+        "context_frames": 8,
+        "context_width": 256,
+        "transcript_words": 29
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 10000,
+        "end_ms": 12000,
+        "frame_timestamps_ms": [
+          10166,
+          10500,
+          10833,
+          11166,
+          11500,
+          11833
+        ],
+        "frame_width": 448,
+        "context_frames": 10,
+        "context_width": 256,
+        "transcript_words": 34
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 12000,
+        "end_ms": 14000,
+        "frame_timestamps_ms": [
+          12166,
+          12500,
+          12833,
+          13166,
+          13500,
+          13833
+        ],
+        "frame_width": 448,
+        "context_frames": 12,
+        "context_width": 256,
+        "transcript_words": 42
+      },
+      {
+        "kind": "prefix",
+        "start_ms": 14000,
+        "end_ms": 15567,
+        "frame_timestamps_ms": [
+          14166,
+          14500,
+          14833,
+          15166,
+          15500
+        ],
+        "frame_width": 448,
+        "context_frames": 14,
+        "context_width": 256,
+        "transcript_words": 47
+      },
+      {
+        "kind": "diagnostic",
+        "start_ms": 0,
+        "end_ms": 15567,
+        "frame_timestamps_ms": [
+          250,
+          750,
+          1250,
+          1750,
+          2250,
+          2750,
+          3250,
+          3750,
+          4250,
+          4750,
+          5250,
+          5750,
+          6250,
+          6750,
+          7250,
+          7750,
+          8250,
+          8750,
+          9250,
+          9750,
+          10250,
+          10750,
+          11250,
+          11750,
+          12250,
+          12750,
+          13250,
+          13750,
+          14250,
+          14750,
+          15250
+        ],
+        "frame_width": 384,
+        "context_frames": 0,
+        "context_width": 0,
+        "transcript_words": 47
+      }
+    ],
+    "total_frames_sent": 134,
+    "transcript_source": "whisper.cpp:ggml-large-v3-turbo-q5_0.bin",
+    "audio_inspection": "whisper.cpp transcript with word timings plus software loudness and silence measurements; the reviewer did not listen to music, sound effects, voice tone or audio-visual sync",
+    "provider": "openai",
+    "model": "gpt-5.6-terra",
+    "limitations": [
+      "frames are samples (3 per second in reviewed windows, 2 per second for diagnosis, 5 per second in close-ups); events between samples can be missed",
+      "not a frame-by-frame audiovisual review; the provider receives still images, not the video file",
+      "native video input unavailable with the configured provider (the Gemini native-video path is out of credit)"
+    ]
+  },
+  "window_reactions": [
+    {
+      "start_ms": 0,
+      "end_ms": 2000,
+      "understanding": "It appears to be explaining that a white cloud of steam or smoke by a dark shoreline contains glass and may be dangerous.",
+      "expectation": "I expect it to explain how the cloud forms and why it contains glass.",
+      "open_question": "How can a cloud contain glass?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The dramatic white plume beside the dark coast and the claim that it contains glass create a surprising safety mystery.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2570,
+      "error": null
+    },
+    {
+      "start_ms": 2000,
+      "end_ms": 4000,
+      "understanding": "It is explaining that the white steam cloud where lava meets the ocean contains glass.",
+      "expectation": "I expect it to explain how the lava creates glass or why the cloud is dangerous.",
+      "open_question": "How does lava hitting the ocean produce glass in the cloud?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The bright lava flowing beside the ocean and the claim that its steam cloud contains glass are intriguing.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2018,
+      "error": null
+    },
+    {
+      "start_ms": 4000,
+      "end_ms": 6000,
+      "understanding": "The video explains that the white cloud formed where lava hits the ocean is called laze and contains glass.",
+      "expectation": "I expect it to explain why the steam cloud contains glass and how dangerous it is.",
+      "open_question": "How does lava hitting the ocean create glass in the cloud?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The close view of bright lava pouring into the ocean while the narration says it creates laze is visually striking and informative.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2055,
+      "error": null
+    },
+    {
+      "start_ms": 6000,
+      "end_ms": 8000,
+      "understanding": "The video explains that when lava hits the ocean, the white cloud called laze contains steam, acid gas, and tiny glass fragments.",
+      "expectation": "I expect it to explain the risks of the glass fragments or show more microscopic evidence.",
+      "open_question": "How dangerous is breathing the cloud?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The close-up of the white plume and the microscope image labeled \"GLASS FRAGMENTS\" made the warning feel concrete.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2018,
+      "error": null
+    },
+    {
+      "start_ms": 8000,
+      "end_ms": 10000,
+      "understanding": "The video explains that the white cloud where lava hits the ocean is hazardous laze, containing steam, acid gas, and tiny glass shards.",
+      "expectation": "I expect it to explain how the shards affect people or how to stay safe.",
+      "open_question": "What part of the body do the glass shards irritate?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The close-up microscope image labeled “GLASS FRAGMENTS” and the warning that shards can irritate you made the danger feel concrete.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2035,
+      "error": null
+    },
+    {
+      "start_ms": 10000,
+      "end_ms": 12000,
+      "understanding": "The video explains that the white cloud formed where lava hits the ocean is hazardous laze containing steam, acid gas, and tiny glass shards that can irritate eyes and lungs.",
+      "expectation": "I expect it to explain what people should do to stay safe around the cloud.",
+      "open_question": "What should you do if you encounter laze?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The close-up of the thick white plume and the warning that it can irritate your eyes and lungs make the danger feel immediate.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2299,
+      "error": null
+    },
+    {
+      "start_ms": 12000,
+      "end_ms": 14000,
+      "understanding": "The video explains that the white plume where lava enters the ocean is hazardous laze containing steam, acid gas, and tiny glass shards that can irritate eyes and lungs.",
+      "expectation": "I expect it to finish the safety warning and explain what to do if you see the white cloud.",
+      "open_question": "What specific warning or action should people take when they see it?",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The dramatic shot of glowing lava beside the white plume and the unfinished line, “the white cloud is,” builds anticipation for the warning.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 2759,
+      "error": null
+    },
+    {
+      "start_ms": 14000,
+      "end_ms": 15567,
+      "understanding": "The video explains that the white cloud where lava hits the ocean is hazardous laze, containing acid gas and tiny glass shards that can irritate eyes and lungs.",
+      "expectation": "I expect the video may end or give more safety guidance about staying away from the cloud.",
+      "open_question": "",
+      "reaction": "engaged",
+      "attention_risk": "low",
+      "cause": "The narration clearly concludes that the white cloud is a warning to back away, alongside the visible lava and plume.",
+      "label": "MODEL JUDGMENT (predicted viewer reaction)",
+      "latency_ms": 1730,
+      "error": null
+    }
+  ],
+  "findings": [],
+  "strengths": [
+    {
+      "id": "audit_1a09778cbc6_0265fbd7_s1",
+      "start_ms": 0,
+      "end_ms": 2800,
+      "what": "The opening pairs a surprising danger claim with a clear view of the white plume at the shoreline.",
+      "why": "The large on-screen text “THIS WHITE CLOUD CONTAINS GLASS” and the narration establish an immediate safety mystery that the viewer model remained engaged with.",
+      "evidence_frames": [
+        {
+          "t_ms": 250,
+          "url": "/media/audit/audit_1a09778cbc6_0265fbd7/000250.jpg"
+        },
+        {
+          "t_ms": 1750,
+          "url": "/media/audit/audit_1a09778cbc6_0265fbd7/001750.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a09778cbc6_0265fbd7_s2",
+      "start_ms": 3250,
+      "end_ms": 10750,
+      "what": "The explanation progresses from the lava-ocean interaction to the plume’s contents and then to a concrete consequence.",
+      "why": "Bright flowing lava visibly meets the coast, followed by captions/narration identifying steam, acid gas, tiny glass shards, and irritation to eyes and lungs; the labeled microscope image makes the glass claim more tangible.",
+      "evidence_frames": [
+        {
+          "t_ms": 3250,
+          "url": "/media/audit/audit_1a09778cbc6_0265fbd7/003250.jpg"
+        },
+        {
+          "t_ms": 5250,
+          "url": "/media/audit/audit_1a09778cbc6_0265fbd7/005250.jpg"
+        }
+      ]
+    },
+    {
+      "id": "audit_1a09778cbc6_0265fbd7_s3",
+      "start_ms": 12250,
+      "end_ms": 15250,
+      "what": "The ending delivers a direct, memorable safety action.",
+      "why": "The final wide shot keeps both the glowing lava and white plume visible while the narration and captions conclude that the cloud is a warning “to back away.”",
+      "evidence_frames": [
+        {
+          "t_ms": 12250,
+          "url": "/media/audit/audit_1a09778cbc6_0265fbd7/012250.jpg"
+        },
+        {
+          "t_ms": 13750,
+          "url": "/media/audit/audit_1a09778cbc6_0265fbd7/013750.jpg"
+        }
+      ]
+    }
+  ],
+  "audience": {
+    "label": "MODEL JUDGMENT (predicted), not measured audience behavior",
+    "stop": {
+      "verdict": "YES",
+      "reason": "The opening’s visible white plume and the unexpected claim that it contains glass create an immediate safety question.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "continue_watching": {
+      "verdict": "YES",
+      "reason": "Each section answers the initial mystery—how the plume forms, what it contains, and why to avoid it.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "finish": {
+      "verdict": "YES",
+      "reason": "The short video builds toward and delivers a clear final warning.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "like": {
+      "verdict": "MAYBE",
+      "reason": "It provides a striking, concise safety fact with concrete visual evidence.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "send": {
+      "verdict": "MAYBE",
+      "reason": "The unusual danger fact could be shared with people interested in volcanoes, nature, or travel safety.",
+      "at_ms": null,
+      "to_whom": "People interested in volcanoes, nature, or travel safety."
+    },
+    "comment": {
+      "verdict": "MAYBE",
+      "reason": "The surprising claim about glass fragments gives viewers a natural point for questions or reactions.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "save_or_replay": {
+      "verdict": "MAYBE",
+      "reason": "A viewer may replay the microscope image and concise explanation of what the plume contains.",
+      "at_ms": null,
+      "to_whom": null
+    },
+    "visit_creator": {
+      "verdict": "INSUFFICIENT_EVIDENCE",
+      "reason": "The video shows no creator identity, series cue, or invitation to view more.",
+      "at_ms": null,
+      "to_whom": null
+    }
+  },
+  "overall_summary": "This is a clear, visually dramatic safety explainer that opens with a strong surprise and follows through with an understandable cause, hazard, and action. The supplied viewer model remains engaged throughout, and the evidence does not establish a material pacing, clarity, or payoff weakness.",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09778-cbc6-7b73-8bc9-0aec177188a6",
+  "weave_call_id": "01a09778-cbc6-7b73-8bc9-0aec177188a6",
+  "timings_ms": {
+    "signals_asr_ms": 2847,
+    "cold_review_ms": 8054,
+    "diagnose_ms": 11647,
+    "closeup_ms": 0,
+    "total_ms": 23197
+  },
+  "model_calls": 9,
+  "notes": [],
+  "incomplete_reasons": [],
+  "primed_with": [],
+  "media_url": null
+}

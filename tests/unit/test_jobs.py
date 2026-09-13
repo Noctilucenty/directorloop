@@ -48,7 +48,8 @@ def test_failures_and_cancellation_are_recorded(tmp_path: Path) -> None:
     worker = JobWorker(store, {"experiment": failing})
     job, _ = store.create("experiment", {})
     done = worker.run_once()
-    assert done.state == "FAILED" and "ffmpeg exploded" in (done.error or "")
+    assert done.state == "FAILED" and "RuntimeError" in (done.error or "")
+    assert "ffmpeg exploded" not in (done.error or ""), "arbitrary exception strings are not a public error contract"
     assert store.events(job.id)[-1]["stage"] == "FAILED"
 
     def slow(job, on_stage):  # noqa: ANN001

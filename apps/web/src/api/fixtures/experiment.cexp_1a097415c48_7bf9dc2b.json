@@ -1,0 +1,844 @@
+{
+  "id": "cexp_1a097415c48_7bf9dc2b",
+  "video_id": "aptip",
+  "created_at": "2026-09-12T20:14:12.851+00:00",
+  "policy_mode": "learned",
+  "generation": 1,
+  "outcome": "no_clear_winner",
+  "winner_label": null,
+  "arms": [
+    {
+      "id": "cexp_1a097415c48_7bf9dc2b_control",
+      "label": "control",
+      "status": "evaluated",
+      "media_url": "/media/renders/6c2051191aaac76af80d53d0a20c2a90777f0998f613000a1d00984830df1aee.mp4",
+      "hook_media_url": "/media/hooks/6c2051191aaac76af80d53d0a20c2a90777f0998_hook3000.mp4",
+      "duration_ms": 13867,
+      "render_ms": 4437,
+      "outcome": null,
+      "outcome_reason": null,
+      "mutation": null,
+      "fitness": {
+        "hard_gates_passed": true,
+        "gate_notes": [],
+        "components": [
+          {
+            "name": "hook_topic_comprehension",
+            "value": 1,
+            "unit": "share of trials",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees only the first 3 s (4 frames + transcript of those 3 s)",
+            "trials": 3,
+            "valid": 3
+          },
+          {
+            "name": "message_comprehension",
+            "value": 3,
+            "unit": "of 3 questions",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees 8 frames + transcript of the rendered audio; questions frozen from the original transcript",
+            "trials": 3,
+            "valid": 9
+          },
+          {
+            "name": "payoff_ms",
+            "value": 9370,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "timeline start of the first proof or payoff beat (derived from the plan; roles are model labels)",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "context_before_payoff_ms",
+            "value": 4130,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "setup/context/problem beats after the opening and before the payoff",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "first_visual_change_ms",
+            "value": 2500,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "scene cut or motion spike on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "longest_static_span_ms",
+            "value": 7467,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "no cut and low motion on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "duration_ms",
+            "value": 13867,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "render_ms",
+            "value": 4437,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          }
+        ]
+      },
+      "preference_reasons": {
+        "full": [],
+        "hook": []
+      }
+    },
+    {
+      "id": "cexp_1a097415c48_7bf9dc2b_A",
+      "label": "A",
+      "status": "evaluated",
+      "media_url": "/media/renders/9cd98d1480f061ecb4cc55ca741e375db5a0e11e75dfcae7d35637890828d2f8.mp4",
+      "hook_media_url": "/media/hooks/9cd98d1480f061ecb4cc55ca741e375db5a0e11e_hook3000.mp4",
+      "duration_ms": 13900,
+      "render_ms": 4472,
+      "outcome": "neutral",
+      "outcome_reason": "full-video model preference 0.50",
+      "mutation": {
+        "type": "PATTERN_INTERRUPT",
+        "description": "Punch in 1.25x at 11.6s inside the 7.5s static span (same footage and audio, new framing).",
+        "changed_variable": "framing during the longest static span",
+        "protected_variables": [
+          "spoken wording",
+          "music and voice inside each beat",
+          "burned-in captions",
+          "every other beat's order and length"
+        ],
+        "hypothesis_id": "hyp_1a097415c63_1e3daf11",
+        "target_start_ms": 6400,
+        "target_end_ms": 13867,
+        "expected_benefit": "prediction: addresses visual_stagnation (The picture barely changes for 7.5s, which may lose attention.)",
+        "risk": "low"
+      },
+      "fitness": {
+        "hard_gates_passed": true,
+        "gate_notes": [],
+        "components": [
+          {
+            "name": "hook_topic_comprehension",
+            "value": 1,
+            "unit": "share of trials",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees only the first 3 s (4 frames + transcript of those 3 s)",
+            "trials": 3,
+            "valid": 3
+          },
+          {
+            "name": "message_comprehension",
+            "value": 3,
+            "unit": "of 3 questions",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees 8 frames + transcript of the rendered audio; questions frozen from the original transcript",
+            "trials": 3,
+            "valid": 9
+          },
+          {
+            "name": "model_full_preference_vs_control",
+            "value": 0.5,
+            "unit": "share of 4 calls",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "both presentation orders, ties count half; a model judgment, not viewer behaviour",
+            "trials": null,
+            "valid": 4
+          },
+          {
+            "name": "model_hook_preference_vs_control",
+            "value": null,
+            "unit": "n/a",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "identical opening to control; not tested",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "payoff_ms",
+            "value": 9370,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "timeline start of the first proof or payoff beat (derived from the plan; roles are model labels)",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "context_before_payoff_ms",
+            "value": 4130,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "setup/context/problem beats after the opening and before the payoff",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "first_visual_change_ms",
+            "value": 2500,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "scene cut or motion spike on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "longest_static_span_ms",
+            "value": 5300,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "no cut and low motion on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "duration_ms",
+            "value": 13900,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "render_ms",
+            "value": 4472,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          }
+        ]
+      },
+      "preference_reasons": {
+        "full": [
+          "tie: Both versions show the same spinning-top demonstration with the same narration and captions.",
+          "tie: Both versions show the same spinning-top sequence with the same on-screen text and audio.",
+          "tie: Both versions show the same spinning-top sequence with the same on-screen text and audio.",
+          "tie: Both versions show the same spinning-top sequence with the same on-screen text and audio."
+        ],
+        "hook": []
+      }
+    },
+    {
+      "id": "cexp_1a097415c48_7bf9dc2b_B",
+      "label": "B",
+      "status": "evaluated",
+      "media_url": "/media/renders/7d048ea79a1a97478c0a7bab8771ce249f50a8b2a36d23f30f53bb04bdcef3b3.mp4",
+      "hook_media_url": "/media/hooks/7d048ea79a1a97478c0a7bab8771ce249f50a8b2_hook3000.mp4",
+      "duration_ms": 13900,
+      "render_ms": 4175,
+      "outcome": "loss",
+      "outcome_reason": "full-video model preference 0.00; tradeoff: the opening alone was preferred (0.75)",
+      "mutation": {
+        "type": "PAYOFF_EARLIER",
+        "description": "Move the payoff beat 'The stem it is now standing on was pointing stra...' from 9.4s to right after the opening.",
+        "changed_variable": "position of the payoff beat",
+        "protected_variables": [
+          "spoken wording",
+          "music and voice inside each beat",
+          "burned-in captions",
+          "every other beat's order and length"
+        ],
+        "hypothesis_id": "hyp_1a097415c63_3a60b1f1",
+        "target_start_ms": 9370,
+        "target_end_ms": 13867,
+        "expected_benefit": "prediction: addresses proof_latency (The evidence or answer arrives late (9.4s); people may leave before the video pays off its)",
+        "risk": "medium"
+      },
+      "fitness": {
+        "hard_gates_passed": true,
+        "gate_notes": [],
+        "components": [
+          {
+            "name": "hook_topic_comprehension",
+            "value": 1,
+            "unit": "share of trials",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees only the first 3 s (4 frames + transcript of those 3 s)",
+            "trials": 3,
+            "valid": 3
+          },
+          {
+            "name": "message_comprehension",
+            "value": 3,
+            "unit": "of 3 questions",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees 8 frames + transcript of the rendered audio; questions frozen from the original transcript",
+            "trials": 3,
+            "valid": 9
+          },
+          {
+            "name": "model_full_preference_vs_control",
+            "value": 0,
+            "unit": "share of 4 calls",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "both presentation orders, ties count half; a model judgment, not viewer behaviour",
+            "trials": null,
+            "valid": 4
+          },
+          {
+            "name": "model_hook_preference_vs_control",
+            "value": 0.75,
+            "unit": "share of 4 calls",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "first 3 s only, both orders",
+            "trials": null,
+            "valid": 4
+          },
+          {
+            "name": "payoff_ms",
+            "value": 2250,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "timeline start of the first proof or payoff beat (derived from the plan; roles are model labels)",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "context_before_payoff_ms",
+            "value": 0,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "setup/context/problem beats after the opening and before the payoff",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "first_visual_change_ms",
+            "value": 2300,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "scene cut or motion spike on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "longest_static_span_ms",
+            "value": 4400,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "no cut and low motion on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "duration_ms",
+            "value": 13900,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "render_ms",
+            "value": 4175,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          }
+        ]
+      },
+      "preference_reasons": {
+        "full": [
+          "control: Version 1 explains the top’s surprising climb before revealing the stem detail at the end.",
+          "control: Version 2 presents the surprising climbing action and explanation before the final reveal about the stem.",
+          "control: Version 1 presents the surprising climb before explaining the upright stem, preserving curiosity longer.",
+          "control: Version 2 presents the surprising climb and explanation before the final reveal about the stem."
+        ],
+        "hook": [
+          "variant: Version 2 reveals the green spinning top by 2.40s, while Version 1 still shows it covered by the hand.",
+          "control: Version 2 removes the large opening text sooner, making the spinning-top setup clearer.",
+          "variant: Version 2 reveals the green top standing upright by 2.40s, while Version 1 still shows the hand covering it.",
+          "variant: Version 1 shows the on-screen hook immediately, while Version 2 briefly lacks it by 2.40 seconds."
+        ]
+      }
+    },
+    {
+      "id": "cexp_1a097415c48_7bf9dc2b_C",
+      "label": "C",
+      "status": "evaluated",
+      "media_url": "/media/renders/917af1e9c9897f842905d2012039e552cc2e819dea0a27645ea77b6ddfe00f5b.mp4",
+      "hook_media_url": "/media/hooks/917af1e9c9897f842905d2012039e552cc2e819d_hook3000.mp4",
+      "duration_ms": 11537,
+      "render_ms": 3383,
+      "outcome": "neutral",
+      "outcome_reason": "full-video model preference 0.50, opening 1.00",
+      "mutation": {
+        "type": "CONTEXT_COMPRESSION",
+        "description": "Remove the context beat 'Tops slow down and fall over.' (2.3s) before the proof.",
+        "changed_variable": "presence of one context beat",
+        "protected_variables": [
+          "spoken wording",
+          "music and voice inside each beat",
+          "burned-in captions",
+          "every other beat's order and length"
+        ],
+        "hypothesis_id": "hyp_1a097415c63_06c3f7ec",
+        "target_start_ms": 2250,
+        "target_end_ms": 4580,
+        "expected_benefit": "prediction: addresses context_interruption (Background context interrupts the momentum between the hook and the payoff.)",
+        "risk": "medium"
+      },
+      "fitness": {
+        "hard_gates_passed": true,
+        "gate_notes": [],
+        "components": [
+          {
+            "name": "hook_topic_comprehension",
+            "value": 1,
+            "unit": "share of trials",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees only the first 3 s (4 frames + transcript of those 3 s)",
+            "trials": 3,
+            "valid": 3
+          },
+          {
+            "name": "message_comprehension",
+            "value": 3,
+            "unit": "of 3 questions",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "model sees 8 frames + transcript of the rendered audio; questions frozen from the original transcript",
+            "trials": 3,
+            "valid": 9
+          },
+          {
+            "name": "model_full_preference_vs_control",
+            "value": 0.5,
+            "unit": "share of 4 calls",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "both presentation orders, ties count half; a model judgment, not viewer behaviour",
+            "trials": null,
+            "valid": 4
+          },
+          {
+            "name": "model_hook_preference_vs_control",
+            "value": 1,
+            "unit": "share of 4 calls",
+            "better": "higher",
+            "evidence": "model_eval",
+            "detail": "first 3 s only, both orders",
+            "trials": null,
+            "valid": 4
+          },
+          {
+            "name": "payoff_ms",
+            "value": 7040,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "timeline start of the first proof or payoff beat (derived from the plan; roles are model labels)",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "context_before_payoff_ms",
+            "value": 1800,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "setup/context/problem beats after the opening and before the payoff",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "first_visual_change_ms",
+            "value": 2300,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "scene cut or motion spike on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "longest_static_span_ms",
+            "value": 7437,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "no cut and low motion on the rendered arm",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "duration_ms",
+            "value": 11537,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          },
+          {
+            "name": "render_ms",
+            "value": 3383,
+            "unit": "ms",
+            "better": "lower",
+            "evidence": "mechanical",
+            "detail": "",
+            "trials": null,
+            "valid": null
+          }
+        ]
+      },
+      "preference_reasons": {
+        "full": [
+          "variant: It omits the slower explanatory line about tops falling over, making the video more direct.",
+          "control: Version 2 adds the setup that tops normally slow down and fall over, making the climbing action more intriguing.",
+          "variant: Version 2 removes the slower explanatory line about tops falling over, making the video more concise.",
+          "control: Version 2 adds the clearer setup that ordinary tops slow down and fall over before showing this one climb."
+        ],
+        "hook": [
+          "variant: Version 2 quickly shows the top spinning and adds the hook, “This one climbs.”",
+          "variant: Version 1 quickly shows the top spinning by 2.40s, while Version 2 still shows the hand holding it.",
+          "variant: Version 2 quickly shows the top spinning and adds the hook, “This one climbs.”",
+          "variant: Version 1 quickly shows the top spinning on its own, while Version 2 still shows it being held."
+        ]
+      }
+    }
+  ],
+  "status": "completed",
+  "policy_version_before": 0,
+  "policy_version_after": 3,
+  "total_ms": 14636,
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09741-5c48-7404-9c6c-09d72832d0a9",
+  "recorded": true,
+  "question": "Which single change best addresses: visual_stagnation; proof_latency; context_interruption",
+  "hypotheses": [
+    {
+      "id": "hyp_1a097415c63_1e3daf11",
+      "family": "visual_stagnation",
+      "statement": "The picture barely changes for 7.5s, which may lose attention.",
+      "region_start_ms": 6400,
+      "region_end_ms": 13867,
+      "region_basis": "creative structure",
+      "detection_confidence": 0.75,
+      "evidence": [
+        {
+          "kind": "mechanical",
+          "text": "no shot cut and frame difference under threshold for 7.5s from 6.4s",
+          "source": "mechanical",
+          "ref": null
+        }
+      ],
+      "counterevidence": [
+        {
+          "kind": "mechanical",
+          "text": "low frame difference can hide slow meaningful motion; a held shot can be intentional"
+        }
+      ],
+      "candidate_mutations": [
+        "PATTERN_INTERRUPT"
+      ],
+      "changed_variable": "framing during the static stretch"
+    },
+    {
+      "id": "hyp_1a097415c63_3a60b1f1",
+      "family": "proof_latency",
+      "statement": "The evidence or answer arrives late (9.4s); people may leave before the video pays off its opening.",
+      "region_start_ms": 2250,
+      "region_end_ms": 9370,
+      "region_basis": "creative structure",
+      "detection_confidence": 0.7,
+      "evidence": [
+        {
+          "kind": "model_eval",
+          "text": "first payoff beat starts at 9.4s of 13.9s (beat roles are language-model labels)",
+          "source": "language_model",
+          "ref": null
+        }
+      ],
+      "counterevidence": [],
+      "candidate_mutations": [
+        "PAYOFF_EARLIER",
+        "RESULT_FIRST"
+      ],
+      "changed_variable": "when the proof or payoff appears"
+    },
+    {
+      "id": "hyp_1a097415c63_06c3f7ec",
+      "family": "context_interruption",
+      "statement": "Background context interrupts the momentum between the hook and the payoff.",
+      "region_start_ms": 2250,
+      "region_end_ms": 6380,
+      "region_basis": "creative structure",
+      "detection_confidence": 0.6,
+      "evidence": [
+        {
+          "kind": "model_eval",
+          "text": "4.1s of setup/context between the hook and the first proof or payoff: 'Tops slow down and fall over.'; 'This one climbs instead.'",
+          "source": "language_model",
+          "ref": "beat_01"
+        }
+      ],
+      "counterevidence": [
+        {
+          "kind": "model_eval",
+          "text": "context may be needed to understand the payoff; the comprehension suite guards against removing it"
+        }
+      ],
+      "candidate_mutations": [
+        "CONTEXT_COMPRESSION"
+      ],
+      "changed_variable": "whether one context beat is present"
+    }
+  ],
+  "ranking": [
+    {
+      "mutation": "PATTERN_INTERRUPT",
+      "hypothesis_id": "hyp_1a097415c63_1e3daf11",
+      "family": "visual_stagnation",
+      "score": 0.575,
+      "detection_confidence": 0.75,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.75; reference prior 0.50 (no reference split); experiment evidence 0.50 from 0 win(s), 0 loss(es), 0 neutral",
+      "description": "Punch in 1.25x at 11.6s inside the 7.5s static span (same footage and audio, new framing).",
+      "changed_variable": "framing during the longest static span",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 6400,
+      "target_end_ms": 13867,
+      "selected": true
+    },
+    {
+      "mutation": "PAYOFF_EARLIER",
+      "hypothesis_id": "hyp_1a097415c63_3a60b1f1",
+      "family": "proof_latency",
+      "score": 0.56,
+      "detection_confidence": 0.7,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.70; reference prior 0.50 (no reference split); experiment evidence 0.50 from 0 win(s), 0 loss(es), 0 neutral",
+      "description": "Move the payoff beat 'The stem it is now standing on was pointing stra...' from 9.4s to right after the opening.",
+      "changed_variable": "position of the payoff beat",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 9370,
+      "target_end_ms": 13867,
+      "selected": true
+    },
+    {
+      "mutation": "RESULT_FIRST",
+      "hypothesis_id": "hyp_1a097415c63_3a60b1f1",
+      "family": "proof_latency",
+      "score": 0.56,
+      "detection_confidence": 0.7,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.70; reference prior 0.50 (no reference split); experiment evidence 0.50 from 0 win(s), 0 loss(es), 0 neutral",
+      "description": "",
+      "changed_variable": "when the proof or payoff appears",
+      "protected_variables": [],
+      "target_start_ms": 2250,
+      "target_end_ms": 9370,
+      "selected": false
+    },
+    {
+      "mutation": "CONTEXT_COMPRESSION",
+      "hypothesis_id": "hyp_1a097415c63_06c3f7ec",
+      "family": "context_interruption",
+      "score": 0.53,
+      "detection_confidence": 0.6,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.60; reference prior 0.50 (no reference split); experiment evidence 0.50 from 0 win(s), 0 loss(es), 0 neutral",
+      "description": "Remove the context beat 'Tops slow down and fall over.' (2.3s) before the proof.",
+      "changed_variable": "presence of one context beat",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 2250,
+      "target_end_ms": 4580,
+      "selected": true
+    }
+  ],
+  "decision": {
+    "outcome": "no_clear_winner",
+    "winner_arm_id": null,
+    "reason": "no arm met the win rule; keeping the control. cexp_1a097415c48_7bf9dc2b_A: neutral (full-video model preference 0.50). cexp_1a097415c48_7bf9dc2b_B: loss (full-video model preference 0.00; tradeoff: the opening alone was preferred (0.75)). cexp_1a097415c48_7bf9dc2b_C: neutral (full-video model preference 0.50, opening 1.00).",
+    "primary_metric": "model_full_preference_vs_control",
+    "per_arm": {
+      "cexp_1a097415c48_7bf9dc2b_A": "neutral",
+      "cexp_1a097415c48_7bf9dc2b_B": "loss",
+      "cexp_1a097415c48_7bf9dc2b_C": "neutral"
+    }
+  },
+  "policy_updates": [
+    {
+      "strategy": "strat_pattern_interrupt__category_educational_short",
+      "mutation": "PATTERN_INTERRUPT",
+      "outcome": "neutral",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 1,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "policy_version": 1
+    },
+    {
+      "strategy": "strat_payoff_earlier__category_educational_short",
+      "mutation": "PAYOFF_EARLIER",
+      "outcome": "loss",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "CONTRADICTED",
+        "wins": 0,
+        "losses": 1,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.333
+      },
+      "policy_version": 2
+    },
+    {
+      "strategy": "strat_context_compression__category_educational_short",
+      "mutation": "CONTEXT_COMPRESSION",
+      "outcome": "neutral",
+      "before": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 0,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "after": {
+        "status": "PROPOSED",
+        "wins": 0,
+        "losses": 0,
+        "neutral": 1,
+        "rejected": 0,
+        "confidence": 0.5
+      },
+      "policy_version": 3
+    }
+  ],
+  "reference_patterns": [],
+  "suite": {
+    "id": "suite_aptip",
+    "hash": "8c894970c013d796308a4db83de4037847ad5927158bd3b311cc850770aad2bf",
+    "questions": [
+      {
+        "id": "q_topic",
+        "text": "What object is introduced at the beginning of the video?"
+      },
+      {
+        "id": "q_message_1",
+        "text": "What surprising behavior does this top display?"
+      },
+      {
+        "id": "q_message_2",
+        "text": "What causes the top to lift up?"
+      },
+      {
+        "id": "q_message_3",
+        "text": "What should viewers understand about the stem's orientation?"
+      }
+    ]
+  },
+  "timings_ms": {
+    "genome_ms": 24,
+    "investigate_ms": 3,
+    "design_ms": 8,
+    "suite_ms": 9,
+    "render_wall_ms": 4480,
+    "arm_media_ms": 1528,
+    "evaluate_wall_ms": 8538,
+    "total_ms": 14636
+  },
+  "model_calls": 68,
+  "notes": [
+    "no retention data: regions come from creative structure, not from measured drops"
+  ]
+}

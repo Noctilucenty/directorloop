@@ -1,0 +1,99 @@
+{
+  "video_id": "aptip",
+  "mode": "none",
+  "policy_version": 0,
+  "rankings": [
+    {
+      "mutation": "PATTERN_INTERRUPT",
+      "hypothesis_id": "hyp_1a097415c63_1e3daf11",
+      "family": "visual_stagnation",
+      "score": 0.575,
+      "detection_confidence": 0.75,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.75; reference prior 0.50 (no reference split); experiment evidence ignored (no-memory mode)",
+      "description": "Punch in 1.25x at 11.6s inside the 7.5s static span (same footage and audio, new framing).",
+      "changed_variable": "framing during the longest static span",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 6400,
+      "target_end_ms": 13867,
+      "selected": true
+    },
+    {
+      "mutation": "PAYOFF_EARLIER",
+      "hypothesis_id": "hyp_1a097415c63_3a60b1f1",
+      "family": "proof_latency",
+      "score": 0.56,
+      "detection_confidence": 0.7,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.70; reference prior 0.50 (no reference split); experiment evidence ignored (no-memory mode)",
+      "description": "Move the payoff beat 'The stem it is now standing on was pointing stra...' from 9.4s to right after the opening.",
+      "changed_variable": "position of the payoff beat",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 9370,
+      "target_end_ms": 13867,
+      "selected": true
+    },
+    {
+      "mutation": "RESULT_FIRST",
+      "hypothesis_id": "hyp_1a097415c63_3a60b1f1",
+      "family": "proof_latency",
+      "score": 0.56,
+      "detection_confidence": 0.7,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.70; reference prior 0.50 (no reference split); experiment evidence ignored (no-memory mode)",
+      "description": "",
+      "changed_variable": "when the proof or payoff appears",
+      "protected_variables": [],
+      "target_start_ms": 2250,
+      "target_end_ms": 9370,
+      "selected": false
+    },
+    {
+      "mutation": "CONTEXT_COMPRESSION",
+      "hypothesis_id": "hyp_1a097415c63_06c3f7ec",
+      "family": "context_interruption",
+      "score": 0.53,
+      "detection_confidence": 0.6,
+      "reference_support": 0.5,
+      "policy_mean": 0.5,
+      "policy_wins": 0,
+      "policy_losses": 0,
+      "policy_neutral": 0,
+      "reason": "detection 0.60; reference prior 0.50 (no reference split); experiment evidence ignored (no-memory mode)",
+      "description": "Remove the context beat 'Tops slow down and fall over.' (2.3s) before the proof.",
+      "changed_variable": "presence of one context beat",
+      "protected_variables": [
+        "spoken wording",
+        "music and voice inside each beat",
+        "burned-in captions",
+        "every other beat's order and length"
+      ],
+      "target_start_ms": 2250,
+      "target_end_ms": 4580,
+      "selected": true
+    }
+  ],
+  "skipped": []
+}

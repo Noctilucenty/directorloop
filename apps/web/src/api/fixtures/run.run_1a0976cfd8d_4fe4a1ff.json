@@ -1,0 +1,135 @@
+{
+  "id": "run_1a0976cfd8d_4fe4a1ff",
+  "config": {
+    "video_id": "beavers-v7",
+    "objective": "Keep a first-time viewer watching to the end and make sure they understand what happens and why it matters.",
+    "focus": null,
+    "constraints": [
+      "Do not add new claims or on-screen text",
+      "Keep the ending"
+    ],
+    "allowed_edits": null,
+    "iteration_budget": 3,
+    "max_attempts_per_finding": 2,
+    "category": "educational_short"
+  },
+  "status": "completed",
+  "stop_reason": "no runnable existing-video repair remains: 8.0-8.2s route C: needs a new or replacement shot | 9.9-11.1s route B: a flattened MP4 cannot change caption text and styling (captions are burned into the pixels) independently",
+  "final_decision": "retain the original: no repair was attempted (see the stop reason)",
+  "created_at": "2026-09-12T21:01:37.556+00:00",
+  "ended_at": "2026-09-12T21:02:17.279+00:00",
+  "original_artifact_hash": "da4a50c19af5900e95c4dd01af4b4eab59a0a9d0696809d09bcc57d597d5e1c4",
+  "final_version_id": "v0",
+  "final_artifact_hash": "da4a50c19af5900e95c4dd01af4b4eab59a0a9d0696809d09bcc57d597d5e1c4",
+  "audit_ids": [
+    "audit_1a0976cfe14_aa5d9529"
+  ],
+  "repair_run_ids": [],
+  "lessons": [],
+  "runtime": {
+    "runtime_version": "director-v1",
+    "git_commit": "d93aae0",
+    "prompt_sources_uncommitted_changes": true,
+    "prompt_source_sha256_16": {
+      "directorloop/audit/review.py": "159e2e861bfebbd0",
+      "directorloop/audit/repairs.py": "5f64d7d2cb93df52",
+      "directorloop/audit/revise.py": "00d1e176a6faa095",
+      "directorloop/runtime/director.py": "c991190b50d3facd",
+      "directorloop/providers/base.py": "3f38a4d6f438b9e3"
+    },
+    "reviewer": {
+      "provider": "openai",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "low"
+    },
+    "selector": {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high"
+    },
+    "decision_rules": "decide_next_action (deterministic, no model call)",
+    "renderer": "ffmpeg from typed, validated edit plans",
+    "asr": "whisper.cpp large-v3-turbo q5_0 (local)",
+    "state": "data/runs/<run_id>.json, data/audit/<audit_id>/audit.json, data/repairs/<repair_id>.json, data/audit/lessons.jsonl"
+  },
+  "mocked_stages": [],
+  "manual_interventions": [],
+  "launched_via": "cli",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0976c-fd8d-7228-bcae-c718d4e64154",
+  "weave_call_id": "01a0976c-fd8d-7228-bcae-c718d4e64154",
+  "timings_ms": {
+    "total_ms": 39729
+  },
+  "error": null,
+  "iterations": [
+    {
+      "index": 1,
+      "current_version_id": "v0",
+      "current_artifact_hash": "da4a50c19af5900e95c4dd01af4b4eab59a0a9d0696809d09bcc57d597d5e1c4",
+      "audit_id": "audit_1a0976cfe14_aa5d9529",
+      "considered": [
+        {
+          "finding_id": "audit_1a0976cfe14_aa5d9529_f1",
+          "interval_ms": [
+            8000,
+            8200
+          ],
+          "issue_type": "framing_hides_important_action",
+          "objective": "comprehension",
+          "severity": "low",
+          "uncertainty": "medium",
+          "weakness": "The key cause-and-effect action is skipped visually: the shot jumps from an airborne closed crate to an already-open crate on the ground.",
+          "route": "C",
+          "runnable": false,
+          "edit": "",
+          "selection_reason": "",
+          "why_not_runnable": "needs a new or replacement shot",
+          "skipped": null
+        },
+        {
+          "finding_id": "audit_1a0976cfe14_aa5d9529_f2",
+          "interval_ms": [
+            9900,
+            11100
+          ],
+          "issue_type": "weak_or_missing_payoff",
+          "objective": "emotional_payoff",
+          "severity": "medium",
+          "uncertainty": "medium",
+          "weakness": "The ending resolves how the crates opened but does not provide a visible or spoken final context for why the beavers were parachuted or what their release meant.",
+          "route": "B",
+          "runnable": false,
+          "edit": "",
+          "selection_reason": "",
+          "why_not_runnable": "a flattened MP4 cannot change caption text and styling (captions are burned into the pixels) independently",
+          "skipped": null
+        }
+      ],
+      "finding_id": null,
+      "finding": "",
+      "ranking_reason": "",
+      "selection_reason": "",
+      "repair_run_id": null,
+      "edit": "",
+      "mutation_type": null,
+      "change_verified": null,
+      "verification_checks": [],
+      "candidate_version_id": null,
+      "candidate_artifact_hash": null,
+      "candidate_audit_id": null,
+      "outcome": null,
+      "target_resolved": null,
+      "improved": [],
+      "regressed": [],
+      "decision": "stop",
+      "reason": "no runnable existing-video repair remains: 8.0-8.2s route C: needs a new or replacement shot | 9.9-11.1s route B: a flattened MP4 cannot change caption text and styling (captions are burned into the pixels) independently",
+      "next_action": "stop",
+      "next_action_reason": "no runnable existing-video repair remains: 8.0-8.2s route C: needs a new or replacement shot | 9.9-11.1s route B: a flattened MP4 cannot change caption text and styling (captions are burned into the pixels) independently",
+      "lesson_id": null,
+      "timings_ms": {},
+      "candidate_media_url": null
+    }
+  ],
+  "original_media_url": "/media/source/beavers-v7.mp4",
+  "final_media_url": "/media/source/beavers-v7.mp4"
+}

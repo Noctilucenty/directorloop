@@ -7,6 +7,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from ..audit.models import ChangeVerification
+from ..observability.workflow import WorkflowStage
 
 Label = Literal["A", "B", "C"]
 Outcome = Literal["improvement", "regression", "mixed", "tie", "insufficient_evidence"]
@@ -196,5 +197,6 @@ class ABCRun(BaseModel):
     launched_via: str = "python"
     weave_url: str | None = None
     weave_call_id: str | None = None
+    workflow_stages: list[WorkflowStage] = Field(default_factory=list)
     timings_ms: dict[str, int] = Field(default_factory=dict)
     error: str | None = None

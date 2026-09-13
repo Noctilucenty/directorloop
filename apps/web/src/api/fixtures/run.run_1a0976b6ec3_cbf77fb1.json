@@ -1,0 +1,117 @@
+{
+  "id": "run_1a0976b6ec3_cbf77fb1",
+  "config": {
+    "video_id": "aptip",
+    "objective": "Keep a first-time viewer watching and make the tippe top's flip easy to follow, without losing the surprise.",
+    "focus": null,
+    "constraints": [
+      "Do not add new claims or on-screen text",
+      "Keep the narration's explanation of why the top flips"
+    ],
+    "allowed_edits": null,
+    "iteration_budget": 3,
+    "max_attempts_per_finding": 2,
+    "category": "educational_short"
+  },
+  "status": "completed",
+  "stop_reason": "no runnable existing-video repair remains: 9.2-13.1s route B: a flattened MP4 cannot change caption text and styling (captions are burned into the pixels) independently",
+  "final_decision": "retain the original: no candidate demonstrated an improvement",
+  "created_at": "2026-09-12T20:59:55.459+00:00",
+  "ended_at": "2026-09-12T21:00:30.473+00:00",
+  "original_artifact_hash": "97ab80b2a7d30cb3bb97f63b86ea97738691ab1819cdc8b37b784fc5a6cf0a14",
+  "final_version_id": "v0",
+  "final_artifact_hash": "97ab80b2a7d30cb3bb97f63b86ea97738691ab1819cdc8b37b784fc5a6cf0a14",
+  "audit_ids": [
+    "audit_1a0976b6f33_adc12b66"
+  ],
+  "repair_run_ids": [],
+  "lessons": [],
+  "runtime": {
+    "runtime_version": "director-v1",
+    "git_commit": "d93aae0",
+    "prompt_sources_uncommitted_changes": true,
+    "prompt_source_sha256_16": {
+      "directorloop/audit/review.py": "159e2e861bfebbd0",
+      "directorloop/audit/repairs.py": "5f64d7d2cb93df52",
+      "directorloop/audit/revise.py": "00d1e176a6faa095",
+      "directorloop/runtime/director.py": "d9eb746366c0eaa1",
+      "directorloop/providers/base.py": "3f38a4d6f438b9e3"
+    },
+    "reviewer": {
+      "provider": "openai",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "low"
+    },
+    "selector": {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high"
+    },
+    "decision_rules": "decide_next_action (deterministic, no model call)",
+    "renderer": "ffmpeg from typed, validated edit plans",
+    "asr": "whisper.cpp large-v3-turbo q5_0 (local)",
+    "state": "data/runs/<run_id>.json, data/audit/<audit_id>/audit.json, data/repairs/<repair_id>.json, data/audit/lessons.jsonl"
+  },
+  "mocked_stages": [],
+  "manual_interventions": [],
+  "launched_via": "cli",
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a0976b-6ec2-79ec-8309-59508cd45502",
+  "weave_call_id": "01a0976b-6ec2-79ec-8309-59508cd45502",
+  "timings_ms": {
+    "total_ms": 35003
+  },
+  "error": null,
+  "iterations": [
+    {
+      "index": 1,
+      "current_version_id": "v0",
+      "current_artifact_hash": "97ab80b2a7d30cb3bb97f63b86ea97738691ab1819cdc8b37b784fc5a6cf0a14",
+      "audit_id": "audit_1a0976b6f33_adc12b66",
+      "considered": [
+        {
+          "finding_id": "audit_1a0976b6f33_adc12b66_f1",
+          "interval_ms": [
+            9200,
+            13100
+          ],
+          "issue_type": "missing_context_or_ambiguous_reference",
+          "objective": "comprehension",
+          "severity": "low",
+          "uncertainty": "medium",
+          "weakness": "The payoff explanation is ambiguous because its key subject—the stem—is difficult to see and the sentence is presented in awkward, fragmented wording.",
+          "route": "B",
+          "runnable": false,
+          "edit": "",
+          "selection_reason": "",
+          "why_not_runnable": "a flattened MP4 cannot change caption text and styling (captions are burned into the pixels) independently",
+          "skipped": null
+        }
+      ],
+      "finding_id": null,
+      "finding": "",
+      "ranking_reason": "",
+      "selection_reason": "",
+      "repair_run_id": null,
+      "edit": "",
+      "mutation_type": null,
+      "change_verified": null,
+      "verification_checks": [],
+      "candidate_version_id": null,
+      "candidate_artifact_hash": null,
+      "candidate_audit_id": null,
+      "outcome": null,
+      "target_resolved": null,
+      "improved": [],
+      "regressed": [],
+      "decision": "stop",
+      "reason": "no runnable existing-video repair remains: 9.2-13.1s route B: a flattened MP4 cannot change caption text and styling (captions are burned into the pixels) independently",
+      "next_action": "stop",
+      "next_action_reason": "no runnable existing-video repair remains: 9.2-13.1s route B: a flattened MP4 cannot change caption text and styling (captions are burned into the pixels) independently",
+      "lesson_id": null,
+      "timings_ms": {},
+      "candidate_media_url": null
+    }
+  ],
+  "original_media_url": "/media/source/aptip.mp4",
+  "final_media_url": "/media/source/aptip.mp4"
+}

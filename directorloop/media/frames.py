@@ -38,34 +38,25 @@ def sample_timestamps(duration_ms: int, count: int) -> list[int]:
 
 
 def extract_frame(path: str | Path, timestamp_ms: int, max_width: int = 512, quality: int = 85) -> SampledFrame:
-    cmd = [
-        FFMPEG,
-        "-nostdin",
-        "-hide_banner",
-        "-loglevel",
-        "error",
-        "-ss",
-        f"{timestamp_ms / 1000:.3f}",
-        "-i",
-        str(path),
-        "-frames:v",
-        "1",
-        "-vf",
-        f"scale='min({max_width},iw)':-2",
-        "-f",
-        "image2pipe",
-        "-vcodec",
-        "mjpeg",
-        "-q:v",
-        str(max(2, min(31, int(round((100 - quality) / 3))))),
-        "-",
-    ]
+    """The frame on screen at timestamp_ms: ffmpeg returns the first frame at or after the seek point. A file whose video stream
+    ends before its container (audio usually runs a few tens of milliseconds longer) has no frame after its last one, and a player
+    keeps showing that last frame; so a time past the last frame returns the last frame, which starts before the requested time."""
+    scale = f"scale='min({max_width},iw)':-2"
+    output = ["-frames:v", "1", "-f", "image2pipe", "-vcodec", "mjpeg", "-q:v", str(max(2, min(31, int(round((100 - quality) / 3))))), "-"]
+    cmd = [FFMPEG, "-nostdin", "-hide_banner", "-loglevel", "error", "-ss", f"{timestamp_ms / 1000:.3f}", "-i", str(path), "-vf", scale, *output]
     proc = subprocess.run(cmd, capture_output=True, timeout=60, check=False)
     if proc.returncode != 0 or not proc.stdout:
-        raise MediaError(f"frame extraction failed at {timestamp_ms} ms: {proc.stderr.decode(errors='ignore')[:200]}")
-    with Image.open(io.BytesIO(proc.stdout)) as im:
+        # the final decodable frame: decode the last second and emit it reversed, so the first output frame is the last one
+        tail = [FFMPEG, "-nostdin", "-hide_banner", "-loglevel", "error", "-sseof", "-1", "-i", str(path), "-vf", f"{scale},reverse", *output]
+        last = subprocess.run(tail, capture_output=True, timeout=60, check=False)
+        if last.returncode != 0 or not last.stdout:
+            raise MediaError(f"frame extraction failed at {timestamp_ms} ms: {proc.stderr.decode(errors='ignore')[:200]}")
+        jpeg = last.stdout
+    else:
+        jpeg = proc.stdout
+    with Image.open(io.BytesIO(jpeg)) as im:
         w, h = im.size
-    return SampledFrame(timestamp_ms=timestamp_ms, jpeg=proc.stdout, width=w, height=h)
+    return SampledFrame(timestamp_ms=timestamp_ms, jpeg=jpeg, width=w, height=h)
 
 
 def sample_frames(path: str | Path, duration_ms: int, count: int = 8, max_width: int = 512) -> list[SampledFrame]:

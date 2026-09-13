@@ -1,0 +1,115 @@
+{
+  "id": "repair_1a0977235a9_aba54f84",
+  "audit_id": "audit_1a097719e54_89c7a8e5",
+  "finding_id": "audit_1a097719e54_89c7a8e5_f1",
+  "video_id": "aptip",
+  "status": "rejected",
+  "hypothesis": "Punch in 1.3x toward the lower left of the frame, where the most movement is during 9.4-13.6s (same footage, sound and timing; tighter framing). should address: The crucial stem/contact detail is too dark and small to serve as a clear visual proof of the concluding explanation.",
+  "repair": {
+    "summary": "Keep the same continuous demonstration, but add a brief brighter close-up or side-angle insert around 9.2–13.2s that isolates the stem and contact point, then return to the existing wide shot for the upright-spin payoff.",
+    "route": "A",
+    "runnable": true,
+    "mutation_type": "PUNCH_IN",
+    "edit_description": "Punch in 1.3x toward the lower left of the frame, where the most movement is during 9.4-13.6s (same footage, sound and timing; tighter framing).",
+    "keep_unchanged": [
+      "The uninterrupted real-time top demonstration.",
+      "The reveal that the top has climbed upright.",
+      "The concise final narration and caption sequence."
+    ],
+    "required_materials": [],
+    "dependency_state": "executable now on the existing file",
+    "secondary_changes": [
+      "burned-in captions near the frame edges may be cropped during the punch-in"
+    ],
+    "why_not_runnable": null,
+    "selection_reason": "This does not add the proposed brighter close-up or side-angle insert, but it plausibly reduces the specific weakness by enlarging the active lower-left area where the stem/contact detail is likely located while preserving the continuous demonstration, timing, narration, and upright-spin payoff. It is preferable to the centered zoom, though the render should be checked for caption cropping.",
+    "implements_proposal": false,
+    "proposal_route": null,
+    "proposal_needs": "",
+    "candidates_offered": [
+      "remove_beat_03: Remove the sentence 'The friction that should be stopping it is what li...' (6.4-9.4s) with its footage.",
+      "later_beat_03: Move 'The friction that should be stopping it is what li...' to after the next sentence.",
+      "earlier_beat_03: Move 'The friction that should be stopping it is what li...' one sentence earlier.",
+      "trim_end_beat_03_8930: Shorten the 0.36s pause at the end of 'The friction that should be stopping it is what li...'.",
+      "remove_beat_04: Remove the sentence 'The stem it is now standing on was pointing straig...' (9.4-13.9s) with its footage.",
+      "earlier_beat_04: Move 'The stem it is now standing on was pointing straig...' one sentence earlier.",
+      "trim_end_beat_04_13460: Shorten the 0.33s pause at the end of 'The stem it is now standing on was pointing straig...'.",
+      "zoom_center_beat_04: Punch in 1.3x centered during 9.4-13.6s (same footage, sound and timing; tighter framing).",
+      "zoom_motion_beat_04: Punch in 1.3x toward the lower left of the frame, where the most movement is during 9.4-13.6s (same footage, sound and timing; tighter framing)."
+    ]
+  },
+  "original_artifact_hash": "97ab80b2a7d30cb3bb97f63b86ea97738691ab1819cdc8b37b784fc5a6cf0a14",
+  "candidate_artifact_hash": "ed861c36e1e6d5551a91e31e347fc119c7ea5a951dd8ed3754867b01848dfb70",
+  "candidate_version_id": "v1-ed861c36",
+  "interval_map": [
+    {
+      "orig_start_ms": 9200,
+      "orig_end_ms": 13600,
+      "new_start_ms": 9200,
+      "new_end_ms": 13600,
+      "note": "audit_1a097719e54_89c7a8e5_f1: split into 2 pieces"
+    }
+  ],
+  "change_verification": {
+    "intended": "Punch in 1.3x toward the lower left of the frame, where the most movement is during 9.4-13.6s (same footage, sound and timing; tighter framing).",
+    "verified": true,
+    "checks": [
+      "duration 13900 ms vs planned 13867 ms: ok",
+      "frame at 11.48s: difference to the original 0.183, to the original cropped as planned 0.002 (ok, reframed as planned)"
+    ]
+  },
+  "candidate_audit_id": "audit_1a097723ab1_644b891d",
+  "comparison": {
+    "improved": [],
+    "regressed": [
+      "protected content lost: Do not add new claims or on-screen text (This is an instruction rather than visible video content, and no such instruction is shown on-screen)"
+    ],
+    "unchanged": [
+      "stop: YES",
+      "continue_watching: YES",
+      "finish: YES",
+      "like: MAYBE",
+      "send: MAYBE",
+      "comment: MAYBE",
+      "save_or_replay: MAYBE",
+      "visit_creator: INSUFFICIENT_EVIDENCE -> INSUFFICIENT_EVIDENCE (not comparable)"
+    ],
+    "target_resolved": "no",
+    "target_evidence": [
+      "target moment preference for the candidate: 0.25 (1 of 2 order-swapped pairs agreed)",
+      "candidate: It begins directly with the explanation, avoiding the isolated preceding word in Version 1.",
+      "original: It begins with “up,” giving a slightly more immediate continuation before the explanation.",
+      "original: Version 1 begins with “up,” which more directly connects to the preceding thought.",
+      "original: Version 2 begins with “up,” which provides a clearer transition into the explanation.",
+      "fresh audit still flags 9.4-12.8s: The final explanation uses an awkward, visually hard-to-verify reference to the stem instead of clearly connecting the visible contact point"
+    ],
+    "new_weaknesses": [],
+    "outcome": "regression",
+    "target_preference": 0.25,
+    "full_preference": 0.625,
+    "stability": {
+      "runs": 8,
+      "agreeing_runs": 2,
+      "order_flips": 2,
+      "agreement": "target: 1 of 2 order-swapped pairs agreed; whole video: 1 of 2 order-swapped pairs agreed"
+    },
+    "label": "MODEL JUDGMENT: fresh reviewer, same frozen criteria, both presentation orders",
+    "notes": [
+      "protected content unclear: The uninterrupted real-time top demonstration.",
+      "whole-video reasons: candidate: Version 2 more clearly shows the top upright near the end, matching the explanation.",
+      "whole-video reasons: tie: Both versions show the same spinning-top sequence with the same narration and on-screen text.",
+      "whole-video reasons: tie: Both versions show the same visuals and have the same transcript.",
+      "whole-video reasons: tie: Both versions show the same visuals and have the identical spoken explanation."
+    ]
+  },
+  "weave_url": null,
+  "created_at": "2026-09-12T21:07:19.593+00:00",
+  "timings_ms": {
+    "render_ms": 1084,
+    "fresh_review_ms": 26027,
+    "compare_ms": 16686
+  },
+  "incomplete_reasons": [],
+  "lesson_id": "lesson_1a09772e18f_44e58236",
+  "candidate_media_url": "/media/renders/ed861c36e1e6d5551a91e31e347fc119c7ea5a951dd8ed3754867b01848dfb70.mp4"
+}

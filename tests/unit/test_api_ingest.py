@@ -1,16 +1,18 @@
-"""Link ingestion, the audit-only Judge job, and the edit-rights gate. A local HTTP server stands in for the web; the platform
-path uses a fake yt-dlp runner. No network, no model calls."""
+"""Link ingestion, the audit-only Judge job, and the edit-rights gate.
+
+An in-process HTTP transport serves real media; the platform path uses a fake
+yt-dlp runner. No network, no model calls.
+"""
 
 from __future__ import annotations
 
-import functools
-import http.server
 import json
 import subprocess
-import threading
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
+import httpx
 import pytest
 from fastapi.testclient import TestClient
 
@@ -32,11 +34,22 @@ def web(tmp_path_factory: pytest.TempPathFactory) -> Any:
     root = tmp_path_factory.mktemp("web")
     _mp4(root / "clip.mp4")
     (root / "notes.mp4").write_text("this is not a video")
-    handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(root))
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
-    threading.Thread(target=server.serve_forever, daemon=True).start()
-    yield f"http://127.0.0.1:{server.server_address[1]}"
-    server.shutdown()
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.host == "127.0.0.1" and request.url.port == 18080
+        if request.url.path in {"/clip.mp4", "/notes.mp4"}:
+            return httpx.Response(200, content=(root / request.url.path[1:]).read_bytes(),
+                                  headers={"Content-Type": "video/mp4"})
+        return httpx.Response(404, content=b"File not found")
+
+    def client(*args, **kwargs):
+        return httpx.Client(*args, **kwargs, transport=httpx.MockTransport(handler))
+
+    # Replace only the ingestion module's client, leaving TestClient and the
+    # global offline socket guard intact.
+    with pytest.MonkeyPatch.context() as monkeypatch:
+        monkeypatch.setattr(U, "httpx", SimpleNamespace(Client=client, Timeout=httpx.Timeout))
+        yield "http://127.0.0.1:18080"
 
 
 def test_classify_and_host_checks() -> None:
