@@ -1,6 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {summarizeReview,checkHasEvidence} from '../src/review-state.ts';
+import {readFileSync} from 'node:fs';
+import {summarizeReview,checkHasEvidence,attentionAssessment,reviewedRisk} from '../src/review-state.ts';
 const moment=(start,end,risk='low',issues=[])=>({start_ms:start,end_ms:end,status:issues.length?'needs_review':'complete',validation_issues:issues,judgment:{attention_risk:risk,suggestion:'A specific observation.'}});
 test('all flagged low estimates are incomplete, never an all-clear',()=>{
  const result=summarizeReview([moment(0,2000,'low',['Checklist incomplete']),moment(2000,4000,'low',['Bad quote'])],4000);
@@ -79,4 +80,46 @@ test('pending and empty reviews are not presented as completed judgments',()=>{
  assert.equal(riskLabel({...moment(0,2000),status:'pending'}),'Waiting');
  assert.equal(riskLabel({...moment(0,2000),status:'failed'}),'No result');
  assert.equal(riskLabel({...moment(0,2000),status:'not_attempted'}),'Not reviewed');
+});
+
+const assessment=(overrides={})=>({version:'attention-evidence-v1',status:'supported',risk:'medium',reason:'The attention estimate cites the visible scene change.',excluded_checks:['caption_alignment'],semantic_grounding_verified:false,...overrides});
+test('a scoped supported attention estimate survives an unrelated caption check without clearing its failure',()=>{
+ const w={...moment(0,4000,'medium',['Review check caption_alignment: matching transcript evidence missing']),attention_assessment:assessment()};
+ const original=structuredClone(w);
+ assert.equal(reviewedRisk(w),'medium');assert.equal(riskLabel(w),'medium risk');
+ const summary=summarizeReview([w],4000);assert.equal(summary.checked,1);assert.equal(summary.state,'concern');
+ assert.deepEqual(attentionAssessment(w).excluded_checks,['caption_alignment']);
+ assert.deepEqual(w,original);assert.equal(w.status,'needs_review');assert.equal(w.validation_issues.length,1);
+});
+
+test('an explicit blocked assessment cannot fall back to a reassuring raw complete result',()=>{
+ const w={...moment(0,4000,'low'),attention_assessment:assessment({status:'blocked',risk:'unknown',reason:'The cited observation does not support the attention estimate.'})};
+ assert.equal(reviewedRisk(w),'unknown');assert.equal(riskLabel(w),'Unverified');
+ assert.equal(summarizeReview([w],4000).checked,0);
+});
+
+test('invalid attention contracts stay unknown even when the legacy raw record looks complete',()=>{
+ for(const value of [null,assessment({version:'future'}),assessment({semantic_grounding_verified:true}),assessment({semantic_grounding_verified:undefined}),assessment({status:'verified'}),assessment({risk:'unknown'}),assessment({risk:'very high'}),assessment({status:'blocked',risk:'low'}),assessment({reason:''}),assessment({reason:null}),assessment({excluded_checks:'caption_alignment'}),assessment({excluded_checks:[null]})]){
+  const w={...moment(0,4000,'low'),attention_assessment:value};
+  assert.equal(attentionAssessment(w),null);assert.equal(reviewedRisk(w),'unknown');
+ }
+});
+
+test('failed, pending, missing-judgment and unattempted sections cannot use a supplied supported assessment',()=>{
+ for(const status of ['failed','pending','running','not_attempted','canceled']){
+  const w={...moment(0,4000),status,attention_assessment:assessment()};
+  assert.equal(reviewedRisk(w),'unknown');assert.equal(attentionAssessment(w),null);
+ }
+ assert.equal(reviewedRisk({...moment(0,4000),judgment:null,attention_assessment:assessment()}),'unknown');
+});
+
+test('legacy reviews retain strict gating and the chart does not call mixed checks a universal pass',()=>{
+ assert.equal(reviewedRisk(moment(0,4000,'low')),'low');
+ assert.equal(reviewedRisk(moment(0,4000,'low',['Unverified caption'])),'unknown');
+ const chart=readFileSync(new URL('../src/RiskChart.tsx',import.meta.url),'utf8');
+ assert.ok(chart.includes('evidence-linked estimates'));
+ assert.ok(!chart.includes('sections passed evidence checks'));
+ assert.ok(chart.includes("strokeDasharray={levels[i]==='unknown'?'3 3':undefined}"));
+ assert.ok(chart.includes('Excluded from this estimate:'));
+ assert.ok(chart.includes('not measured audience retention'));
 });

@@ -1,7 +1,23 @@
 export type ReviewCheck = {aspect:string;status:string;reason:string;observation_indices?:number[]};
 export type ReviewObservation = {text:string;kind:string;frame_timestamps_ms:number[];asr_quote:string|null};
-export type ReviewMoment = {attention_context?:string;display_reason?:string;start_ms:number;end_ms:number;status:string;validation_issues:string[];judgment:null|{attention_risk:string;suggestion:string;review_checks?:ReviewCheck[];observations?:ReviewObservation[]}};
-export const reviewedRisk = (w:ReviewMoment) => w.status==='complete' && !w.validation_issues.length ? w.judgment?.attention_risk ?? 'unknown' : 'unknown';
+export type AttentionAssessment = {version:'attention-evidence-v1';status:'supported'|'blocked';risk:'low'|'medium'|'high'|'unknown';reason:string;excluded_checks:string[];semantic_grounding_verified:false};
+export type ReviewMoment = {attention_context?:string;attention_assessment?:AttentionAssessment|null;display_reason?:string;start_ms:number;end_ms:number;status:string;validation_issues:string[];judgment:null|{attention_risk:string;suggestion:string;review_checks?:ReviewCheck[];observations?:ReviewObservation[]}};
+export function attentionAssessment(w:ReviewMoment):AttentionAssessment|null {
+ const assessment=w.attention_assessment;
+ if(!['complete','needs_review'].includes(w.status)||!w.judgment||!assessment||assessment.version!=='attention-evidence-v1'||
+  assessment.semantic_grounding_verified!==false||!['supported','blocked'].includes(assessment.status)||
+  typeof assessment.reason!=='string'||!assessment.reason.trim()||assessment.reason.length>640||
+  !Array.isArray(assessment.excluded_checks)||assessment.excluded_checks.length>32||
+  assessment.excluded_checks.some(check=>typeof check!=='string'||!check.trim()||check.length>200)||
+  (assessment.status==='supported'?!['low','medium','high'].includes(assessment.risk):assessment.risk!=='unknown'))return null;
+ return assessment;
+}
+/** A scoped attention decision can exclude unrelated checks without erasing their failures. */
+export const reviewedRisk = (w:ReviewMoment) => {
+ if(w.attention_assessment!==undefined){const assessment=attentionAssessment(w);return assessment?.status==='supported'?assessment.risk:'unknown';}
+ const risk=w.judgment?.attention_risk;
+ return w.status==='complete'&&!w.validation_issues.length&&risk&&['low','medium','high'].includes(risk)?risk:'unknown';
+};
 const rank=(risk:string)=>({high:3,medium:2,low:1}[risk]??0);
 /** Evidence failures cannot become a reassuring all-clear or a ranked repair. */
 export function summarizeReview(windows:ReviewMoment[],duration:number) {

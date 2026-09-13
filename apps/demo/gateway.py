@@ -258,6 +258,10 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
         result['windows'] = []
         for window in data.get('windows', []):
             item = selected(window, ('start_ms', 'end_ms', 'status', 'recorded_status', 'display_reason', 'attention_context', 'semantic_grounding_verified', 'weave_url'))
+            assessment = window.get('attention_assessment')
+            if isinstance(assessment, dict):
+                item['attention_assessment'] = selected(assessment, ('version', 'status', 'risk', 'reason', 'semantic_grounding_verified'))
+                item['attention_assessment']['excluded_checks'] = [clean(x) for x in assessment.get('excluded_checks', []) if isinstance(x, str)]
             item['delivery_signals'] = window.get('delivery_signals')
             item['validation_issues'] = [clean(x) for x in window.get('validation_issues', [])]
             judgment = window.get('judgment')

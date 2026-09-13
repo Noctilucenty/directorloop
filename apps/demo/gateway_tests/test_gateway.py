@@ -27,7 +27,7 @@ def bridge(tmp_path):
         if p == '/api/jobs/job_abc_def':
             return httpx.Response(200, json={'id': 'job_abc_def', 'state': 'RUNNING', 'params': {'path': '/Users/secret/file.mp4'}})
         if p == '/api/screenings/screen_abc_def':
-            return httpx.Response(200, json={'id':'screen_abc_def','status':'complete','semantic_grounding_verified':False,'automatic_edit_allowed':False,'artifact_path':'/Users/secret/file.mp4','raw_output':{'secret':'hidden'},'windows':[{'status':'complete','judgment':{'understanding':'x','observations':[{'text':'x','kind':'visible_fact','frame_timestamps_ms':[166],'asr_quote':None}]}}]})
+            return httpx.Response(200, json={'id':'screen_abc_def','status':'complete','semantic_grounding_verified':False,'automatic_edit_allowed':False,'artifact_path':'/Users/secret/file.mp4','raw_output':{'secret':'hidden'},'windows':[{'status':'complete','attention_assessment':{'version':'attention-evidence-v1','status':'supported','risk':'low','reason':'Anchored evidence.','excluded_checks':['caption_alignment'],'semantic_grounding_verified':False,'private_key':'hidden'},'judgment':{'understanding':'x','observations':[{'text':'x','kind':'visible_fact','frame_timestamps_ms':[166],'asr_quote':None}]}}]})
         return httpx.Response(404, json={'detail':'missing'})
     app = gateway.create_app(engine_token='not-public', database=tmp_path/'registry.sqlite3', transport=httpx.MockTransport(handler))
     with TestClient(app) as client:
@@ -78,6 +78,9 @@ def test_results_whitelist_and_no_promotion(bridge):
     assert r.json()['semantic_grounding_verified'] is False
     assert r.json()['automatic_edit_allowed'] is False
     assert r.headers['cache-control']=='no-store'
+    assessment=r.json()['windows'][0]['attention_assessment']
+    assert assessment['risk']=='low' and assessment['semantic_grounding_verified'] is False
+    assert assessment['excluded_checks']==['caption_alignment'] and 'private_key' not in assessment
 
 def test_invalid_file_or_request_does_not_dispatch(bridge):
     client,calls=bridge
