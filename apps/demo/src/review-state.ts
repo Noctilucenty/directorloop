@@ -15,7 +15,7 @@ export function summarizeReview(windows:ReviewMoment[],duration:number) {
  }
  if(cursor<duration)gaps.push({start:cursor,end:duration});
  const incomplete=gaps.length>0 || levels.some(risk=>risk==='unknown');
- const state=actionable.some(risk=>rank(risk)>=2)?'concern':incomplete?'incomplete':actionable.every(risk=>risk==='unknown')?'unknown':'clear';
+ const state=windows.length===0?'unknown':actionable.some(risk=>rank(risk)>=2)?'concern':incomplete?'incomplete':actionable.every(risk=>risk==='unknown')?'unknown':'clear';
  return {levels,preferred,gaps,state,checked:levels.filter(risk=>risk!=='unknown').length};
 }
 export function checkHasEvidence(check:ReviewCheck,issues:string[]) {
@@ -36,8 +36,8 @@ export const sectionTime=(ms:number)=>{
  return String(Math.floor(tenths/600)).padStart(2,'0')+':'+String(Math.floor(tenths%600/10)).padStart(2,'0')+'.'+tenths%10;
 };
 export const sectionRange=(w:ReviewMoment)=>sectionTime(w.start_ms)+'–'+sectionTime(w.end_ms);
-export const riskLabel=(w:ReviewMoment)=>reviewedRisk(w)==='unknown'?'Unverified':reviewedRisk(w)+' risk';
-export const aspectLabel=(aspect:string)=>({pacing:'Pace',visual_clarity:'Visual clarity',caption_readability:'Subtitles',caption_alignment:'Subtitle timing',hook_and_payoff:'Hook & payoff',tone_from_words:'Wording & tone',voice_delivery:'Voice delivery',share_motivation:'Reason to share'}[aspect]??aspect.replaceAll('_',' '));
+export const riskLabel=(w:ReviewMoment)=>w.status==='pending'?'Waiting':w.status==='failed'?'No result':w.status==='not_attempted'?'Not reviewed':reviewedRisk(w)==='unknown'?'Unverified':reviewedRisk(w)+' risk';
+export const aspectLabel=(aspect:string)=>({pacing:'Pace',visual_clarity:'Visual clarity',caption_readability:'Subtitles',caption_alignment:'Caption wording',hook_and_payoff:'Hook & payoff',tone_from_words:'Wording & tone',voice_delivery:'Voice delivery',share_motivation:'Reason to share'}[aspect]??aspect.replaceAll('_',' '));
 function anchoredCheck(w:ReviewMoment,c:ReviewCheck) {
  const refs=c.observation_indices??[], observations=w.judgment?.observations??[];
  return refs.length>0 && refs.every(i=>Number.isInteger(i)&&i>=0&&i<observations.length) && checkHasEvidence(c,w.validation_issues) &&

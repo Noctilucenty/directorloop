@@ -27,7 +27,7 @@ export default function LiveAnalysis({source,mode,onBusy}:{source:Source;mode:'s
   try{const response=await fetch(ENDPOINT+path,{...init,signal:controller.signal,headers:{'X-Demo-Session':session.current,...init.headers}});
    const body=await response.json().catch(()=>null);
    if(!response.ok)throw new RequestError(typeof body?.detail==='string'?body.detail:'This request could not be completed.',response.status);
-   if(body===null)throw new RequestError('The engine returned an unreadable response.');return body;
+   if(body===null)throw new RequestError('The engine returned an unreadable response.');setConnected(true);return body;
   }catch(e){if(controller.signal.aborted)throw new RequestError(init.method==='POST'?'The upload response timed out. Retry the same video to recover this submission.':'The progress check timed out.');throw e;}finally{clearTimeout(timeout);}
  }
  useEffect(()=>{

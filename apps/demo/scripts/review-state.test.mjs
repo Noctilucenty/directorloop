@@ -73,3 +73,10 @@ test('all result surfaces share decimal boundaries without misleading floor/ceil
  assert.equal(sectionRange(moment(8823,13645)),'00:08.8–00:13.6');
  assert.equal(sectionRange(moment(59999,61555)),'01:00.0–01:01.6');
 });
+
+test('pending and empty reviews are not presented as completed judgments',()=>{
+ assert.equal(summarizeReview([],0).state,'unknown');
+ assert.equal(riskLabel({...moment(0,2000),status:'pending'}),'Waiting');
+ assert.equal(riskLabel({...moment(0,2000),status:'failed'}),'No result');
+ assert.equal(riskLabel({...moment(0,2000),status:'not_attempted'}),'Not reviewed');
+});
