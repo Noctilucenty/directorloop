@@ -20,11 +20,12 @@ export default function AttentionStrengthChart({windows,duration,timeline,improv
  return <section className="risk-overview editorial-risk" aria-label="AI attention strength">
   <p className="risk-kicker">Attention strength</p><h3>{headline}</h3>
   <p className="risk-intro">AI content ratings · {checked}/{windows.length} sections · higher is stronger · not audience retention %</p>
-  <div className="risk-plot"><div className="risk-axis" aria-hidden="true"><span>Stronger</span><span>Mixed</span><span>Weaker</span></div>
-   <div className="risk-graph"><svg width="100%" height={height} role="img" aria-label={'AI content ratings. '+windows.map((w,i)=>`${label(i)} ${sectionTime(w.start_ms)} to ${sectionTime(w.end_ms)}: ${points[i]?.score??'not rated'} out of 100`).join('. ')}>
+  <div className="risk-plot"><div className="risk-axis" aria-hidden="true"><span className="risk-high">Stronger</span><span className="risk-medium">Mixed</span><span className="risk-low">Weaker</span></div>
+   <div className="risk-graph"><svg width="100%" height={height} role="group" aria-label={'AI content ratings. '+windows.map((w,i)=>`${label(i)} ${sectionTime(w.start_ms)} to ${sectionTime(w.end_ms)}: ${points[i]?.score??'not rated'} out of 100`).join('. ')}>
     {[26,76,126].map(row=><line key={row} x1="0" x2="100%" y1={row} y2={row} stroke="var(--line-3)" strokeDasharray="2 6"/>)}
     {gaps.map(g=><rect key={g.start} x={pct(g.start)} y="8" width={pct(g.end-g.start)} height="127" fill="var(--surface-2)"/>)}
-    {windows.map((w,i)=>{const rating=points[i],previous=points[i-1],concern=concerns.find(item=>item.window_index===i);return <g key={w.end_ms} role="button" tabIndex={0} aria-label={`${label(i)}, ${rating?rating.score+' out of 100':'not rated'}`} onClick={()=>select(i)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(i);}}}>
+    {windows.map((w,i)=>{const rating=points[i],previous=points[i-1],concern=concerns.find(item=>item.window_index===i);return <g key={w.end_ms} className="risk-segment" role="button" tabIndex={0} aria-pressed={i===index} aria-label={`${label(i)}, ${rating?rating.score+' out of 100':'not rated'}`} onClick={()=>select(i)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(i);}}}>
+      <rect className="strength-hit-target" x={pct(w.start_ms)} y="8" width={pct(w.end_ms-w.start_ms)} height="127" fill="transparent" pointerEvents="all"/>
       {rating&&previous&&windows[i-1].end_ms===w.start_ms&&<line x1={pct(w.start_ms)} x2={pct(w.start_ms)} y1={y(previous.score)} y2={y(rating.score)} stroke="var(--accent)" strokeWidth="2"/>}
       <rect x={pct(w.start_ms)} y={rating?y(rating.score)-4:8} width={pct(w.end_ms-w.start_ms)} height={rating?8:127} rx="2" fill={rating?(i===index?'var(--accent)':'var(--fg-3)'):'none'} stroke={rating?'none':'var(--fg-3)'} strokeDasharray={rating?undefined:'3 3'}/>
       {rating&&concern&&<circle cx={pct((w.start_ms+w.end_ms)/2)} cy={y(rating.score)-12} r="3" fill="var(--warn)"><title>{concern.action}</title></circle>}

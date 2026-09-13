@@ -167,3 +167,11 @@ test('missing, failed or malformed section ratings stay empty without invented p
  assert.ok(chart.includes('Attention strength'));assert.ok(chart.includes('not audience retention %'));
  assert.ok(chart.includes('point?.reason'));assert.ok(!chart.includes('findingForMoment'));
 });
+
+test('chart sections have full-height pointer targets and expose keyboard-selected state',()=>{
+ const chart=readFileSync(new URL('../src/AttentionStrengthChart.tsx',import.meta.url),'utf8');
+ assert.match(chart,/<rect className="strength-hit-target"[^>]+height="127"[^>]+fill="transparent" pointerEvents="all"/);
+ assert.ok(chart.includes('aria-pressed={i===index}'));
+ assert.ok(chart.includes("e.key==='Enter'||e.key===' '"));
+ assert.match(chart,/<svg[^>]+role="group"/);
+});
