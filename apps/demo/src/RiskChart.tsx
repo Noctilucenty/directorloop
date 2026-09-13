@@ -8,7 +8,7 @@ export default function RiskChart({windows,duration}:{windows:Moment[];duration:
  const index=Math.min(selected,Math.max(0,windows.length-1)), chosen=windows[index];
  const total=Math.max(duration,...windows.map(x=>x.end_ms),1), percent=(n:number)=>(n/total*100)+'%';
  const levels=windows.map(w=>w.judgment?.attention_risk??'unknown'), unknown=levels.includes('unknown');
- const headline=levels.includes('high')?'A moment worth reviewing.':levels.includes('medium')?'Some moments may lose attention.':levels.every(x=>x==='unknown')?'Not enough evidence to judge.':unknown?'No clear drop-off in reviewed moments.':'No clear drop-off flagged.';
+ const headline=levels.includes('high')?'A moment worth reviewing.':levels.includes('medium')?'Some moments may lose attention.':levels.every(x=>x==='unknown')?'Not enough evidence to judge.':unknown?'No clear drop-off in reviewed moments.':'No clear drop-off in reviewed moments.';
  const gaps:{start:number;end:number}[]=[];let cursor=0;
  for(const w of windows){if(w.start_ms>cursor)gaps.push({start:cursor,end:w.start_ms});cursor=Math.max(cursor,w.end_ms);}
  if(cursor<total)gaps.push({start:cursor,end:total});
@@ -31,7 +31,7 @@ export default function RiskChart({windows,duration}:{windows:Moment[];duration:
     {ticks.map(t=><text key={t} x={percent(t)} y={height-2} textAnchor={t===0?'start':t===total?'end':'middle'} fill="#c2bbad" fontSize="12">{seconds(t)}</text>)}
    </svg></div>
   </div>
-  {gaps.length>0&&<p className="risk-gap">{gaps.map(g=>seconds(g.start)+'–'+seconds(g.end)).join(', ')} was not reviewed.{windows.some(w=>w.validation_issues.length>0)&&' Dashed marks need an evidence check.'}</p>}
+  {(gaps.length>0||windows.some(w=>w.validation_issues.length>0))&&<p className="risk-gap">{gaps.length>0&&gaps.map(g=>seconds(g.start)+'–'+seconds(g.end)).join(', ')+' was not reviewed.'}{windows.some(w=>w.validation_issues.length>0)&&' Dashed marks need an evidence check.'}</p>}
   <div className="risk-moments" role="group" aria-label="Choose a reviewed moment">{windows.map((w,i)=><button key={w.end_ms} type="button" className={i===index?'is-selected':''} aria-pressed={i===index} onClick={()=>setSelected(i)}><span>{label(i)}</span><b>{timecode(w.start_ms)}–{timecode(w.end_ms)}</b><em>{levels[i]==='unknown'?'Not scored':levels[i]+' risk'}</em>{w.validation_issues.length>0&&<small>Check evidence</small>}</button>)}</div>
   {chosen&&<div className="risk-reason" aria-live="polite"><div className="reason-time"><span>{label(index)}</span><strong>{timecode(chosen.start_ms)}–{timecode(chosen.end_ms)}</strong></div><div className="reason-copy"><p>{chosen.judgment?(chosen.display_reason??shortReason(chosen.judgment.suggestion)):chosen.status==='pending'?'Waiting for this moment.':'No validated judgment for this moment.'}</p>{chosen.validation_issues.length>0&&<small>This moment needs an evidence check.</small>}</div></div>}
  </section>;
