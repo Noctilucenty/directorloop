@@ -36,6 +36,17 @@ def selected(value, keys):
     return {k: clean(value[k]) for k in keys if k in value}
 
 
+def public_scorecard(value):
+    if not isinstance(value, dict):
+        return None
+    result = selected(value, ('version', 'status', 'evidence_level', 'predicts_audience_outcomes', 'method'))
+    result['limitations'] = [clean(x) for x in value.get('limitations', []) if isinstance(x, str)]
+    metrics = value.get('metrics') or {}
+    result['metrics'] = {name: selected(metrics[name], ('score', 'coverage', 'rated_ms', 'total_ms', 'rated_sections', 'total_sections', 'provisional', 'reason')) for name in ('creative', 'retention', 'virality') if isinstance(metrics.get(name), dict)}
+    result['improvements'] = [selected(item, ('window_index', 'start_ms', 'end_ms', 'aspect', 'action', 'reason', 'observation_indices')) for item in value.get('improvements', [])[:3] if isinstance(item, dict)]
+    return result
+
+
 class Guard:
     def __init__(self, app, origins):
         self.app, self.origins = app, origins
@@ -139,7 +150,7 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
             screen = state.get('full_screening', state['screening'])
             return {'available': screen['available'], 'reason': clean(screen.get('reason')), 'max_upload_bytes': MAX_BYTES, 'max_duration_ms': 180000, 'max_model_calls': 8, 'weave_connected': state['weave']['connected'], 'model': screen['model']}
         except HTTPException:
-            return JSONResponse({'available': False, 'reason': 'The presenter’s analysis engine is offline.'}, status_code=503)
+            return JSONResponse({'available': False, 'reason': 'The analysis engine is offline.'}, status_code=503)
 
     @app.post('/analyze')
     async def analyze(request: Request, request_id: str = Form(...), file: UploadFile = File(...)):
@@ -175,7 +186,7 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
                         if job['state'] not in TERMINAL:
                             raise HTTPException(409, 'An analysis is already running. Wait for it to finish.')
                     else:
-                        raise HTTPException(409, 'A previous submission needs presenter review before another can start.')
+                        raise HTTPException(409, 'A previous submission needs review before another can start.')
                 state = await health()
                 if not isinstance(state, dict) or not state.get('available'):
                     raise HTTPException(503, state.get('reason', 'Screening is unavailable.') if isinstance(state, dict) else 'The analysis engine is unavailable.')
@@ -228,6 +239,7 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
             raise HTTPException(404, 'Unknown demo report.')
         data = (await api('GET', '/api/screenings/' + screen_id)).json()
         result = selected(data, ('id', 'status', 'recorded_status', 'view_validation', 'duration_ms', 'created_at', 'ended_at', 'error', 'review_required', 'semantic_grounding_verified', 'automatic_edit_allowed', 'model_calls', 'input_tokens', 'output_tokens', 'weave_url', 'protocol_fingerprint'))
+        result['scorecard'] = public_scorecard(data.get('scorecard'))
         result['windows'] = []
         for window in data.get('windows', []):
             item = selected(window, ('start_ms', 'end_ms', 'status', 'recorded_status', 'display_reason', 'attention_context', 'semantic_grounding_verified', 'weave_url'))

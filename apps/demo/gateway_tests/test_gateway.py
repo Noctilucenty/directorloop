@@ -202,3 +202,18 @@ def test_ambiguous_screening_response_preserves_same_request_recovery(tmp_path):
         recovered = submit(client)
         assert recovered.status_code == 200
         assert len(uploads) == 1 and attempts[0] == attempts[1]
+
+
+def test_scorecard_whitelist_keeps_zero_and_unknown_separate_and_redacts_nested_text():
+    scorecard = {'version':'creative-potential-v1','status':'partial','evidence_level':'model_rubric','predicts_audience_outcomes':False,
+        'secret':'private','method':'0..4 scaled to 100','limitations':['Do not read /Users/private/secret.txt'],
+        'metrics':{'creative':{'score':0,'coverage':1,'reason':'Observed','private_key':'hidden'},
+                   'retention':{'score':None,'coverage':0,'reason':'Missing'},'unexpected':{'private_key':'hidden'}},
+        'improvements':[{'start_ms':2000,'end_ms':4000,'aspect':'pacing','action':'Inspect /Users/private/clip.mp4','reason':'Repetition.','observation_indices':[0],'raw_output':'hidden'}]}
+    clean = gateway.public_scorecard(scorecard)
+    assert clean['metrics']['creative']['score'] == 0
+    assert clean['metrics']['retention']['score'] is None
+    assert clean['predicts_audience_outcomes'] is False
+    assert set(clean['metrics']) == {'creative','retention'}
+    assert '/Users/' not in str(clean) and 'private_key' not in str(clean) and 'raw_output' not in str(clean)
+    assert gateway.public_scorecard(None) is None

@@ -1,0 +1,85 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {metricPresentation, scoreSummaryState, supportedImprovements, SCORE_DISCLAIMER, SCORE_LABELS} from '../src/score-summary.ts';
+
+const metric = (overrides = {}) => ({score: 75, coverage: 1, rated_ms: 12000, total_ms: 12000, rated_sections: 4, total_sections: 4, provisional: false, reason: 'Supported creative evidence.', ...overrides});
+const card = (overrides = {}) => ({version: 'creative-potential-v1', status: 'complete', evidence_level: 'model_rubric', predicts_audience_outcomes: false, metrics: {creative: metric(), retention: metric(), virality: metric()}, improvements: [], method: 'Duration-weighted rubric.', limitations: [], ...overrides});
+const improvement = (overrides = {}) => ({window_index: 0, start_ms: 0, end_ms: 2000, aspect: 'visual_clarity', action: 'Keep the product visible during the demonstration.', reason: 'The object is obscured by text.', observation_indices: [0], ...overrides});
+
+test('a complete rating keeps the backend score and evidence denominator', () => {
+  const result = metricPresentation(metric());
+  assert.equal(result.score, 75);
+  assert.equal(result.value, '75');
+  assert.equal(result.provisional, false);
+  assert.equal(result.sections, '4 of 4 sections rated');
+  assert.equal(result.duration, '12.0 / 12.0s of evidence');
+});
+
+test('zero is a real supplied score, while null and invalid numbers are not rated', () => {
+  assert.equal(metricPresentation(metric({score: 0})).value, '0');
+  for (const score of [null, undefined, NaN, Infinity, -1, 101, '75']) {
+    const result = metricPresentation(metric({score}));
+    assert.equal(result.score, null);
+    assert.equal(result.value, 'Not rated');
+  }
+});
+
+test('partial duration, section or metric coverage remains visibly provisional', () => {
+  for (const fields of [{coverage: .5, rated_ms: 6000}, {rated_sections: 2}, {provisional: true}]) {
+    const result = metricPresentation(metric(fields));
+    assert.equal(result.status, 'Provisional');
+    assert.equal(result.value, '75');
+  }
+  assert.equal(metricPresentation(metric(), true).status, 'Provisional');
+});
+
+test('an asserted score without a usable evidence denominator cannot be displayed', () => {
+  for (const fields of [{coverage: 0}, {coverage: 1.01}, {rated_ms: 0}, {total_ms: 1000}, {rated_sections: 0}, {total_sections: 2}]) {
+    assert.equal(metricPresentation(metric(fields)).value, 'Not rated');
+  }
+});
+
+test('running, failed and legacy reports do not fabricate or reveal a final score', () => {
+  assert.equal(scoreSummaryState(card(), 'running').state, 'pending');
+  assert.match(scoreSummaryState(card(), 'failed').message, /incomplete review/);
+  assert.equal(scoreSummaryState(undefined, 'complete').message, 'Scores appear on new analyses.');
+  assert.equal(scoreSummaryState(card({status: 'partial'}), 'needs_review').state, 'ready');
+  assert.equal(scoreSummaryState(card({predicts_audience_outcomes: true}), 'complete').state, 'unavailable');
+  assert.equal(scoreSummaryState(card({evidence_level: 'human'}), 'complete').state, 'unavailable');
+});
+
+test('improvements preserve backend ordering, qualifications and evidence without truncation', () => {
+  const first = improvement({reason: 'The object may be difficult to identify while the large subtitle covers the demonstration.'});
+  const second = improvement({window_index: 1, start_ms: 2000, end_ms: 5000, action: 'Hold the product shot until the label is readable.'});
+  const source = [first, {...first}, improvement({action: 'Does the subtitle need changing?'}), second, improvement({window_index: 2}), improvement({window_index: 3})];
+  const snapshot = structuredClone(source);
+  const output = supportedImprovements(source);
+  assert.equal(output.length, 3);
+  assert.deepEqual(output[0], first);
+  assert.deepEqual(output[1], second);
+  assert.deepEqual(source, snapshot);
+  for (const invalid of [{observation_indices: []}, {observation_indices: [-1]}, {start_ms: -1}, {end_ms: 0}, {action: 'Try a clearer…'}, {action: 'Does this video need clearer subtitles.'}, {reason: ''}]) {
+    assert.equal(supportedImprovements([improvement(invalid)]).length, 0);
+  }
+});
+
+test('the score strip labels rubric indices rather than probabilities or audience outcomes', () => {
+  assert.equal(SCORE_DISCLAIMER, 'AI rubric · not audience predictions');
+  assert.equal(SCORE_LABELS.retention, 'Retention potential');
+  assert.equal(SCORE_LABELS.virality, 'Virality potential');
+  const component = readFileSync(new URL('../src/ScoreSummary.tsx', import.meta.url), 'utf8');
+  assert.ok(component.includes('/100'));
+  assert.ok(!/viral chance|predicted completion|predicted views|percent of viewers/i.test(component));
+  const integration = readFileSync(new URL('../src/LiveAnalysis.tsx', import.meta.url), 'utf8');
+  assert.ok(integration.indexOf('<ScoreSummary ') < integration.indexOf('<RiskChart '));
+});
+
+test('evidence-backed improvements remain available when the report has no numeric ratings', () => {
+  const scorecard = card({status: 'unavailable', metrics: {creative: metric({score: null}), retention: metric({score: null}), virality: metric({score: null})}, improvements: [improvement()]});
+  assert.equal(scoreSummaryState(scorecard, 'needs_review').state, 'ready');
+  assert.equal(supportedImprovements(scorecard.improvements).length, 1);
+  assert.equal(metricPresentation(scorecard.metrics.creative).value, 'Not rated');
+  const component = readFileSync(new URL('../src/ScoreSummary.tsx', import.meta.url), 'utf8');
+  assert.ok(component.includes('const improvements = supportedImprovements(scorecard.improvements)'));
+});
