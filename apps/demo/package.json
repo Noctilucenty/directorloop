@@ -7,7 +7,7 @@
     "dev": "vite --host 127.0.0.1 --port 5188",
     "build": "tsc -p tsconfig.json --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 5188",
-    "test": "node scripts/verify-demo.mjs && node --test scripts/poll-state.test.mjs scripts/review-state.test.mjs scripts/score-summary.test.mjs scripts/availability-state.test.mjs scripts/review-recovery.test.mjs"
+    "test": "node scripts/verify-demo.mjs && node --test scripts/poll-state.test.mjs scripts/review-state.test.mjs scripts/score-summary.test.mjs scripts/availability-state.test.mjs scripts/review-recovery.test.mjs scripts/local-preview.test.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
