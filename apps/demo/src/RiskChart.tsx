@@ -14,7 +14,7 @@ export default function RiskChart({windows,duration}:{windows:Moment[];duration:
  const total=Math.max(duration,...windows.map(x=>x.end_ms),1), percent=(n:number)=>(n/total*100)+'%';
  const levels=windows.map(w=>w.judgment?.attention_risk??'unknown');
  const actionable=windows.map((w,i)=>w.attention_context?.startsWith('last_')?'unknown':levels[i]);
- const headline=actionable.some(x=>x==='high'||x==='medium')?'Review '+timecode(windows[preferred].start_ms)+'–'+timecode(windows[preferred].end_ms)+' first.':levels.every(x=>x==='unknown')?'Not enough evidence to judge.':'No clear drop-off in reviewed moments.';
+ const headline=actionable.some(x=>x==='high'||x==='medium')?'Review '+timecode(windows[preferred].start_ms)+'–'+timecode(windows[preferred].end_ms)+' first.':actionable.every(x=>x==='unknown')?'Not enough evidence to judge.':'No clear drop-off in reviewed moments.';
  const gaps:{start:number;end:number}[]=[];let cursor=0;
  for(const w of windows){if(w.start_ms>cursor)gaps.push({start:cursor,end:w.start_ms});cursor=Math.max(cursor,w.end_ms);}
  if(cursor<total)gaps.push({start:cursor,end:total});
