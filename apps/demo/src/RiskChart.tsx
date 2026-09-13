@@ -1,5 +1,5 @@
 import {useState} from 'react';
-type Moment={display_reason?:string;start_ms:number;end_ms:number;status:string;validation_issues:string[];judgment:null|{attention_risk:string;suggestion:string}};
+type Moment={attention_context?:string;display_reason?:string;start_ms:number;end_ms:number;status:string;validation_issues:string[];judgment:null|{attention_risk:string;suggestion:string;review_checks?:{aspect:string;status:string;reason:string}[]}};
 const shortReason=(text:string)=>text.split(/(?<=[.!?])\s+/).map(x=>x.trim()).find(x=>/[.!?]$/.test(x)&&x.length<=120&&x.split(/\s+/).length<=18)||'Full explanation in details.';
 const evidenceNote=(issues:string[])=>issues.some(x=>x.includes('quote is absent'))?'A quoted line wasn’t found in the transcript.':issues.some(x=>x.includes('frame citation was not supplied'))?'A cited frame wasn’t supplied to the reviewer.':issues.some(x=>x.includes('no supporting observation')||x.includes('no anchored'))?'This estimate has no usable supporting observation.':issues.some(x=>x.includes('requires a verbatim quote'))?'A transcript claim is missing its quoted source.':'The evidence supporting this moment needs review.';
 const seconds=(ms:number)=>Number((ms/1000).toFixed(1))+'s';
@@ -7,23 +7,24 @@ const timecode=(ms:number)=>String(Math.floor(ms/60000)).padStart(2,'0')+':'+Str
 export default function RiskChart({windows,duration}:{windows:Moment[];duration:number}){
  const [selected,setSelected]=useState<string|null>(null);
  const rank=(risk:string)=>({high:3,medium:2,low:1}[risk]??0);
- const preferred=windows.reduce((best,w,i)=>rank(w.judgment?.attention_risk??'unknown')>rank(windows[best]?.judgment?.attention_risk??'unknown')?i:best,0);
+ const preferred=windows.reduce((best,w,i)=>rank(w.attention_context?.startsWith('last_')?'unknown':w.judgment?.attention_risk??'unknown')>rank(windows[best]?.attention_context?.startsWith('last_')?'unknown':windows[best]?.judgment?.attention_risk??'unknown')?i:best,0);
  const selectedIndex=windows.findIndex(w=>w.start_ms+':'+w.end_ms===selected);
  const index=selectedIndex<0?preferred:selectedIndex, chosen=windows[index];
  const select=(i:number)=>setSelected(windows[i].start_ms+':'+windows[i].end_ms);
  const total=Math.max(duration,...windows.map(x=>x.end_ms),1), percent=(n:number)=>(n/total*100)+'%';
  const levels=windows.map(w=>w.judgment?.attention_risk??'unknown');
- const headline=levels.some(x=>x==='high'||x==='medium')?'Review '+timecode(windows[preferred].start_ms)+'–'+timecode(windows[preferred].end_ms)+' first.':levels.every(x=>x==='unknown')?'Not enough evidence to judge.':'No clear drop-off in reviewed moments.';
+ const actionable=windows.map((w,i)=>w.attention_context?.startsWith('last_')?'unknown':levels[i]);
+ const headline=actionable.some(x=>x==='high'||x==='medium')?'Review '+timecode(windows[preferred].start_ms)+'–'+timecode(windows[preferred].end_ms)+' first.':levels.every(x=>x==='unknown')?'Not enough evidence to judge.':'No clear drop-off in reviewed moments.';
  const gaps:{start:number;end:number}[]=[];let cursor=0;
  for(const w of windows){if(w.start_ms>cursor)gaps.push({start:cursor,end:w.start_ms});cursor=Math.max(cursor,w.end_ms);}
  if(cursor<total)gaps.push({start:cursor,end:total});
  const y=(risk:string)=>({high:26,medium:76,low:126}[risk]??76), height=166;
- const label=(i:number)=>i===0?'Opening':i===windows.length-1?'Ending':'Early sequence';
- const ticks=[...new Set([0,...windows.flatMap(w=>[w.start_ms,w.end_ms]),total])];
+ const label=(i:number)=>i===0?'Opening':i===windows.length-1?'Ending':windows.length===3?'Early sequence':'Part '+(i+1);
+ const ticks=windows.length>4?[0,total/4,total/2,total*3/4,total]:[...new Set([0,...windows.flatMap(w=>[w.start_ms,w.end_ms]),total])];
  return <section className="risk-overview editorial-risk" aria-label="Sampled attention risk">
   <p className="risk-kicker">Attention review</p>
   <h3>{headline}</h3>
-  <p className="risk-intro">AI estimate · {windows.length} sampled moments</p>
+  <p className="risk-intro">AI estimate · {windows.length} sections · sampled frames</p>
   <div className="risk-plot">
    <div className="risk-axis" aria-hidden="true"><span className="risk-high">High</span><span className="risk-medium">Medium</span><span className="risk-low">Low</span></div>
    <div className="risk-graph"><svg width="100%" height={height} role="img" aria-label={'AI estimated attention risk. '+windows.map((w,i)=>label(i)+' '+seconds(w.start_ms)+' to '+seconds(w.end_ms)+': '+levels[i]).join('. ')}>
@@ -37,7 +38,8 @@ export default function RiskChart({windows,duration}:{windows:Moment[];duration:
    </svg></div>
   </div>
   {(gaps.length>0||windows.some(w=>w.validation_issues.length>0))&&<p className="risk-gap">{gaps.length>0&&gaps.map(g=>seconds(g.start)+'–'+seconds(g.end)).join(', ')+' was not reviewed.'}{windows.some(w=>w.validation_issues.length>0)&&' Dashed marks need an evidence check.'}</p>}
-  <div className="risk-moments" role="group" aria-label="Choose a reviewed moment">{windows.map((w,i)=><button key={w.end_ms} type="button" className={i===index?'is-selected':''} aria-pressed={i===index} onClick={()=>select(i)}><span>{label(i)}</span><b>{timecode(w.start_ms)}–{timecode(w.end_ms)}</b><em>{levels[i]==='unknown'?'Not scored':levels[i]+' risk'}</em>{w.validation_issues.length>0&&<small>Check evidence</small>}</button>)}</div>
+  <div className={"risk-moments"+(windows.length>3?" many-moments":"")} role="group" aria-label="Choose a reviewed moment">{windows.map((w,i)=><button key={w.end_ms} type="button" className={i===index?'is-selected':''} aria-pressed={i===index} onClick={()=>select(i)}><span>{label(i)}</span><b>{timecode(w.start_ms)}–{timecode(w.end_ms)}</b><em>{levels[i]==='unknown'?'Not scored':levels[i]+' risk'}</em>{w.validation_issues.length>0&&<small>Check evidence</small>}</button>)}</div>
   {chosen&&<div className="risk-reason" aria-live="polite"><div className="reason-time"><span>{label(index)}</span><strong>{timecode(chosen.start_ms)}–{timecode(chosen.end_ms)}</strong></div><div className="reason-copy"><p>{chosen.judgment?(chosen.display_reason??shortReason(chosen.judgment.suggestion)):chosen.status==='pending'?'Waiting for this moment.':'No validated judgment for this moment.'}</p>{chosen.validation_issues.length>0&&<small>{evidenceNote(chosen.validation_issues)}</small>}</div></div>}
+  {chosen?.judgment?.review_checks?.length? <details className="complete-evidence"><summary>What we checked in this section</summary><dl className="review-checklist">{chosen.judgment.review_checks.map(c=><div key={c.aspect}><dt>{c.aspect.replaceAll('_',' ')} <span>{c.status==='unknown'?'Not assessed':c.status==='clear'?'No issue found':'Check'}</span></dt><dd>{c.reason}</dd></div>)}</dl></details>:null}
  </section>;
 }

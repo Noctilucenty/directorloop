@@ -116,3 +116,12 @@ html[data-motion="paused"] { scroll-behavior: auto; }
 .brand-mark i::after { opacity: 1; padding: 1.5px; }
 
 body { background: radial-gradient(ellipse at 50% 0%, #12336128 0%, transparent 40%), var(--bg); }
+
+.editorial-risk .risk-moments.many-moments { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px 22px; }
+@media(max-width:600px) { .editorial-risk .risk-moments.many-moments { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+
+.review-checklist { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 28px; }
+.review-checklist dt { font-size:14px; text-transform:capitalize; color:var(--fg); }
+.review-checklist dt span { color:var(--fg-3); font-size:12px; margin-left:8px; }
+.review-checklist dd { margin:8px 0 0; font-size:14px; color:var(--fg-2); line-height:1.5; }
+@media(max-width:600px) { .review-checklist { grid-template-columns:1fr; } }

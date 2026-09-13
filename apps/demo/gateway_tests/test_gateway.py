@@ -132,3 +132,73 @@ async def test_concurrent_upload_rejected_before_body_consumption():
     async def third_send(x):third_messages.append(x)
     await guard(dict(scope),receive,third_send)
     assert third_messages[0]['status']==200
+
+
+def test_full_health_blocks_upload_when_only_quick_budget_fits(tmp_path):
+    calls = []
+
+    def handler(request):
+        calls.append((request.method, request.url.path))
+        assert request.url.path == '/api/health'
+        return httpx.Response(200, json={
+            'screening': {'available': True, 'model': 'Qwen', 'reason': None},
+            'full_screening': {'available': False, 'model': 'Qwen', 'reason': 'Screening budget has insufficient headroom for 8 requests.'},
+            'weave': {'connected': True},
+        })
+
+    app = gateway.create_app(engine_token='offline', database=tmp_path/'registry.sqlite3', transport=httpx.MockTransport(handler))
+    with TestClient(app) as client:
+        health = client.get('/health').json()
+        assert health['available'] is False and health['max_model_calls'] == 8
+        assert submit(client).status_code == 503
+        assert all(method == 'GET' for method, _ in calls)
+
+
+def test_known_prequeue_budget_rejection_does_not_orphan_public_request(tmp_path):
+    attempts = []
+
+    def handler(request):
+        if request.url.path == '/api/health':
+            return httpx.Response(200, json={'screening': {'available': True, 'model': 'Qwen'}, 'weave': {'connected': True}})
+        if request.url.path == '/api/uploads':
+            return httpx.Response(200, json={'video_id': 'upl-test', 'duration_ms': 31637})
+        if request.url.path == '/api/screenings':
+            attempts.append(request.content)
+            if len(attempts) == 1:
+                return httpx.Response(503, json={'detail': 'Screening budget has insufficient headroom for 8 requests.'})
+            return httpx.Response(200, json={'job_id': 'job_abc_def', 'screen_id': 'screen_abc_def'})
+        raise AssertionError('Unexpected engine request')
+
+    app = gateway.create_app(engine_token='offline', database=tmp_path/'registry.sqlite3', transport=httpx.MockTransport(handler))
+    with TestClient(app) as client:
+        assert submit(client).status_code == 503
+        recovered = submit(client, request_id='request-new-1234567')
+        assert recovered.status_code == 200
+        assert recovered.json()['job_id'] == 'job_abc_def'
+        assert b'"coverage":"full"' in attempts[-1]
+
+
+def test_ambiguous_screening_response_preserves_same_request_recovery(tmp_path):
+    attempts = []
+    uploads = []
+
+    def handler(request):
+        if request.url.path == '/api/health':
+            return httpx.Response(200, json={'screening': {'available': True, 'model': 'Qwen'}, 'weave': {'connected': True}})
+        if request.url.path == '/api/uploads':
+            uploads.append(1)
+            return httpx.Response(200, json={'video_id': 'upl-test', 'duration_ms': 31637})
+        if request.url.path == '/api/screenings':
+            attempts.append(request.content)
+            if len(attempts) == 1:
+                raise httpx.ReadTimeout('Response lost after possible queue creation', request=request)
+            return httpx.Response(200, json={'job_id': 'job_abc_def', 'screen_id': 'screen_abc_def'})
+        raise AssertionError('Unexpected engine request')
+
+    app = gateway.create_app(engine_token='offline', database=tmp_path/'registry.sqlite3', transport=httpx.MockTransport(handler))
+    with TestClient(app) as client:
+        assert submit(client).status_code == 503
+        assert submit(client, request_id='request-new-1234567').status_code == 409
+        recovered = submit(client)
+        assert recovered.status_code == 200
+        assert len(uploads) == 1 and attempts[0] == attempts[1]

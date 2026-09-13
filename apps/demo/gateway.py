@@ -136,8 +136,8 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
     async def health():
         try:
             state = (await api('GET', '/api/health')).json()
-            screen = state['screening']
-            return {'available': screen['available'], 'reason': clean(screen.get('reason')), 'max_upload_bytes': MAX_BYTES, 'max_duration_ms': 180000, 'max_model_calls': 3, 'weave_connected': state['weave']['connected'], 'model': screen['model']}
+            screen = state.get('full_screening', state['screening'])
+            return {'available': screen['available'], 'reason': clean(screen.get('reason')), 'max_upload_bytes': MAX_BYTES, 'max_duration_ms': 180000, 'max_model_calls': 8, 'weave_connected': state['weave']['connected'], 'model': screen['model']}
         except HTTPException:
             return JSONResponse({'available': False, 'reason': 'The presenter’s analysis engine is offline.'}, status_code=503)
 
@@ -193,7 +193,14 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
                     if exc.status_code < 500:
                         write('DELETE FROM requests WHERE id=?', (request_id,))
                     raise
-            result = (await api('POST', '/api/screenings', json={'video_id': record['video_id'], 'idempotency_key': 'public-demo-' + request_id})).json()
+            try:
+                result = (await api('POST', '/api/screenings', json={'video_id': record['video_id'], 'coverage': 'full', 'idempotency_key': 'public-demo-' + request_id})).json()
+            except HTTPException as exc:
+                # This explicit admission rejection happens before queue creation. Keep
+                # ambiguous connection failures for safe recovery with the same key.
+                if exc.status_code == 503 and str(exc.detail).startswith('Screening budget has insufficient headroom'):
+                    write('DELETE FROM requests WHERE id=? AND job_id IS NULL', (request_id,))
+                raise
             write('UPDATE requests SET job_id=?,screen_id=? WHERE id=?', (result['job_id'], result['screen_id'], request_id))
             return selected(result, ('job_id', 'screen_id'))
 
@@ -224,10 +231,12 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
         result['windows'] = []
         for window in data.get('windows', []):
             item = selected(window, ('start_ms', 'end_ms', 'status', 'attention_context', 'semantic_grounding_verified', 'weave_url'))
+            item['delivery_signals'] = window.get('delivery_signals')
             item['validation_issues'] = [clean(x) for x in window.get('validation_issues', [])]
             judgment = window.get('judgment')
             if judgment:
                 item['judgment'] = selected(judgment, ('understanding', 'attention_risk', 'suggestion', 'moment_kind'))
+                item['judgment']['review_checks'] = [selected(c, ('aspect', 'status', 'reason', 'observation_indices')) for c in judgment.get('review_checks', [])]
                 item['judgment']['uncertainties'] = [clean(x) for x in judgment.get('uncertainties', [])]
                 item['judgment']['observations'] = [selected(x, ('text', 'kind', 'frame_timestamps_ms', 'asr_quote')) for x in judgment.get('observations', [])]
             else:
