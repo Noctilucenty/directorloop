@@ -132,7 +132,7 @@
           }
         ]
       },
-      "display_reason": "The body-as-ruler process has not revealed the final measurement yet.",
+      "display_reason": "The viewer is still waiting for the final measurement.",
       "display_reason_source": "Editorial summary of this recorded model suggestion; original preserved in evidence details."
     },
     {
@@ -177,7 +177,7 @@
           }
         ]
       },
-      "display_reason": "A clean ending; leaving here may simply mean completion.",
+      "display_reason": "The story has ended, so a viewer may scroll away.",
       "display_reason_source": "Editorial summary of this recorded model suggestion; original preserved in evidence details."
     }
   ],
