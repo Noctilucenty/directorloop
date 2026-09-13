@@ -66,6 +66,11 @@ export function findingForMoment(w:ReviewMoment):{label:string;text:string} {
    const text=declarativeFinding(c.reason);
    if(c.status===status && text && anchoredCheck(w,c))return {label:status==='concern'?'Possible issue · '+aspectLabel(c.aspect):'Observed · '+aspectLabel(c.aspect),text};
   }
+  if(status==='concern') {
+   const assessment=attentionAssessment(w), text=declarativeFinding(w.judgment?.suggestion);
+   if(assessment?.status==='supported'&&['medium','high'].includes(assessment.risk)&&text&&text.length<=240&&
+    !w.validation_issues.some(issue=>/^(?:Attention |Intermediate checkpoint:|Suggestion:)/i.test(issue)))return {label:'AI attention estimate',text};
+  }
  }
  // Legacy reviews may have no aspect checklist. Keep their original evidence visible.
  for(const [i,o] of (w.judgment?.observations??[]).entries()) {

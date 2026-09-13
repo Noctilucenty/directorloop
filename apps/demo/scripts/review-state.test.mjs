@@ -123,3 +123,22 @@ test('legacy reviews retain strict gating and the chart does not call mixed chec
  assert.ok(chart.includes('Excluded from this estimate:'));
  assert.ok(chart.includes('not measured audience retention'));
 });
+
+test('a supported medium attention summary precedes an unrelated clear pacing check',()=>{
+ const w={...supported(),attention_assessment:assessment()};
+ w.judgment.suggestion='The interval provides a clear scripture reading and a specific app recommendation for a targeted audience.';
+ w.judgment.review_checks=[{aspect:'pacing',status:'clear',reason:'The pacing stays steady and logical.',observation_indices:[0]}];
+ assert.deepEqual(findingForMoment(w),{label:'AI attention estimate',text:w.judgment.suggestion});
+ w.judgment.review_checks.push({aspect:'hook_and_payoff',status:'concern',reason:'The app pitch may feel abrupt after the tutorial.',observation_indices:[0]});
+ assert.equal(findingForMoment(w).label,'Possible issue · Hook & payoff');
+});
+
+test('the attention-summary preference preserves question, missing-source and blocked safeguards',()=>{
+ const base={...supported(),attention_assessment:assessment()};
+ base.judgment.review_checks=[{aspect:'pacing',status:'clear',reason:'The pacing stays steady and logical.',observation_indices:[0]}];
+ for(const w of [base,{...base,judgment:{...base.judgment,suggestion:'The topic changes…'}},
+  {...base,attention_assessment:assessment({status:'blocked',risk:'unknown'}),judgment:{...base.judgment,suggestion:'The interval switches to a product recommendation.'}},
+  {...base,validation_issues:['Attention explanation references a missing observation'],judgment:{...base.judgment,suggestion:'The interval switches to a product recommendation.'}}]){
+  assert.notEqual(findingForMoment(w).label,'AI attention estimate');
+ }
+});
