@@ -221,6 +221,21 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
         data = (await api('GET', '/api/jobs/' + job_id)).json()
         return selected(data, ('id', 'state', 'stage', 'created_at', 'started_at', 'ended_at', 'elapsed_ms', 'error', 'screen_id', 'cancel_requested'))
 
+    @app.get('/requests/{request_id}')
+    async def recover_request(request_id: str, request: Request):
+        # Read-only recovery after a refresh loses the upload response. Never
+        # create a job, reveal another session's request, or retry inference.
+        if not SAFE_ID.fullmatch(request_id):
+            raise HTTPException(422, 'Invalid request identifier.')
+        found = rows('SELECT job_id,screen_id FROM requests WHERE id=? AND owner=?',
+                     (request_id, request.scope['demo_owner']))
+        if not found:
+            return {'state': 'unknown'}
+        record = found[0]
+        if not record['job_id'] or not record['screen_id']:
+            return {'state': 'pending'}
+        return {'state': 'submitted', **selected(record, ('job_id', 'screen_id'))}
+
     @app.get('/jobs/{job_id}/events')
     async def events(job_id: str, request: Request):
         own(job_id, request)

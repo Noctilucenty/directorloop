@@ -217,3 +217,34 @@ def test_scorecard_whitelist_keeps_zero_and_unknown_separate_and_redacts_nested_
     assert set(clean['metrics']) == {'creative','retention'}
     assert '/Users/' not in str(clean) and 'private_key' not in str(clean) and 'raw_output' not in str(clean)
     assert gateway.public_scorecard(None) is None
+
+
+def test_upload_response_recovery_is_owned_and_read_only(bridge):
+    client, calls = bridge
+    assert submit(client).status_code == 200
+    before = list(calls)
+    result = client.get('/requests/request-1234567890', headers=AUTH)
+    assert result.json() == {'state': 'submitted', 'job_id': 'job_abc_def', 'screen_id': 'screen_abc_def'}
+    other = {**AUTH, 'X-Demo-Session': 'b' * 32}
+    assert client.get('/requests/request-1234567890', headers=other).json() == {'state': 'unknown'}
+    assert client.get('/requests/request-unknown-12345', headers=AUTH).json() == {'state': 'unknown'}
+    assert client.get('/requests/bad', headers=AUTH).status_code == 422
+    assert result.headers['cache-control'] == 'no-store'
+    assert calls == before
+
+
+def test_pending_upload_recovery_does_not_retry_engine(tmp_path):
+    import sqlite3
+    import hashlib
+    database = tmp_path / 'registry.sqlite3'
+    calls = []
+    def handler(request):
+        calls.append(request.method)
+        raise AssertionError('Recovery must not dispatch an engine operation')
+    app = gateway.create_app(engine_token='offline', database=database, transport=httpx.MockTransport(handler))
+    with sqlite3.connect(database) as db:
+        db.execute('INSERT INTO requests(id,sha,owner) VALUES(?,?,?)',
+                   ('request-pending-12345', 'fixture', hashlib.sha256(SESSION.encode()).hexdigest()))
+    with TestClient(app) as client:
+        assert client.get('/requests/request-pending-12345', headers=AUTH).json() == {'state': 'pending'}
+    assert not calls
