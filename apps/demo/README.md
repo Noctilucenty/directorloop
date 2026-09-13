@@ -1,9 +1,12 @@
-# DirectorLoop public presentation
+# DirectorLoop presentation frontend
 
-Read-only React presentation using the current DirectorLoop studio design. The only published media are the three evaluated Curio Smoot artifacts in the curated A/B/C run. The public site cannot upload media, call inference, or start analysis.
+Original introduction and upload page with anonymous bounded live screening, plus a curated recorded Smoot experiment. No presenter code or account prompt. Each browser page generates a random session capability in memory; it never appears in URLs or storage.
 
-The evidence is from a recorded real run, not live processing. All model judgments are distinguished from measured human retention. Weave links retain project access requirements; this deployment does not change W&B sharing.
+Live screening calls a narrow HTTPS gateway connected to the existing local DirectorLoop engine. It uses the same canonical $2 / 30-attempt budget, at most three W&B calls per video, and real Weave traces. It requires human review and never runs an automatic edit.
 
-Render: root directory `apps/demo`, build `npm ci && npm test && npm run build`, publish `dist`, branch `codex/public-hackathon-demo`.
+The gateway only exposes uploaded-video screening and the submitting page’s own jobs/reports. File limits: 50 MB / 3 minutes. No corpus, arbitrary media, URL import, full-review or provider-key endpoints.
 
-Local: `npm ci && npm test && npm run build && npm run preview`.
+This is a presentation deployment: the Mac, engine and tunnel must stay available. It is not a standalone production backend. The recorded experiment remains usable when the live engine is unavailable.
+
+Build: `npm ci && npm test && npm run build`. Serve `dist`.
+Gateway source and isolated mock regression tests are included; all private config, ownership registry and spending state stay outside Git.

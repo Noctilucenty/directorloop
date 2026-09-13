@@ -9,8 +9,8 @@ from fastapi.testclient import TestClient
 spec = importlib.util.spec_from_file_location('demo_gateway', Path(__file__).parents[1] / 'gateway.py')
 gateway = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(gateway)
-CODE = 'demo-test-only-code-' + 'a' * 32
-AUTH = {'Authorization': 'Bearer ' + CODE, 'Origin': 'https://directorloop-demo.onrender.com'}
+SESSION = 'a' * 32
+AUTH = {'X-Demo-Session': SESSION, 'Origin': 'https://directorloop-demo.onrender.com'}
 
 @pytest.fixture
 def bridge(tmp_path):
@@ -29,7 +29,7 @@ def bridge(tmp_path):
         if p == '/api/screenings/screen_abc_def':
             return httpx.Response(200, json={'id':'screen_abc_def','status':'complete','semantic_grounding_verified':False,'automatic_edit_allowed':False,'artifact_path':'/Users/secret/file.mp4','raw_output':{'secret':'hidden'},'windows':[{'status':'complete','judgment':{'understanding':'x','observations':[{'text':'x','kind':'visible_fact','frame_timestamps_ms':[166],'asr_quote':None}]}}]})
         return httpx.Response(404, json={'detail':'missing'})
-    app = gateway.create_app(code=CODE, engine_token='not-public', database=tmp_path/'registry.sqlite3', transport=httpx.MockTransport(handler))
+    app = gateway.create_app(engine_token='not-public', database=tmp_path/'registry.sqlite3', transport=httpx.MockTransport(handler))
     with TestClient(app) as client:
         yield client, calls
 
@@ -38,14 +38,14 @@ def submit(client, request_id='request-1234567890', content=b'video'):
 
 def test_auth_origin_oversize_prevent_engine_dispatch(bridge):
     client, calls=bridge
-    assert client.post('/analyze').status_code == 401
+    assert client.post('/analyze').status_code == 400
     assert client.post('/analyze',headers={**AUTH,'Origin':'https://evil.test'}).status_code == 403
     assert client.post('/analyze',headers={**AUTH,'Content-Length':str(60*1024*1024)}).status_code == 413
     assert calls == []
 
 def test_preflight_allowed_origin_only(bridge):
     client,_=bridge
-    r=client.options('/analyze',headers={'Origin':AUTH['Origin'],'Access-Control-Request-Method':'POST','Access-Control-Request-Headers':'authorization,content-type'})
+    r=client.options('/analyze',headers={'Origin':AUTH['Origin'],'Access-Control-Request-Method':'POST','Access-Control-Request-Headers':'x-demo-session,content-type'})
     assert r.status_code==200
     assert r.headers['access-control-allow-origin']==AUTH['Origin']
     r=client.options('/analyze',headers={'Origin':'https://evil.test','Access-Control-Request-Method':'POST'})
@@ -85,3 +85,50 @@ def test_invalid_file_or_request_does_not_dispatch(bridge):
     assert submit(client,content=b'').status_code==422
     assert client.post('/analyze',headers=AUTH,data={'request_id':'request-1234567890'},files={'file':('bad.txt',b'foo')}).status_code==415
     assert calls==[]
+
+
+def test_anonymous_sessions_own_only_their_jobs(bridge):
+    client,calls=bridge
+    assert submit(client).status_code==200
+    other={**AUTH,'X-Demo-Session':'b'*32}
+    before=len(calls)
+    for route in ['/jobs/job_abc_def','/reports/screen_abc_def','/jobs/job_abc_def/events']:
+        assert client.get(route,headers=other).status_code==404
+    assert client.post('/jobs/job_abc_def/cancel',headers=other).status_code==404
+    assert len(calls)==before
+    assert client.post('/analyze',headers=other,data={'request_id':'request-1234567890'},files={'file':('clip.mp4',b'video','video/mp4')}).status_code==409
+    assert len(calls)==before
+
+
+@pytest.mark.asyncio
+async def test_concurrent_upload_rejected_before_body_consumption():
+    import asyncio
+    entered, release = asyncio.Event(), asyncio.Event()
+    reads=[]
+    async def app(scope, receive, send):
+        entered.set()
+        await release.wait()
+        await receive()
+        await send({'type':'http.response.start','status':200,'headers':[]})
+        await send({'type':'http.response.body','body':b'ok'})
+    guard=gateway.Guard(app,origins={AUTH['Origin']})
+    scope={'type':'http','path':'/analyze','method':'POST','headers':[(b'x-demo-session',SESSION.encode()),(b'origin',AUTH['Origin'].encode())]}
+    async def receive():
+        reads.append(1)
+        return {'type':'http.request','body':b'x','more_body':False}
+    first_messages=[]
+    async def first_send(x):first_messages.append(x)
+    pending=asyncio.create_task(guard(dict(scope),receive,first_send))
+    await entered.wait()
+    second_messages=[]
+    async def second_send(x):second_messages.append(x)
+    await guard(dict(scope),receive,second_send)
+    assert second_messages[0]['status']==409
+    assert reads==[]
+    release.set()
+    await pending
+    assert first_messages[0]['status']==200 and len(reads)==1
+    third_messages=[]
+    async def third_send(x):third_messages.append(x)
+    await guard(dict(scope),receive,third_send)
+    assert third_messages[0]['status']==200
