@@ -8,9 +8,13 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import json
+import math
 import os
 import re
+import shutil
 import sqlite3
+import subprocess
+import tempfile
 from pathlib import Path
 
 import httpx
@@ -19,10 +23,57 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 
 MAX_BYTES = 50 * 1024 * 1024
+MAX_DURATION_MS = 180000
+UPLOAD_IDLE_SECONDS = 30
+UPLOAD_TOTAL_SECONDS = 120
+PROBE_TIMEOUT_SECONDS = 10
 TERMINAL = {'COMPLETED', 'FAILED', 'CANCELED'}
 SAFE_ID = re.compile(r'^[a-zA-Z0-9_-]{16,80}$')
 JOB_ID = re.compile(r'^job_[a-f0-9]+_[a-f0-9]+$')
 SCREEN_ID = re.compile(r'^screen_[a-f0-9]+_[a-f0-9]+$')
+
+
+def _probe_video_file(source, suffix):
+    executable = shutil.which('ffprobe')
+    if not executable:
+        raise HTTPException(503, 'Video validation is unavailable. Please try later.')
+    # Only a temporary bounded upload exists until admission succeeds. Probe
+    # self-contained containers, with no network protocols or shell commands.
+    with tempfile.NamedTemporaryFile(prefix='directorloop-upload-', suffix=suffix) as temporary:
+        shutil.copyfileobj(source, temporary, length=1024 * 1024)
+        temporary.flush()
+        try:
+            result = subprocess.run([
+                executable, '-v', 'error', '-protocol_whitelist', 'file,pipe',
+                '-format_whitelist', 'mov,matroska,webm', '-select_streams', 'v:0',
+                '-show_entries', 'format=duration:stream=codec_type,width,height,duration',
+                '-of', 'json', temporary.name,
+            ], stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                timeout=PROBE_TIMEOUT_SECONDS, check=False)
+        except subprocess.TimeoutExpired as exc:
+            raise HTTPException(422, 'This video could not be validated in time. Try a standard MP4 export.') from exc
+        except OSError as exc:
+            raise HTTPException(503, 'Video validation is unavailable. Please try later.') from exc
+    try:
+        data = json.loads(result.stdout)
+        video = data['streams'][0]
+        if (result.returncode != 0 or video.get('codec_type') != 'video'
+                or int(video.get('width', 0)) <= 0 or int(video.get('height', 0)) <= 0):
+            raise ValueError('No video stream')
+        duration = float(data.get('format', {}).get('duration') or video.get('duration')) * 1000
+        if not math.isfinite(duration) or not 1 <= duration <= MAX_DURATION_MS:
+            raise HTTPException(422, 'Use a video between 1 millisecond and 3 minutes.')
+    except (ValueError, TypeError, KeyError, IndexError, AttributeError) as exc:
+        raise HTTPException(422, 'This file is not a readable MP4, MOV, M4V or WebM video.') from exc
+    return round(duration)
+
+
+async def preflight_video(file, suffix):
+    await file.seek(0)
+    try:
+        return await asyncio.to_thread(_probe_video_file, file.file, suffix)
+    finally:
+        await file.seek(0)
 
 
 def clean(value):
@@ -99,21 +150,33 @@ class Guard:
         if size < 0 or size > limit:
             return await JSONResponse({'detail': 'Video upload limit is 50 MB.'}, status_code=413)(scope, receive, send)
         total = 0
+        uploading = scope['method'] == 'POST' and scope['path'] == '/analyze'
+        body_complete = False
+        body_deadline = asyncio.get_running_loop().time() + UPLOAD_TOTAL_SECONDS
 
         async def bounded():
-            nonlocal total
-            message = await receive()
+            nonlocal total, body_complete
+            if uploading and not body_complete:
+                remaining = body_deadline - asyncio.get_running_loop().time()
+                if remaining <= 0:
+                    raise HTTPException(408, 'Video upload timed out. Please try uploading again.')
+                try:
+                    message = await asyncio.wait_for(receive(), min(UPLOAD_IDLE_SECONDS, remaining))
+                except asyncio.TimeoutError as exc:
+                    raise HTTPException(408, 'Video upload timed out. Please try uploading again.') from exc
+            else:
+                message = await receive()
             if message['type'] == 'http.request':
                 total += len(message.get('body', b''))
                 if total > limit:
                     raise HTTPException(413, 'Video upload limit is 50 MB.')
+                body_complete = not message.get('more_body', False)
             return message
 
         async def private_send(message):
             if message['type'] == 'http.response.start':
                 message = {**message, 'headers': [*message.get('headers', []), (b'cache-control', b'no-store'), (b'x-content-type-options', b'nosniff')]}
             await send(message)
-        uploading = scope['method'] == 'POST' and scope['path'] == '/analyze'
         if uploading and self.upload_busy:
             return await JSONResponse({'detail': 'Another upload is being received. Try again when it finishes.'}, status_code=409)(scope, receive, send)
         if uploading:
@@ -175,7 +238,7 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
         try:
             state = (await api('GET', '/api/health')).json()
             screen = state.get('full_screening', state['screening'])
-            return {'available': screen['available'], 'reason': clean(screen.get('reason')), 'max_upload_bytes': MAX_BYTES, 'max_duration_ms': 180000, 'max_model_calls': 16, 'max_sections': 8, 'weave_connected': state['weave']['connected'], 'model': screen['model']}
+            return {'available': screen['available'], 'reason': clean(screen.get('reason')), 'max_upload_bytes': MAX_BYTES, 'max_duration_ms': MAX_DURATION_MS, 'max_model_calls': 16, 'max_sections': 8, 'weave_connected': state['weave']['connected'], 'model': screen['model']}
         except HTTPException:
             return JSONResponse({'available': False, 'reason': 'The analysis engine is offline.'}, status_code=503)
 
@@ -206,6 +269,10 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
                     raise HTTPException(409, 'This request identifier belongs to a different file.')
                 if record['job_id']:
                     return selected(record, ('job_id', 'screen_id'))
+                if not record['video_id']:
+                    # Revalidate pending uploads created before this protection,
+                    # while keeping their ambiguous submission history intact.
+                    await preflight_video(file, suffix)
             else:
                 for record in rows('SELECT * FROM requests'):
                     if record['job_id']:
@@ -217,12 +284,13 @@ def create_app(*, engine_token: str, database: Path, legacy_session: str | None 
                 state = await health()
                 if not isinstance(state, dict) or not state.get('available'):
                     raise HTTPException(503, state.get('reason', 'Screening is unavailable.') if isinstance(state, dict) else 'The analysis engine is unavailable.')
+                await preflight_video(file, suffix)
                 write('INSERT INTO requests(id,sha,owner) VALUES(?,?,?)', (request_id, sha, request.scope['demo_owner']))
                 record = {'id': request_id, 'sha': sha, 'video_id': None}
             if not record['video_id']:
                 try:
                     uploaded = (await api('POST', '/api/uploads', files={'file': ('presenter-upload' + suffix, file.file, file.content_type or 'application/octet-stream')})).json()
-                    if not 0 < uploaded['duration_ms'] <= 180000:
+                    if not 0 < uploaded['duration_ms'] <= MAX_DURATION_MS:
                         write('DELETE FROM requests WHERE id=?', (request_id,))
                         raise HTTPException(422, 'Use a video between 1 millisecond and 3 minutes.')
                     record['video_id'] = uploaded['video_id']

@@ -12,6 +12,14 @@ spec.loader.exec_module(gateway)
 SESSION = 'a' * 32
 AUTH = {'X-Demo-Session': SESSION, 'Origin': 'https://directorloop-demo.onrender.com'}
 
+@pytest.fixture(autouse=True)
+def fixture_media_preflight(monkeypatch):
+    # Route tests use symbolic bytes; real container admission is exercised in
+    # test_upload_security.py, independently of the mocked engine transport.
+    async def accept_fixture(file, suffix):
+        return 6000
+    monkeypatch.setattr(gateway, 'preflight_video', accept_fixture)
+
 @pytest.fixture
 def bridge(tmp_path):
     calls = []
