@@ -125,3 +125,18 @@ body { background: radial-gradient(ellipse at 50% 0%, #12336128 0%, transparent 
 .review-checklist dt span { color:var(--fg-3); font-size:12px; margin-left:8px; }
 .review-checklist dd { margin:8px 0 0; font-size:14px; color:var(--fg-2); line-height:1.5; }
 @media(max-width:600px) { .review-checklist { grid-template-columns:1fr; } }
+
+/* One finding, one risk label; raw responses stay in the evidence drawer. */
+.finding-label{display:block;margin-bottom:10px;color:var(--fg-3);font-size:13px;line-height:1.5}
+.reason-copy p{overflow:visible;display:block;-webkit-line-clamp:unset;white-space:normal;overflow-wrap:anywhere}
+.live-evidence-list{margin-top:24px;border-top:1px solid var(--line-2)}
+.live-evidence-row{border-bottom:1px solid var(--line-2);padding:0}
+.live-evidence-row>summary{display:grid;grid-template-columns:170px 1fr 90px;align-items:start;gap:24px;padding:24px 0;cursor:pointer;color:var(--fg-2)}
+.live-evidence-row>summary:focus-visible{outline:2px solid var(--accent);outline-offset:5px}
+.evidence-section{font-size:13px;color:var(--fg-3)}
+.evidence-section b{display:block;margin-top:6px;font-weight:400;color:var(--fg-2);font-variant-numeric:tabular-nums}
+.evidence-finding{font-size:16px;line-height:1.6;overflow-wrap:anywhere}
+.evidence-risk{font-size:12px;text-transform:capitalize;text-align:right;color:var(--fg-3)}
+.evidence-body{padding:0 0 28px;max-width:760px;font-size:14px;line-height:1.6;color:var(--fg-3)}
+.evidence-body ul{padding-left:20px}.evidence-body li{margin:8px 0}.evidence-body p{overflow-wrap:anywhere}
+@media(max-width:640px){.live-evidence-row>summary{grid-template-columns:1fr auto;gap:12px}.evidence-finding{grid-column:1/-1;grid-row:2}.risk-reason .reason-copy p{font-size:21px}.finding-label{font-size:12px}.risk-moments button b{font-size:14px}}

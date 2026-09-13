@@ -1,5 +1,6 @@
 export type ReviewCheck = {aspect:string;status:string;reason:string;observation_indices?:number[]};
-export type ReviewMoment = {attention_context?:string;display_reason?:string;start_ms:number;end_ms:number;status:string;validation_issues:string[];judgment:null|{attention_risk:string;suggestion:string;review_checks?:ReviewCheck[]}};
+export type ReviewObservation = {text:string;kind:string;frame_timestamps_ms:number[];asr_quote:string|null};
+export type ReviewMoment = {attention_context?:string;display_reason?:string;start_ms:number;end_ms:number;status:string;validation_issues:string[];judgment:null|{attention_risk:string;suggestion:string;review_checks?:ReviewCheck[];observations?:ReviewObservation[]}};
 export const reviewedRisk = (w:ReviewMoment) => w.status==='complete' && !w.validation_issues.length ? w.judgment?.attention_risk ?? 'unknown' : 'unknown';
 const rank=(risk:string)=>({high:3,medium:2,low:1}[risk]??0);
 /** Evidence failures cannot become a reassuring all-clear or a ranked repair. */
@@ -20,4 +21,46 @@ export function summarizeReview(windows:ReviewMoment[],duration:number) {
 export function checkHasEvidence(check:ReviewCheck,issues:string[]) {
  return !issues.some(issue=>issue.startsWith('Review check '+check.aspect+':') ||
   (check.observation_indices??[]).some(i=>issue.startsWith('Observation '+(i+1)+':')) || issue.includes('checklist is incomplete'));
+}
+
+/** Preserve a complete model sentence and its uncertainty; never truncate a claim. */
+export function declarativeFinding(text?:string):string|null {
+ const value=text?.trim();
+ if(!value || value.length>320 || /[?？؟]|\.\.\.|…/.test(value) ||
+    /^(?:does|do|did|is|are|was|were|can|could|would|should|will|has|have)\b/i.test(value) ||
+    !/[.!。！]["”’']?$/.test(value))return null;
+ return value;
+}
+export const sectionTime=(ms:number)=>{
+ const tenths=Math.round(Math.max(0,Number.isFinite(ms)?ms:0)/100);
+ return String(Math.floor(tenths/600)).padStart(2,'0')+':'+String(Math.floor(tenths%600/10)).padStart(2,'0')+'.'+tenths%10;
+};
+export const sectionRange=(w:ReviewMoment)=>sectionTime(w.start_ms)+'–'+sectionTime(w.end_ms);
+export const riskLabel=(w:ReviewMoment)=>reviewedRisk(w)==='unknown'?'Unverified':reviewedRisk(w)+' risk';
+export const aspectLabel=(aspect:string)=>({pacing:'Pace',visual_clarity:'Visual clarity',caption_readability:'Subtitles',caption_alignment:'Subtitle timing',hook_and_payoff:'Hook & payoff',tone_from_words:'Wording & tone',voice_delivery:'Voice delivery',share_motivation:'Reason to share'}[aspect]??aspect.replaceAll('_',' '));
+function anchoredCheck(w:ReviewMoment,c:ReviewCheck) {
+ const refs=c.observation_indices??[], observations=w.judgment?.observations??[];
+ return refs.length>0 && refs.every(i=>Number.isInteger(i)&&i>=0&&i<observations.length) && checkHasEvidence(c,w.validation_issues) &&
+  !(w.validation_issues.some(x=>x.startsWith('Intermediate checkpoint:')) && c.aspect==='hook_and_payoff');
+}
+export function findingForMoment(w:ReviewMoment):{label:string;text:string} {
+ const checks=w.judgment?.review_checks??[];
+ for(const status of ['concern','clear']) {
+  for(const c of checks) {
+   const text=declarativeFinding(c.reason);
+   if(c.status===status && text && anchoredCheck(w,c))return {label:status==='concern'?'Possible issue · '+aspectLabel(c.aspect):'Observed · '+aspectLabel(c.aspect),text};
+  }
+ }
+ // Legacy reviews may have no aspect checklist. Keep their original evidence visible.
+ for(const [i,o] of (w.judgment?.observations??[]).entries()) {
+  const text=declarativeFinding(o.text);
+  if(text && ['visible_fact','caption_claim','asr_claim'].includes(o.kind) &&
+    (o.frame_timestamps_ms.length>0||Boolean(o.asr_quote)) &&
+    !w.validation_issues.some(x=>x.startsWith('Observation '+(i+1)+':')))return {label:'Observed in this section',text};
+ }
+ if(!checks.length && reviewedRisk(w)!=='unknown') {
+  const text=declarativeFinding(w.judgment?.suggestion);
+  if(text)return {label:'Model finding',text};
+ }
+ return {label:w.status==='pending'?'In progress':'Limited evidence',text:w.status==='pending'?'This section is waiting to be reviewed.':'No supported finding is available for this section.'};
 }

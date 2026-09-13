@@ -1,18 +1,13 @@
 import {useState} from 'react';
-import {summarizeReview,checkHasEvidence,type ReviewMoment as Moment} from './review-state';
-const shortReason=(text:string)=>{
- const first=text.split(/(?<=[.!?])\s+/)[0]?.trim()||'No short finding available.';
- const words=first.split(/\s+/);
- return words.length<=18?first:words.slice(0,18).join(' ')+'…';
-};
+import {summarizeReview,checkHasEvidence,findingForMoment,declarativeFinding,aspectLabel,sectionTime as timecode,riskLabel,type ReviewMoment as Moment} from './review-state';
 const evidenceNote=(issues:string[])=>issues.some(x=>x.startsWith('Intermediate checkpoint:'))?'This finding may confuse a checkpoint with the ending.':issues.some(x=>x.includes('pending future payoff'))?'An unseen payoff is not proof of a problem.':issues.some(x=>x.includes('checklist is incomplete'))?'The detailed review is incomplete.':issues.some(x=>x.includes('quote is absent'))?'A quoted line wasn’t found in the transcript.':issues.some(x=>x.includes('frame citation was not supplied'))?'A cited frame wasn’t supplied to the reviewer.':issues.some(x=>x.includes('no supporting observation')||x.includes('no anchored'))?'This estimate has no usable supporting observation.':issues.some(x=>x.includes('requires a verbatim quote'))?'A transcript claim is missing its quoted source.':'The evidence supporting this moment needs review.';
 const seconds=(ms:number)=>Number((ms/1000).toFixed(1))+'s';
-const timecode=(ms:number)=>String(Math.floor(ms/60000)).padStart(2,'0')+':'+String(Math.floor(ms/1000)%60).padStart(2,'0');
 export default function RiskChart({windows,duration}:{windows:Moment[];duration:number}){
  const [selected,setSelected]=useState<string|null>(null);
  const {levels,preferred,gaps,state,checked}=summarizeReview(windows,duration);
  const selectedIndex=windows.findIndex(w=>w.start_ms+':'+w.end_ms===selected);
  const index=selectedIndex<0?preferred:selectedIndex, chosen=windows[index];
+ const finding=chosen?findingForMoment(chosen):null;
  const select=(i:number)=>setSelected(windows[i].start_ms+':'+windows[i].end_ms);
  const total=Math.max(duration,...windows.map(x=>x.end_ms),1), percent=(n:number)=>(n/total*100)+'%';
  const headline=state==='concern'?'Review '+timecode(windows[preferred].start_ms)+'–'+timecode(windows[preferred].end_ms)+' first.':state==='incomplete'?'The evidence needs checking.':state==='unknown'?'Not enough evidence to judge.':'No specific attention issue found.';
@@ -22,7 +17,7 @@ export default function RiskChart({windows,duration}:{windows:Moment[];duration:
  return <section className="risk-overview editorial-risk" aria-label="Sampled attention risk">
   <p className="risk-kicker">Attention review</p>
   <h3>{headline}</h3>
-  <p className="risk-intro">AI section risk · {checked}/{windows.length} evidence checks passed · not measured retention</p>
+  <p className="risk-intro">AI estimate · {checked}/{windows.length} sections passed evidence checks · not measured retention</p>
   <div className="risk-plot">
    <div className="risk-axis" aria-hidden="true"><span className="risk-high">High</span><span className="risk-medium">Medium</span><span className="risk-low">Low</span></div>
    <div className="risk-graph"><svg width="100%" height={height} role="img" aria-label={'AI estimated attention risk. '+windows.map((w,i)=>label(i)+' '+seconds(w.start_ms)+' to '+seconds(w.end_ms)+': '+levels[i]).join('. ')}>
@@ -36,8 +31,8 @@ export default function RiskChart({windows,duration}:{windows:Moment[];duration:
    </svg></div>
   </div>
   {(gaps.length>0||windows.some(w=>w.validation_issues.length>0))&&<p className="risk-gap">{gaps.length>0&&gaps.map(g=>seconds(g.start)+'–'+seconds(g.end)).join(', ')+' was not reviewed.'}{windows.some(w=>w.validation_issues.length>0)&&' Dashed sections are unverified, not low risk.'}</p>}
-  <div className={"risk-moments"+(windows.length>3?" many-moments":"")} role="group" aria-label="Choose a reviewed moment">{windows.map((w,i)=><button key={w.end_ms} type="button" className={i===index?'is-selected':''} aria-pressed={i===index} onClick={()=>select(i)}><span>{label(i)}</span><b>{timecode(w.start_ms)}–{timecode(w.end_ms)}</b><em>{levels[i]==='unknown'?'Unverified':levels[i]+' risk'}</em>{w.validation_issues.length>0&&<small>Check evidence</small>}</button>)}</div>
-  {chosen&&<div className="risk-reason" aria-live="polite"><div className="reason-time"><span>{label(index)}</span><strong>{timecode(chosen.start_ms)}–{timecode(chosen.end_ms)}</strong></div><div className="reason-copy"><p>{chosen.validation_issues.length>0&&<small>Provisional finding · </small>}{chosen.judgment?(chosen.display_reason??shortReason(chosen.judgment.suggestion)):chosen.status==='pending'?'Waiting for this moment.':'No validated judgment for this moment.'}</p>{chosen.validation_issues.length>0&&<small>{evidenceNote(chosen.validation_issues)}</small>}</div></div>}
-  {chosen?.judgment?.review_checks?.length? <details className="complete-evidence"><summary>What we checked in this section</summary><dl className="review-checklist">{chosen.judgment.review_checks.map(c=><div key={c.aspect}><dt>{c.aspect.replaceAll('_',' ')} <span>{!checkHasEvidence(c,chosen.validation_issues)?'Evidence missing':c.status==='unknown'?'Not assessed':c.status==='clear'?'No issue found':'Possible issue'}</span></dt><dd>{checkHasEvidence(c,chosen.validation_issues)?c.reason:'The supplied evidence does not support this check.'}</dd></div>)}</dl></details>:null}
+  <div className={"risk-moments"+(windows.length>3?" many-moments":"")} role="group" aria-label="Choose a reviewed moment">{windows.map((w,i)=><button key={w.end_ms} type="button" className={i===index?'is-selected':''} aria-pressed={i===index} onClick={()=>select(i)}><span>{label(i)}</span><b>{timecode(w.start_ms)}–{timecode(w.end_ms)}</b><em>{riskLabel(w)}</em></button>)}</div>
+  {chosen&&<div className="risk-reason" aria-live="polite"><div className="reason-time"><span>{label(index)}</span><strong>{timecode(chosen.start_ms)}–{timecode(chosen.end_ms)}</strong></div><div className="reason-copy"><p><small className="finding-label">{finding?.label}</small>{finding?.text}</p>{chosen.validation_issues.length>0&&<small>{evidenceNote(chosen.validation_issues)}</small>}</div></div>}
+  {chosen?.judgment?.review_checks?.length? <details className="complete-evidence"><summary>What we checked in this section</summary><dl className="review-checklist">{chosen.judgment.review_checks.map(c=><div key={c.aspect}><dt>{aspectLabel(c.aspect)} <span>{!checkHasEvidence(c,chosen.validation_issues)?'Evidence missing':c.status==='unknown'?'Not assessed':c.status==='clear'?'No issue found':'Possible issue'}</span></dt><dd>{checkHasEvidence(c,chosen.validation_issues)?(declarativeFinding(c.reason)??'No clear finding returned for this check.'):'The supplied evidence does not support this check.'}</dd></div>)}</dl></details>:null}
  </section>;
 }
