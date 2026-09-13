@@ -168,19 +168,24 @@ class Services:
         self._registry: dict[str, dict[str, Any]] | None = None
 
     def _configure_screening(self) -> None:
+        self.screening_provider = None
+        self.screening_ledger = None
         if not self.settings.wandb_api_key:
             self.screening_problem = "Screening needs a configured W&B inference key."
             return
         try:
             price_card(WANDB_INFERENCE_BASE_URL, SCREENING_MODEL)
-            path = Path(self.settings.dl_screening_spend_ledger_path) if self.settings.dl_screening_spend_ledger_path else self.data / "screening-spend.sqlite3"
-            self.screening_ledger = SpendLedger(path, self.settings.dl_screening_spend_budget_id,
-                                                self.settings.dl_screening_spend_limit_usd,
-                                                max_attempts=self.settings.dl_screening_max_physical_attempts)
+            guard = None
+            if self.settings.dl_screening_spend_guard_enabled:
+                path = Path(self.settings.dl_screening_spend_ledger_path) if self.settings.dl_screening_spend_ledger_path else self.data / "screening-spend.sqlite3"
+                self.screening_ledger = SpendLedger(path, self.settings.dl_screening_spend_budget_id,
+                                                    self.settings.dl_screening_spend_limit_usd,
+                                                    max_attempts=self.settings.dl_screening_max_physical_attempts)
+                guard = SpendGuard(self.screening_ledger, SCREENING_OUTPUT_CAP)
             self.screening_provider = OpenAICompatProvider(
                 name="wandb_inference", api_key=self.settings.wandb_api_key, model=SCREENING_MODEL,
                 base_url=WANDB_INFERENCE_BASE_URL, project=self.settings.weave_project_path(), vision=True,
-                spend_guard=SpendGuard(self.screening_ledger, SCREENING_OUTPUT_CAP),
+                spend_guard=guard,
                 max_output_tokens=SCREENING_OUTPUT_CAP, allow_compatibility_fallback=False, enable_thinking=False,
             )
             self.screening_problem = None
@@ -194,13 +199,16 @@ class Services:
         try:
             budget = self.screening_ledger.summary() if self.screening_ledger else None
             if self.screening_provider is not None:
-                card = price_card(WANDB_INFERENCE_BASE_URL, SCREENING_MODEL)
-                # Corrections run after the first pass settles; physical calls still
-                # reserve their full cost individually in the shared ledger.
-                required = card.cost_units(card.max_input_tokens, SCREENING_OUTPUT_CAP) * min(required_calls, 8) / 1_000_000_000
-                if budget["halted"] or budget["available_usd"] < required or budget["physical_attempts"] + required_calls > budget["max_physical_attempts"]:
-                    reason = f"Screening budget has insufficient headroom for {required_calls} requests."
-                elif not weave_status().connected:
+                if self.settings.dl_screening_spend_guard_enabled:
+                    card = price_card(WANDB_INFERENCE_BASE_URL, SCREENING_MODEL)
+                    # Corrections run after the first pass settles; physical calls still
+                    # reserve their full cost individually in the shared ledger.
+                    required = card.cost_units(card.max_input_tokens, SCREENING_OUTPUT_CAP) * min(required_calls, 8) / 1_000_000_000
+                    if budget is None:
+                        reason = "Screening spending ledger is unavailable."
+                    elif budget["halted"] or budget["available_usd"] < required or budget["physical_attempts"] + required_calls > budget["max_physical_attempts"]:
+                        reason = f"Screening budget has insufficient headroom for {required_calls} requests."
+                if reason is None and not weave_status().connected:
                     reason = "Screening needs connected Weave tracing."
         except SpendGuardError as exc:
             reason = safe_failure(exc, "screening")
@@ -208,6 +216,8 @@ class Services:
             reason = "Screening spending ledger is unavailable."
         return {"enabled": self.settings.dl_screening_enabled, "available": self.screening_provider is not None and reason is None,
                 "reason": reason, "budget": budget, "model": SCREENING_MODEL, "evidence_label": SCREENING_EVIDENCE_LABEL,
+                "spending_guard_enabled": self.settings.dl_screening_spend_guard_enabled,
+                "usage_tracking": "local ledger and W&B" if self.settings.dl_screening_spend_guard_enabled else "W&B billing and Weave; previous local ledger retained as history",
                 "no_automatic_edit": True, "review_required": True,
                 "funding_status": "provider billing is not polled by this endpoint"}
 

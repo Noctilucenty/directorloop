@@ -231,3 +231,32 @@ def test_screening_api_and_evidence_use_existing_auth(tmp_path, monkeypatch):
         assert client.post("/api/screenings", json={"video_id": "source-one"}).status_code == 401
         assert client.get("/media/screening/screen_ab_cd/original.mp4").status_code == 401
         assert client.get("/api/screenings", headers={"Authorization": "Bearer offline-test-session"}).status_code == 200
+
+
+def test_operator_can_remove_local_caps_without_erasing_history(screening_client, monkeypatch):
+    client, services, _, captured = screening_client
+    ledger = services.screening_ledger
+    card = price_card(A.WANDB_INFERENCE_BASE_URL, A.SCREENING_MODEL)
+    for _ in range(30):
+        reservation = ledger.reserve(card, 2048)
+        ledger.settle(reservation, 1, 1)
+    before = ledger.summary()
+    assert client.get('/api/health').json()['full_screening']['available'] is False
+    services.settings.dl_screening_spend_guard_enabled = False
+    services._configure_screening()
+    assert captured[-1]['spend_guard'] is None
+    assert captured[-1]['max_output_tokens'] == 2048
+    assert captured[-1]['allow_compatibility_fallback'] is False
+    state = client.get('/api/health').json()['full_screening']
+    assert state['available'] is True
+    assert state['spending_guard_enabled'] is False and state['budget'] is None
+    assert 'W&B' in state['usage_tracking']
+    assert ledger.summary() == before
+    assert client.post('/api/screenings', json={'video_id': 'source-one', 'coverage': 'full'}).status_code == 200
+    monkeypatch.setattr(A, 'weave_status', lambda: SimpleNamespace(connected=False, project='offline', traces_url=None, reason=None))
+    assert client.get('/api/health').json()['full_screening']['available'] is False
+    services.settings.wandb_api_key = ''
+    services._configure_screening()
+    assert services.screening_provider is None
+    assert client.get('/api/health').json()['full_screening']['available'] is False
+    assert ledger.summary() == before

@@ -47,6 +47,8 @@ class Settings(BaseSettings):
     dl_max_output_tokens: int = Field(default=2048, ge=1, le=32768)
     # Separate sponsor screening lane; never switches the final evaluator.
     dl_screening_enabled: bool = False
+    # Operator-only opt-out: provider billing still applies; old ledger is preserved.
+    dl_screening_spend_guard_enabled: bool = True
     dl_screening_spend_limit_usd: float = Field(default=2.0, gt=0, le=2.0)
     dl_screening_spend_budget_id: str = "screening-app-20260912-v1"
     dl_screening_spend_ledger_path: str = ""
