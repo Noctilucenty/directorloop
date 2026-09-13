@@ -2,6 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {metricPresentation, metricExplanation, scoreDrivers, scoreSummaryState, supportedImprovements, supportedStrengths, SCORE_DISCLAIMER, SCORE_LABELS} from '../src/score-summary.ts';
+import {reviewPriorityMoments} from '../src/review-state.ts';
 
 const metric = (overrides = {}) => ({score: 75, coverage: 1, rated_ms: 12000, total_ms: 12000, rated_sections: 4, total_sections: 4, provisional: false, reason: 'Supported creative evidence.', ...overrides});
 const card = (overrides = {}) => ({version: 'creative-potential-v1', status: 'complete', evidence_level: 'model_rubric', predicts_audience_outcomes: false, metrics: {creative: metric(), retention: metric(), virality: metric()}, improvements: [], method: 'Duration-weighted rubric.', limitations: [], ...overrides});
@@ -106,4 +107,27 @@ test('strengths require real evidence references and valid times; empty feedback
  assert.ok(component.includes('What’s working'));assert.ok(component.includes('What to improve'));
  assert.ok(component.includes('No specific edit is supported by the checked evidence.'));
  assert.ok(component.includes('metricExplanation(supplied)'));
+});
+
+const reviewWindows=()=>[0,1,2,3].map(index=>({start_ms:index*2000,end_ms:(index+1)*2000,status:'complete',validation_issues:[],judgment:{attention_risk:'low',suggestion:'The sampled scene is visible.',observations:[{text:'The walking shot stays on screen.',kind:'visible_fact',frame_timestamps_ms:[index*2000+500],asr_quote:null}]}}));
+const reviewTimeline=(scores)=>scores.map((score,index)=>({window_index:index,start_ms:index*2000,end_ms:(index+1)*2000,score,reason:score===null?null:'The walking shot is static, which may hold less attention.',observation_indices:score===null?[]:[0]}));
+test('review priorities preserve exact lower-rated reasons, bound the list, and keep zero as a real rating',()=>{
+ const windows=reviewWindows(),timeline=reviewTimeline([50,0,25,50]),before=structuredClone(timeline);
+ const result=reviewPriorityMoments(windows,timeline);
+ assert.deepEqual(result.map(point=>point.score),[0,25]);
+ assert.equal(result[0].reason,timeline[1].reason);assert.equal(result[0].start_ms,2000);
+ assert.deepEqual(timeline,before);
+});
+test('strong, missing, final, and unsupported timeline ratings never create an improvement priority',()=>{
+ const windows=reviewWindows();
+ for(const scores of [[75,75,75,75],[null,null,null,null],[75,75,75,50]])assert.deepEqual(reviewPriorityMoments(windows,reviewTimeline(scores)),[]);
+ const timeline=reviewTimeline([50,75,75,75]);
+ assert.deepEqual(reviewPriorityMoments(windows,timeline.map(point=>({...point,observation_indices:[99]}))),[]);
+ assert.deepEqual(reviewPriorityMoments(windows.map((w,index)=>index===0?{...w,status:'failed'}:w),timeline),[]);
+ assert.deepEqual(reviewPriorityMoments(windows.map((w,index)=>index===0?{...w,attention_context:'last_endcard'}:w),timeline),[]);
+ assert.deepEqual(reviewPriorityMoments(windows.map((w,index)=>index===0?{...w,validation_issues:['Observation 1: missing anchor']}:w),timeline),[]);
+ const component=readFileSync(new URL('../src/ScoreSummary.tsx',import.meta.url),'utf8');
+ assert.ok(component.includes('improvements.length ? [] : reviewPriorityMoments'));
+ assert.ok(component.includes('Review this moment'));assert.ok(component.includes('Lower-rated moment; review before changing.'));
+ assert.ok(component.includes('<p>{item.reason}</p>'));
 });

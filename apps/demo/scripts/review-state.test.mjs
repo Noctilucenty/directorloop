@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {summarizeReview,checkHasEvidence,attentionAssessment,reviewedRisk} from '../src/review-state.ts';
+import {summarizeReview,summarizeAttentionStrength,checkHasEvidence,attentionAssessment,reviewedRisk} from '../src/review-state.ts';
 const moment=(start,end,risk='low',issues=[])=>({start_ms:start,end_ms:end,status:issues.length?'needs_review':'complete',validation_issues:issues,judgment:{attention_risk:risk,suggestion:'A specific observation.'}});
 test('all flagged low estimates are incomplete, never an all-clear',()=>{
  const result=summarizeReview([moment(0,2000,'low',['Checklist incomplete']),moment(2000,4000,'low',['Bad quote'])],4000);
@@ -141,4 +141,29 @@ test('the attention-summary preference preserves question, missing-source and bl
   {...base,validation_issues:['Attention explanation references a missing observation'],judgment:{...base.judgment,suggestion:'The interval switches to a product recommendation.'}}]){
   assert.notEqual(findingForMoment(w).label,'AI attention estimate');
  }
+});
+
+test('attention strength shows actual rubric differences even when categorical risk is flat',()=>{
+ const windows=[0,1,2].map(i=>({...moment(i*2000,(i+1)*2000,'low'),judgment:{...moment(0,2000).judgment,observations:[evidence()]}}));
+ const timeline=[75,50,75].map((score,i)=>({window_index:i,start_ms:i*2000,end_ms:(i+1)*2000,score,reason:i===1?'The walking shot is static and may hold less attention.':'The next visual detail supports the explanation.',observation_indices:[0]}));
+ const result=summarizeAttentionStrength(windows,timeline);
+ assert.deepEqual(result.points.map(point=>point?.score),[75,50,75]);assert.equal(result.preferred,1);assert.equal(result.hasVariation,true);
+ assert.equal(result.points[result.preferred].reason,timeline[1].reason);
+ assert.deepEqual(summarizeReview(windows,6000).levels,['low','low','low']);
+ assert.equal(summarizeAttentionStrength(windows,timeline.map(point=>({...point,score:75}))).hasVariation,false);
+});
+
+test('missing, failed or malformed section ratings stay empty without invented peaks',()=>{
+ const w={...moment(0,2000),judgment:{...moment(0,2000).judgment,observations:[evidence()]}};
+ const point={window_index:0,start_ms:0,end_ms:2000,score:0,reason:'The intended subject is not visible in the sampled frames.',observation_indices:[0]};
+ assert.equal(summarizeAttentionStrength([w],[point]).points[0].score,0);
+ for(const invalid of [{score:null,reason:null,observation_indices:[]},{score:60},{end_ms:3000},{observation_indices:[9]},{reason:'Does this lose attention?'}]){
+  assert.equal(summarizeAttentionStrength([w],[{...point,...invalid}]).checked,0);
+ }
+ assert.equal(summarizeAttentionStrength([{...w,status:'failed'}],[point]).checked,0);
+ assert.equal(summarizeAttentionStrength([{...w,validation_issues:['Observation 1: quote is absent']}],[point]).checked,0);
+ assert.equal(summarizeAttentionStrength([w],[point,{...point}]).checked,0);
+ const chart=readFileSync(new URL('../src/AttentionStrengthChart.tsx',import.meta.url),'utf8');
+ assert.ok(chart.includes('Attention strength'));assert.ok(chart.includes('not audience retention %'));
+ assert.ok(chart.includes('point?.reason'));assert.ok(!chart.includes('findingForMoment'));
 });

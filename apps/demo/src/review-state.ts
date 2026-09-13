@@ -52,6 +52,13 @@ export function summarizeAttentionStrength(windows:ReviewMoment[],timeline:Atten
  const preferred=rated.reduce((best,item)=>item.point.score<(points[best]?.score??Infinity)?item.index:best,rated[0]?.index??0);
  return {points,preferred,checked:rated.length,hasVariation:new Set(rated.map(item=>item.point.score)).size>1};
 }
+/** Lower content ratings identify review moments, not proven defects or edit instructions. */
+export function reviewPriorityMoments(windows:ReviewMoment[],timeline:AttentionStrengthRating[]=[]) {
+ const lastEnd=Math.max(0,...windows.map(w=>w.end_ms));
+ return summarizeAttentionStrength(windows,timeline).points.flatMap((point,index)=>
+  point&&point.score<=50&&point.end_ms<lastEnd&&!windows[index].attention_context?.startsWith('last_')?[point]:[]
+ ).sort((a,b)=>a.score-b.score||a.start_ms-b.start_ms).slice(0,2);
+}
 export function checkHasEvidence(check:ReviewCheck,issues:string[]) {
  return !issues.some(issue=>issue.startsWith('Review check '+check.aspect+':') ||
   (check.observation_indices??[]).some(i=>issue.startsWith('Observation '+(i+1)+':')) || issue.includes('checklist is incomplete'));
