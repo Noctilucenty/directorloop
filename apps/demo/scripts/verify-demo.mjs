@@ -8,4 +8,6 @@ const app=fs.readFileSync(new URL('../src/App.tsx',import.meta.url),'utf8');asse
 
 const landing=fs.readFileSync(new URL("../src/Landing.tsx",import.meta.url),"utf8");assert.ok(landing.includes("Find what loses the viewer."));assert.ok(landing.includes("URL.createObjectURL"));assert.ok(landing.includes("URL.revokeObjectURL"));assert.ok(landing.includes('LiveAnalysis'));
 
-const live=fs.readFileSync(new URL('../src/LiveAnalysis.tsx',import.meta.url),'utf8');assert.ok(!/localStorage|sessionStorage|sk-proj-|wandb_v1_|apikey_/.test(live));assert.ok(live.includes('Human review required'));assert.ok(live.includes('crypto.randomUUID()'));
+const live=fs.readFileSync(new URL('../src/LiveAnalysis.tsx',import.meta.url),'utf8');assert.ok(!/localStorage|sessionStorage|sk-proj-|wandb_v1_|apikey_/.test(live));assert.ok(live.includes('AI suggestions. Review before editing.'));assert.ok(live.includes('crypto.randomUUID()'));
+
+const screening=JSON.parse(fs.readFileSync(new URL('../src/screening-replay.json',import.meta.url)));assert.equal(screening.display_mode,'recorded');assert.equal(screening.model_calls,3);assert.equal(screening.semantic_grounding_verified,false);assert.equal(screening.automatic_edit_allowed,false);assert.ok(screening.weave_url.startsWith('https://wandb.ai/'));

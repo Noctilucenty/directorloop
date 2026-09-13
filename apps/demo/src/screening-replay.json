@@ -1,0 +1,181 @@
+{
+  "id": "screen_1a09bb4ed2f_2498a8ae",
+  "status": "needs_review",
+  "duration_ms": 14000,
+  "created_at": "2026-09-13T16:58:41.195+00:00",
+  "ended_at": "2026-09-13T16:59:09.737+00:00",
+  "error": null,
+  "review_required": true,
+  "semantic_grounding_verified": false,
+  "automatic_edit_allowed": false,
+  "model_calls": 3,
+  "input_tokens": 12296,
+  "output_tokens": 1400,
+  "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09bb4-eeaa-7d9b-809f-54ebcbe500be",
+  "protocol_fingerprint": "07cf9170464dbf09b0fb8f45a52f440e8c3694bbfad3c7f0e2573bdee8d52ef5",
+  "windows": [
+    {
+      "start_ms": 0,
+      "end_ms": 2000,
+      "status": "complete",
+      "attention_context": "content",
+      "semantic_grounding_verified": false,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09bb4-fd23-7d20-92f9-d68a97f09e49",
+      "validation_issues": [],
+      "judgment": {
+        "understanding": "This is a 'curio' video from 1958. The text and narration state that 'His friends measured a bridge using his body.' The animation shows a man lying on a bridge, and a measuring line appears next to him, then extends to show the bridge's 's",
+        "attention_risk": "low",
+        "suggestion": "The video is a simple, clear anecdote. The viewer is waiting to see the full measurement or the punchline of the story. The animation is simple but effective.",
+        "moment_kind": "setup",
+        "uncertainties": [
+          "The full extent of the bridge measurement is not yet shown.",
+          "The identity of 'his' is not provided."
+        ],
+        "observations": [
+          {
+            "text": "A flat-style illustration shows a man lying on a bridge over water. A measuring line appears next to him and then extends to show the bridge's 's",
+            "kind": "visible_fact",
+            "frame_timestamps_ms": [
+              166,
+              500,
+              833,
+              1166,
+              1499,
+              1833
+            ],
+            "asr_quote": null
+          },
+          {
+            "text": "The on-screen text reads 'His friends measured a bridge using his body.'",
+            "kind": "caption_claim",
+            "frame_timestamps_ms": [
+              166,
+              500,
+              833,
+              1166,
+              1499,
+              1833
+            ],
+            "asr_quote": null
+          },
+          {
+            "text": "The audio transcript says 'His friends measured a bridge using his'.",
+            "kind": "asr_claim",
+            "frame_timestamps_ms": [],
+            "asr_quote": "His friends measured a bridge using his"
+          },
+          {
+            "text": "The video is likely a short, factual anecdote or 'curio' about a historical event from 1958.",
+            "kind": "inference",
+            "frame_timestamps_ms": [
+              166
+            ],
+            "asr_quote": null
+          }
+        ]
+      }
+    },
+    {
+      "start_ms": 2000,
+      "end_ms": 4000,
+      "status": "needs_review",
+      "attention_context": "content",
+      "semantic_grounding_verified": false,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09bb5-1fc4-7742-b486-e4b2ef72f1fb",
+      "validation_issues": [
+        "Observation 3: quote is absent from the supplied ASR prefix"
+      ],
+      "judgment": {
+        "understanding": "This is a short animated explainer about a historical event in 1958. It shows a man lying on a bridge while his friends measure its length using his body as a unit, marking 'one body length'.",
+        "attention_risk": "low",
+        "suggestion": "The video is currently in the middle of a process. The viewer is waiting to see the final measurement or the result of using the body as a ruler. The pacing is steady and the animation is clear.",
+        "moment_kind": "development",
+        "uncertainties": [
+          "It is unclear if the man is alive or dead, as he is lying motionless on the bridge.",
+          "The specific identity of the man or the bridge is not yet provided."
+        ],
+        "observations": [
+          {
+            "text": "The video displays the year '1958' and the brand 'curio' in the top corners of the screen.",
+            "kind": "visible_fact",
+            "frame_timestamps_ms": [
+              500,
+              2166
+            ],
+            "asr_quote": null
+          },
+          {
+            "text": "On-screen text states 'His friends measured a bridge using his body' and later 'They laid him down, marked his height'.",
+            "kind": "caption_claim",
+            "frame_timestamps_ms": [
+              500,
+              2500,
+              3833
+            ],
+            "asr_quote": null
+          },
+          {
+            "text": "The narration describes the action: 'They laid him down, marked his height'.",
+            "kind": "asr_claim",
+            "frame_timestamps_ms": [],
+            "asr_quote": "They laid him down, marked his height"
+          },
+          {
+            "text": "The animation shows a figure lying flat on a bridge deck with a measurement line labeled 'one body length' appearing next to him.",
+            "kind": "visible_fact",
+            "frame_timestamps_ms": [
+              3833
+            ],
+            "asr_quote": null
+          }
+        ]
+      }
+    },
+    {
+      "start_ms": 12000,
+      "end_ms": 14000,
+      "status": "needs_review",
+      "attention_context": "last_endcard",
+      "semantic_grounding_verified": false,
+      "weave_url": "https://wandb.ai/leondragon3798-curio/directorloop/r/call/01a09bb5-428a-7b9d-a1cb-0f2c95ef5ba6",
+      "validation_issues": [
+        "Observation 2: quote is absent from the supplied ASR prefix"
+      ],
+      "judgment": {
+        "understanding": "This video explains the origin of the 'Smoot' unit of measurement. It shows an animation of a man measuring a bridge with his body, then reveals that the bridge is still marked in Smoots today.",
+        "attention_risk": "low",
+        "suggestion": "The video ends cleanly. A viewer might scroll away simply because the content is finished, but the pacing is appropriate for a short factoid.",
+        "moment_kind": "endcard",
+        "uncertainties": [],
+        "observations": [
+          {
+            "text": "The video concludes with a static shot of the word 'SMOOTS' painted on a bridge, accompanied by the text 'marked in Smoots.'",
+            "kind": "visible_fact",
+            "frame_timestamps_ms": [
+              12500,
+              13833
+            ],
+            "asr_quote": null
+          },
+          {
+            "text": "The narration ends with the phrase 'marked in Smoots.'",
+            "kind": "asr_claim",
+            "frame_timestamps_ms": [],
+            "asr_quote": "marked in Smoots."
+          },
+          {
+            "text": "The video functions as a short explainer that has reached its conclusion, showing the final result of the measurement process.",
+            "kind": "inference",
+            "frame_timestamps_ms": [
+              12500
+            ],
+            "asr_quote": null
+          }
+        ]
+      }
+    }
+  ],
+  "display_mode": "recorded",
+  "source_title": "Smoot — original",
+  "source_sha256": "6a9f3a80108cd411609caa2416781e504924cef7967721170dfe15c7d62ed416"
+}
